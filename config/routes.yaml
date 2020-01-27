@@ -1,0 +1,12 @@
+#index:
+#    path: /
+#    controller: App\Controller\CenturyController::index
+
+rules:
+    path:         /rules
+    controller:   Symfony\Bundle\FrameworkBundle\Controller\TemplateController::templateAction
+    defaults:
+        template: rules.html.twig
+        
+logout:
+    path: /logout

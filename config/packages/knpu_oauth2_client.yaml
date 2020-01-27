@@ -1,0 +1,36 @@
+knpu_oauth2_client:
+    clients:
+        # configure your clients as described here: https://github.com/knpuniversity/oauth2-client-bundle#configuration
+        # will create service: "knpu.oauth2.client.komoot_oauth"
+        # an instance of: KnpU\OAuth2ClientBundle\Client\OAuth2Client
+        komoot_oauth:
+            type: generic
+            provider_class: MartynWheeler\OAuth2\Client\Provider\Komoot
+
+            # optional: a class that extends OAuth2Client
+            client_class: MartynWheeler\OAuth2\Client\Provider\KomootClient
+
+            # optional: if your provider has custom constructor options
+            # provider_options: {}
+
+            # now, all the normal options!
+            client_id: '%env(KOMOOT_ID)%'
+            client_secret: '%env(KOMOOT_SECRET)%'
+            redirect_route: connect_komoot_check
+            redirect_params: {}
+
+        # will create service: "knpu.oauth2.client.strava"
+        # an instance of: KnpU\OAuth2ClientBundle\Client\Provider\StravaClient
+        # composer require edwin-luijten/oauth2-strava
+        strava_oauth:
+            # must be "strava" - it activates that type!
+            type: strava
+            # add and configure client_id and client_secret in parameters.yml
+            client_id: '%env(STRAVA_ID)%'
+            client_secret: '%env(STRAVA_SECRET)%'
+            # a route name you'll create
+            redirect_route: connect_strava_check
+            redirect_params: {}
+
+            # whether to check OAuth2 "state": defaults to true
+            # use_state: true

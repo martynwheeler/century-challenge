@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+{% block title %}Update{% endblock %}
+{% block body %}
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="card">
+      <div class="card-header text-center">
+	    <h2>Update your details below</h2>
+	      <p class="text-left">If your Strava/Komoot details displayed below are incorrect please log out of the 
+		  service and log back in with the correct account.</p>
+      </div>
+      <div class="card-body">
+	    {{ form_start(registrationForm) }}
+	    {{ form_row(registrationForm.username) }}
+	    {{ form_row(registrationForm.email) }}
+	    {{ form_row(registrationForm.name) }}
+	    {% if registrationForm.stravaID is defined %}
+	    {{ form_row(registrationForm.stravaID) }}
+	    {% endif %}
+	    {% if registrationForm.komootID is defined %}
+	    {{ form_row(registrationForm.komootID) }}
+	    {% endif %}
+		{% if registrationForm.stravaID is defined and registrationForm.komootID is defined %}
+		{{ form_label(registrationForm.preferredProvider) }}
+		{{ form_widget(registrationForm.preferredProvider) }}
+		{% endif %}
+		<div class="help-inline pb-2 text-danger">* denotes required field</div>
+	    <button type="submit" class="btn btn-success btn-block" name="submit">Update</button>
+	    {{ form_end(registrationForm) }}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+		

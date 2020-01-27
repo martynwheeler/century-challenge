@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% block title %}Welcome{% endblock %}
+{% block body %}
+<h1>Century Challenge</h1>
+<div class="alert alert-info text-left col-sm-8 col-md-8 mx-auto">
+  {#<strong>Important notice: </strong><p>10/02/19 - Owing to a software upgrade, all users need to reset their passwords to access the site. 
+    To do so, simply click on <a href="{{ path('resetpassword') }}">this link</a> and enter your email address, 
+    an email will be sent to you with instructions on how to reset your password. Please email me via the 
+    <a href="{{ path('contact') }}">contact form</a> if there are any issues.</p>
+  <!--<strong>Update: </strong><p>18/01/19 - Strava uploading is now fully functional.</p>-->#}
+  <strong>Important notice: </strong><p>05/05/19 - The club ride counter function stopped working after the clocks went forward to BST (I forgot to set the correct timezone). 
+  It is now fixed and I have been through the rides for April and manually flagged them as club rides.  If you think your counter is not correct please let me know via the 
+  <a href="{{ path('contact') }}">contact form</a>.</p>
+</div>
+<p>Welcome back to the LFCC Century Challenge{% if is_granted('ROLE_USER') %} {{ app.user.name }}{% endif %}. The current top 10 riders are:</p>
+{% include "leaderboard/top10.html.twig" %}
+{% endblock %}

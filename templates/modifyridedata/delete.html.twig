@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{% block title %}Delete{% endblock %}
+{% block body %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header text-center">
+	<h2>Delete Ride</h2>
+	<p class="text-left">Are you sure you want to delete this ride?</p>
+      </div>
+      <div class="card-body">
+	{{ form_start(deleterideForm) }}
+	<div class="row">
+	  <div class="col">
+	    <a href="{{ app.request.headers.get('referer') }}" class="btn btn-primary btn-block"><i class="far fa-hand-point-left"></i> No, take me back</a>
+	  </div>
+	  <div class="col">
+	    <button type="submit" class="btn btn-danger btn-block" name="submit"><i class="far fa-trash-alt"></i> Yes, delete it already</button>
+	  </div>
+	</div>  
+	{{ form_end(deleterideForm) }}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

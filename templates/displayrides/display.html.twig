@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+{% if is_granted('ROLE_USER') %}
+{{ user.name }}
+{% else %}
+{{ user.privatename }}
+{% endif %}
+{% endblock %}
+{% block body %}
+<div class="row">
+  <div class="col-8">
+    <h1>
+      {% if is_granted('ROLE_USER') %}
+      {{ user.name }}
+      {% else %}
+      {{ user.privatename }}
+      {% endif %}
+      {% if user.isDisqualified %}
+      <em>Disqualified</em>
+      {% endif %}
+    </h1>
+    <p class="pl-2=0">has earned a total of {{ user.totalpoints }} points from riding a total distance of {{ user.totaldistance }} km in {{ "now"|date("Y") }}.</p>
+  </div>
+  <div class="col-4">
+		{% if is_granted('ROLE_USER') and (user.stravauserid or user.komootuserid) %}
+		<p class="float-right">Find {{ user.name }} on
+    {% if is_granted('ROLE_USER') and user.stravauserid %}
+      <a href="https://app.strava.com/athletes/{{ user.stravauserid }}"><img src="{{ asset('assets/img/strava.jpg') }}" width="80px"/></a>
+    {% endif %}
+		{% if is_granted('ROLE_USER') and user.komootuserid %}
+      <a href="https://www.komoot.com/user/{{ user.komootuserid }}"><img src="{{ asset('assets/img/komoot.jpg') }}" width="80px"/></a>
+    {% endif %}
+    </p>
+		{% endif %}
+  </div>
+</div>
+<div class="row pt-3">
+  <div class="col-12">
+    <h3>List of rides for {{ "now"|date("Y") }}:</h3>
+  </div>
+</div>
+{% for key, month in user.months|reverse(true) %}
+{% if month.points > 0 %}
+<div class="row pt-2">
+  <div class="col-12">
+    <h5>{{ key|date("F") }}: total of {{ month.points }} points for riding {{ month.distance }} km</h5>
+  </div>
+</div>
+<div class="row justify-content-left">
+  <div class="col-md-8">
+    <table class="table table-striped table-bordered table-sm table-responsive-sm">
+      <thead>
+	<tr>
+	  <th>Date</th>
+	  <th>Distance</th>
+	  <th>Points</th>
+	  <th>Link</th>
+	  <th>Edit</th>
+	  <th>Delete</th>
+	</tr>
+      </thead>
+      <tbody>
+	{% for ride in month.rides%}
+	<tr>
+	  <td>{{ ride.date|date("d/m/Y") }}</td>
+	  <td>{{ ride.km }}</td>
+	  <td>{{ ride.points }}</td>
+	  <td class="text-center">
+	    {% if ride.rideid and ride.source == 'strava' %}
+	    <a title="Ride Link" href="https://app.strava.com/activities/{{ ride.rideid }}">
+	      <img class="border" width="60px" src="{{ asset('assets/img/strava.jpg') }}" alt="strava logo" />
+	    </a>
+		{% elseif ride.rideid and ride.source == 'komoot' %}
+	    <a title="Ride Link" href="https://www.komoot.com/tour/{{ ride.rideid }}">
+	      <img class="border" width="60px" src="{{ asset('assets/img/komoot.jpg') }}" alt="komoot logo" />
+	    </a>
+	    {% endif %}
+	  </td>
+	  <td class="text-center">
+	    {% if ride.rideid == null and is_granted('ROLE_USER') and app.user.id == user.id %}
+	    <a title="Edit Ride" class="btn btn-sm btn-primary" href="{{ path('editride', {'ride_id': ride.id}) }}">
+	      <i class="far fa-edit"></i>
+	    </a>
+	    {% else %}
+	    <a title="Edit Ride" class="btn btn-sm btn-light" style="pointer-events: none;">
+	      <i class="far fa-edit"></i>
+	    </a>
+	    {% endif %}
+	  </td>
+	  <td class="text-center">
+	    {% if is_granted('ROLE_USER') and app.user.id == user.id %}
+	    <a title="Delete Ride" class="btn btn-sm btn-danger" href="{{ path('deleteride', {'ride_id': ride.id}) }}">
+	      <i class="far fa-trash-alt"></i>
+	    </a>
+	    {% else %}
+	    <a title="Delete Ride" class="btn btn-sm btn-light" style="pointer-events: none;">
+	      <i class="far fa-trash-alt"></i>
+	    </a>					
+	    {% endif %}
+	  </td>
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+{% endfor %}
+{% endblock %}
