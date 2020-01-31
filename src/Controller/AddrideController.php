@@ -22,6 +22,7 @@ class AddrideController extends AbstractController
         $user = $this->getUser();
         $ride = new Ride();
         $ride->setUser($user);
+        $athleteActivities = null;
 
         //Switch depending on provider
         switch ($user->getPreferredProvider()) {
@@ -57,15 +58,19 @@ class AddrideController extends AbstractController
                 return $this->redirectToRoute('addridemanual');
         }
 
-        $form = $this->createFormBuilder($ride)
-            ->add('ride_id', ChoiceType::class, [
-                'choices' => array_column($athleteActivities, 'id', 'key'),
-                'label' => 'Select a recent century ride from the dropdown menu:',
-                'expanded' => false,
-                'multiple' => false,
-            ])
-            ->getForm()
-        ;
+        if ($athleteActivities) {
+            $form = $this->createFormBuilder($ride)
+                ->add('ride_id', ChoiceType::class, [
+                    'choices' => array_column($athleteActivities, 'id', 'key'),
+                    'label' => 'Select a recent century ride from the dropdown menu:',
+                    'expanded' => false,
+                    'multiple' => false,
+                ])
+                ->getForm()
+            ;
+        } else {
+            return $this->redirectToRoute('addridemanual');
+        }
 
         $ride->setSource($user->getPreferredProvider());
 

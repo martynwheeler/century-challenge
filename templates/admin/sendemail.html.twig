@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+{% block title %}Message Users{% endblock %}
+{% block body %}
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="card">
+      <div class="card-header text-center">
+	      <h2>Message Users</h2>
+      </div>
+      <div class="card-body">
+	{{ form_start(email_form) }}
+	{{ form_widget(email_form) }}
+        <div class="row">
+          <div class="col-sm">
+            <button type="button" onclick="monthReminder()" class="btn btn-light btn-block">Monthly Message</button>
+          </div>
+          <div class="col-sm">
+            <button type="button" onclick="annualMessage()" class="btn btn-light btn-block">Annual Message</button>
+          </div>
+        </div>
+	<div class="help-inline pb-2 text-danger">* denotes required field</div>
+	<button type="submit" class="btn btn-success btn-block" name="submit">Send</button>
+	{{ form_end(email_form) }}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script>
+  function monthReminder() {
+    var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var now = new Date();
+    var message =
+      'Dear Century Challenge User,' + String.fromCharCode(13) + 
+      'Just a gentle reminder to add your rides for ' + months[now.getMonth()] + '.  ' +
+      'The deadline for adding any rides is midnight on last day of the month.  ' +
+      'If you have not submitted any rides by this time you will get the boot!' + String.fromCharCode(13) + 
+      'Thank you, Admin.';
+    document.getElementById("form_message").value = message;
+  }
+
+  function annualMessage() {
+    var message =
+      'Dear Century Challenge User,' + String.fromCharCode(13) + 
+      'You are currently signed up for the LFCC century challenge.  ' +
+      'If you no longer wish to be signed up please reply to this message and I will remove you from the database.  ' +
+      'Do not forget to add your 100km rides before the end of January to avoid being disqualified!' + String.fromCharCode(13) + 
+      'Thank you, Admin.';
+    document.getElementById("form_message").value = message;
+  }
+</script>
+{% endblock %}

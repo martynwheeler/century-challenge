@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
-use GuzzleHttp\Client;
+use Symfony\Component\HttpClient\HttpClient;
 
 /**
  * Simple PHP Library for the Komoot API
@@ -37,27 +37,24 @@ class KomootAPI
     {
         try {
             //Create a new client
-            $guzzleClient = new Client([
-                'base_uri' => self::API_URL,
-            ]);            
+            $httpClient = HttpClient::create(['base_uri' => self::API_URL]);
             //Set up request headers
             $headers = [
                 'Authorization' => 'Bearer ' . $token,
                 'Content-type' => 'application/json'
             ];
             //Get response
-            $response = $guzzleClient->request('GET', $url, [
+            $response = $httpClient->request('GET', $url, [
                 'headers' => $headers,
                 'query' => $query,
-                'debug' => false,
             ]);
+            $content = $response->toArray();
         } catch (\Exception $e) {
             print $e->getMessage().'<br/>';
             return $e->getResponse()->getStatusCode();
         }
-
         //Return the body of the response object as an array
-        return json_decode($response->getBody(), true, JSON_PRETTY_PRINT);            
+        return $content;
     }
     
     /**
@@ -72,17 +69,17 @@ class KomootAPI
     {
         try {
             //Create a new client
-            $guzzleClient = new Client(['base_uri' => self::BASE_URL]);
+            $httpClient = HttpClient::create(['base_uri' => self::BASE_URL]);
             //Get the last refresh token from the user entity
             $refreshToken = $user->getKomootRefreshToken();
             //Get response
-            $response = $guzzleClient->request('POST', 'oauth/token', [
+            $response = $httpClient->request('POST', 'oauth/token', [
                 'headers' => ['Accept' => 'application/json'],
-                'auth' => [getenv('KOMOOT_ID'), getenv('KOMOOT_SECRET')],
+                'auth_basic' => [$_ENV['KOMOOT_ID'], $_ENV['KOMOOT_SECRET']],
                 'query' => ['refresh_token' => $refreshToken, 'grant_type' => 'refresh_token'],
-                ]);
+            ]);
             //Grab the token from the response
-            $accessToken = json_decode($response->getBody(), true);
+            $accessToken = $response->toArray();
             //Persist the new refresh token to the db
             $user->setKomootRefreshToken($accessToken['refresh_token']);
             $user->setKomootTokenExpiry($accessToken['expires_in'] + time());
@@ -107,7 +104,12 @@ class KomootAPI
     public function getAthlete($token, $user)
     {
         $url = 'users/' . $user;
-        return $this->request($token, $url);
+        $athlete = $this->request($token, $url); 
+        //Check for error
+        if (gettype($athlete) != 'array'){
+            print "HTTP Error ".$athlete.". This is not a valid Komoot ID, go back and try again."; die;
+        }        
+        return $athlete;
     }
 
     /**

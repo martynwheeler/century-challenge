@@ -15,11 +15,27 @@ class CenturyController extends AbstractController
      */
     public function index(Request $request, RideData $rd)
     {
+        //Read latest ride data
         $data = $rd->getRideData(null);
+        
+        //Read in any warning messages
+        @$motd = file_get_contents('resources/motd.json');
+        if (!$motd) {
+             $motd = null;
+        } else {
+            $motd = json_decode($motd, true);
+            $message = "";
+            foreach ($motd['message'] as $line) {
+                $message .= $line;
+            }
+            $motd['message'] = $message;
+        }
+        
         //render the page
         return $this->render('index.html.twig', [
             'users' => $data['users'],
             'months' => $data['months'],
+            'motd' => $motd,
         ]);
     }
 }

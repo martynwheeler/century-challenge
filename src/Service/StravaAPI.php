@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
-use GuzzleHttp\Client;
+use Symfony\Component\HttpClient\HttpClient;
 
 /**
  * Simple PHP Library for the Stava API
@@ -36,26 +36,24 @@ class StravaAPI
     {
         try {
             //Create a new client
-            $guzzleClient = new Client([
-                'base_uri' => self::API_URL,
-            ]);            
+            $httpClient = HttpClient::create(['base_uri' => self::API_URL]);
             //Set up request headers
             $headers = [
                 'Authorization' => 'Bearer ' . $token,
                 'Content-type' => 'application/json'
             ];
             //Get response
-            $response = $guzzleClient->request('GET', $url, [
+            $response = $httpClient->request('GET', $url, [
                 'headers' => $headers,
                 'query' => $query,
-                'debug' => false,
             ]);
+            $content = $response->toArray();
         } catch (\Exception $e) {
             print $e->getMessage().'<br/>';
             return $e->getResponse()->getStatusCode();
         }
         //Return the body of the response object as an array
-        return json_decode($response->getBody(), true, JSON_PRETTY_PRINT);            
+        return $content;
     }
 
     /**
@@ -70,20 +68,23 @@ class StravaAPI
     {
         try {
             //Create a new client
-            $guzzleClient = new Client(['base_uri' => self::API_URL]);
+            $httpClient = HttpClient::create(['base_uri' => self::API_URL]);
             //Get the last refresh token from the user entity
             $refreshToken = $user->getStravaRefreshToken();
             //Get response
-            $postdata = 
-                'client_id=' . getenv('STRAVA_ID') .
-                '&client_secret=' . getenv('STRAVA_SECRET') .
-                '&grant_type=refresh_token&refresh_token=' . $refreshToken;
-            $response = $guzzleClient->request('POST', 'oauth/token', ['body' => $postdata]);
+            $response = $httpClient->request('POST', 'oauth/token', [
+                'body' => [
+                    'client_id' => $_ENV['STRAVA_ID'],
+                    'client_secret' => $_ENV['STRAVA_SECRET'],
+                    'grant_type' => 'refresh_token',
+                    'refresh_token' => $refreshToken,
+                ]
+            ]);
             //Grab the token from the response
-            $accessToken = json_decode($response->getBody(), true);
+            $accessToken = $response->toArray();
             //Persist the new refresh token to the db
             $user->setStravaRefreshToken($accessToken['refresh_token']);
-            $user->setStravaTokenExpiry($accessToken['expires_in'] + time());
+            $user->setStravaTokenExpiry($accessToken['expires_at']);
             $entityManager = $this->em;
             $entityManager->persist($user);
             $entityManager->flush();
@@ -106,7 +107,12 @@ class StravaAPI
     public function getAthlete($token)
     {
         $url = 'athlete';
-        return $this->request($token, $url);
+        $athlete = $this->request($token, $url); 
+        //Check for error
+        if (gettype($athlete) != 'array'){
+            print "HTTP Error ".$athlete.". This is not a valid Strava ID, go back and try again."; die;
+        }  
+        return $athlete;
     }
 
     public function getAthleteActivitiesThisMonth($token)

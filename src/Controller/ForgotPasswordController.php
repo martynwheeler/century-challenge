@@ -8,6 +8,9 @@ use App\Form\ResetPasswordFormType;
 use App\Security\LoginFormAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -18,7 +21,7 @@ class ForgotPasswordController extends AbstractController
     /**
      * @Route("/resetpassword", name="resetpassword")
      */
-    public function resetPassword(Request $request, \Swift_Mailer $mailer)
+    public function resetPassword(Request $request, MailerInterface $mailer)
     {
         $form = $this->createForm(ForgotPasswordFormType::class);
         $form->handleRequest($request);
@@ -26,18 +29,18 @@ class ForgotPasswordController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             //Get the data from the submitted form
             $email = $form->getData()['email'];
-            //The user will be sent a message regardless so begin the swiftmailer message
-            $message = (new \Swift_Message())
-                ->setFrom(getenv('MAILER_FROM'))
-                ->setTo($email)
-                ->setSubject('Message from Century Challenge')
+            //The user will be sent a message regardless so begin the mailer message
+            $message = (new Email())
+                ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
+                ->to($email)
+                ->subject('Message from Century Challenge')
             ;
             //Check that the user exists
             $entityManager = $this->getDoctrine()->getManager();
             $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
             if (!$user instanceof User) {
                 //User not found --> send warning email
-                $message->setBody($this->renderView('emails/usernotfound.html.twig', []), 'text/html');
+                $message->html($this->renderView('emails/usernotfound.html.twig', []));
             } else {
                 //User found --> generate token and send in email
                 $token = bin2hex(random_bytes(64));
@@ -48,7 +51,7 @@ class ForgotPasswordController extends AbstractController
                 $user->setRequestTokenExpiry($date);
                 $entityManager->flush();
                 $url = $this->generateUrl('resetpassword_confirm', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
-                $message->setBody(
+                $message->html(
                     $this->renderView(
                         'emails/passwordreset.html.twig',
                         [
@@ -56,22 +59,21 @@ class ForgotPasswordController extends AbstractController
                             'username' => $user->getUsername(),
                             'url' => $url
                         ]
-                    ),
-                    'text/html'
+                    )
                 )
-                    // Include a plaintext version of the message
-                        ->addPart(
-                            $this->renderView(
-                                'emails/passwordreset.txt.twig',
-                                [
-                                    'name' => $user->getName(),
-                                    'username' => $user->getUsername(),
-                                    'url' => $url
-                                ]
-                            ),
-                            'text/plain'
-                        )
-                    ;
+
+                // Include a plaintext version of the message
+                        ->text(
+                    $this->renderView(
+                        'emails/passwordreset.txt.twig',
+                        [
+                            'name' => $user->getName(),
+                            'username' => $user->getUsername(),
+                            'url' => $url
+                        ]
+                    )
+                )
+                ;
             }
             $mailer->send($message);
             $this->addFlash('success', 'You have been sent an email to '.$email.' with instructions on how to reset your password, please check your inbox and your spam folder.');
