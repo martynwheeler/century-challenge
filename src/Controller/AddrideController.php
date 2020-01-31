@@ -81,7 +81,7 @@ class AddrideController extends AbstractController
                 if ($athleteActivity['id'] == $rideID) {
                     $ride->setKm($athleteActivity['distance']);
                     $ride->setAverageSpeed($athleteActivity['average']);
-                    $ride->setDate($athleteActivity['date']);    
+                    $ride->setDate($athleteActivity['date']);
                     switch ($user->getPreferredProvider()) {
                         case "komoot":
                             $ride->setClubRide($komoot_api->isClubRide($token, $rideID, $athleteActivity['date']));

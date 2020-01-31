@@ -81,7 +81,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        //Check for missing refresh tokens and 
+        //Check for missing refresh tokens and
         $user = $token->getUser();
         if ($user->getKomootID() && !$user->getKomootRefreshToken()) {
             return new RedirectResponse($this->urlGenerator->generate('connect_komoot'));

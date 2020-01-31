@@ -23,7 +23,7 @@ class ConnectKomootController extends AbstractController
             ->getClient('komoot_oauth') // key used in config/packages/knpu_oauth2_client.yaml
             ->redirect(['profile']) // the scopes you want to access
         ;
-	}
+    }
 
     /**
      * After going to Komoot, you're redirected back here
@@ -64,7 +64,8 @@ class ConnectKomootController extends AbstractController
         } catch (IdentityProviderException $e) {
             // something went wrong!
             // probably you should return the reason to the user
-            var_dump($e->getMessage()); die;
+            var_dump($e->getMessage());
+            die;
         }
     }
 }

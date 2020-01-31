@@ -89,7 +89,8 @@ class StravaAPI
             $entityManager->persist($user);
             $entityManager->flush();
         } catch (\Exception $e) {
-                print $e->getMessage(); die;
+            print $e->getMessage();
+            die;
         }
         return $accessToken['access_token'];
     }
@@ -107,11 +108,12 @@ class StravaAPI
     public function getAthlete($token)
     {
         $url = 'athlete';
-        $athlete = $this->request($token, $url); 
+        $athlete = $this->request($token, $url);
         //Check for error
-        if (gettype($athlete) != 'array'){
-            print "HTTP Error ".$athlete.". This is not a valid Strava ID, go back and try again."; die;
-        }  
+        if (gettype($athlete) != 'array') {
+            print "HTTP Error ".$athlete.". This is not a valid Strava ID, go back and try again.";
+            die;
+        }
         return $athlete;
     }
 
@@ -172,8 +174,9 @@ class StravaAPI
         //Make request and get response from API
         $athleteactivity = $this->request($token, $url);
         //Check for error
-        if (gettype($athleteactivity) != 'array'){
-            print "HTTP Error ".$athleteactivity.". This is not a valid ride ID, go back and try again."; die;
+        if (gettype($athleteactivity) != 'array') {
+            print "HTTP Error ".$athleteactivity.". This is not a valid ride ID, go back and try again.";
+            die;
         }
 
         //Process the results and return

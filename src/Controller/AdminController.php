@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+
 use App\Service\RideData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -43,7 +44,7 @@ class AdminController extends AbstractController
             );
             //Add BCC to non-disqualified users
             $users = $rd->getRideData($year)['users'];
-            foreach($users as $user){
+            foreach ($users as $user) {
                 if (!$user['isDisqualified']) {
                     $message->addBcc($user['email']);
                 }

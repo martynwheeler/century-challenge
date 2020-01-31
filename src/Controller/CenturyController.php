@@ -21,7 +21,7 @@ class CenturyController extends AbstractController
         //Read in any warning messages
         @$motd = file_get_contents('resources/motd.json');
         if (!$motd) {
-             $motd = null;
+            $motd = null;
         } else {
             $motd = json_decode($motd, true);
             $message = "";

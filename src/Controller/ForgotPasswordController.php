@@ -64,15 +64,15 @@ class ForgotPasswordController extends AbstractController
 
                 // Include a plaintext version of the message
                         ->text(
-                    $this->renderView(
-                        'emails/passwordreset.txt.twig',
-                        [
+                            $this->renderView(
+                                'emails/passwordreset.txt.twig',
+                                [
                             'name' => $user->getName(),
                             'username' => $user->getUsername(),
                             'url' => $url
                         ]
-                    )
-                )
+                            )
+                        )
                 ;
             }
             $mailer->send($message);

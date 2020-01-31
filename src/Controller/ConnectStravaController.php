@@ -23,7 +23,7 @@ class ConnectStravaController extends AbstractController
             ->getClient('strava_oauth') // key used in config/packages/knpu_oauth2_client.yaml
             ->redirect(['read', 'activity:read_all']) // the scopes you want to access
         ;
-	}
+    }
 
     /**
      * After going to Strava, you're redirected back here
@@ -64,7 +64,8 @@ class ConnectStravaController extends AbstractController
         } catch (IdentityProviderException $e) {
             // something went wrong!
             // probably you should return the reason to the user
-            var_dump($e->getMessage()); die;
+            var_dump($e->getMessage());
+            die;
         }
     }
 }

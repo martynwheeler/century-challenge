@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Ride;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+
 /**
  * @method Ride|null find($id, $lockMode = null, $lockVersion = null)
  * @method Ride|null findOneBy(array $criteria, array $orderBy = null)

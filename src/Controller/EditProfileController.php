@@ -59,7 +59,7 @@ class EditProfileController extends AbstractController
         //Create the form
         $form = $this->createForm(EditProfileFormType::class, $user, [
             'komootAthlete' => $komootAthlete,
-            'stravaAthlete' => $stravaAthlete,            
+            'stravaAthlete' => $stravaAthlete,
         ]);
         $form->handleRequest($request);
         
