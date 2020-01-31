@@ -2,6 +2,6 @@
     "date": "27/01/20",
     "message": [
         "There has been a major update of the site behind the scenes to keep up with changes made by Strava. ",
-        "I think I have tested everything but if you get an error please let me know via the <a href=\"{{ path('contact') }}\">contact form</a>."
+        "I think I have tested everything but if you get an error please let me know via the <a href=\"contact\">contact form</a>."
     ]
 }
