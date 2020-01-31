@@ -29,7 +29,6 @@ class CenturyController extends AbstractController
                 $message .= $line;
             }
             $motd['message'] = $message;
-//            var_dump($motd['message']); die;
         }
         
         //render the page
