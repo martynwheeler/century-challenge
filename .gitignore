@@ -15,3 +15,8 @@
 ###> FriendsOfPHP/PHP-CS-Fixer ###
 .php_cs.cache
 ###< FriendsOfPHP/PHP-CS-Fixer ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###

@@ -18,17 +18,15 @@ class RideData
     {
         //Date range to loop over
         //Can change when rides need to be entered here
-        //Modified for MySQL 8 - 13/3/20
         $thisyear = false;
         if (!$year) {
-            $start = new \DateTime('first day of January');
+            $year = (new \DateTime())->format("Y");
             $end = new \DateTime();
             $thisyear = true;
         } else {
-            $start = new \DateTime($year.'-01-01');
             $end = new \DateTime($year.'-12-01');
         }
-        $year = $start;
+        $start = new \DateTime($year.'-01-01');
         $end->modify('midnight')->modify('last day of this month');
         $interval = new \DateInterval('P1M');
         $period = new \Dateperiod($start, $interval, $end);

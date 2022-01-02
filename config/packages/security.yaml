@@ -23,7 +23,7 @@ security:
                     - App\Security\LoginFormAuthenticator
             logout:
                 path:   logout
-                success_handler: App\Security\LogoutSuccessHandler
+                target: homepage
 
             # activate different ways to authenticate
 

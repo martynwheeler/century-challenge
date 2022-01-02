@@ -141,6 +141,10 @@ class KomootAPI
         if (is_array($athleteactivities) || $athleteactivities instanceof Countable) {
             foreach ($athleteactivities as $athleteactivity) {
                 if ($athleteactivity['distance'] >= 100000) {
+                    // Gives odd error when planned tour! Need an ignore statement
+                    //echo '<pre>';
+                    //var_dump($athleteactivity);
+                    //echo '</pre>';
                     //convert to km and round to nearest 10m
                     $athleteactivity['distance'] = round(($athleteactivity['distance'] / 1000), 2);
                     //key is displayed in drop down box
@@ -153,8 +157,8 @@ class KomootAPI
                         'date' => \DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $athleteactivity['date']),
                         'distance' => $athleteactivity['distance'],
                         'average' => $athleteactivity['distance']/$athleteactivity['time_in_motion'] * 3600,
-                    ];
-                }
+                    ];  
+                }   
             }
         }
 
