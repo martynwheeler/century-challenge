@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\ForgotPasswordFormType;
 use App\Form\ResetPasswordFormType;
-use App\Security\LoginFormAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
@@ -13,8 +12,9 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
 
 class ForgotPasswordController extends AbstractController
 {
@@ -87,7 +87,7 @@ class ForgotPasswordController extends AbstractController
     /**
      * @Route("/resetpassword/confirm/{token}", name="resetpassword_confirm")
      */
-    public function resetPasswordCheck(Request $request, $token, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $authenticator)
+    public function resetPasswordCheck(Request $request, $token, UserPasswordHasherInterface $passwordHasher, UserAuthenticatorInterface $userAuthenticator, FormLoginAuthenticator $formLoginAuthenticator)
     {
         //test whether the link is valid
         $entityManager = $this->getDoctrine()->getManager();
@@ -109,17 +109,16 @@ class ForgotPasswordController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $form->get('newPassword')->getData();
-            $password = $passwordEncoder->encodePassword($user, $plainPassword);
+            $password = $passwordHasher->hashPassword($user, $plainPassword);
             $user->setPassword($password);
             $user->setPasswordRequestToken(null);
             $entityManager->flush();
 
             //Everyhting has gone smoothly so authenticate the user
-            return $guardHandler->authenticateUserAndHandleSuccess(
+            return $userAuthenticator->authenticateUser(
                 $user,
-                $request,
-                $authenticator,
-                'main' // firewall name in security.yaml
+                $formLoginAuthenticator,
+                $request
             );
         }
         return $this->render('security/resetpassword.html.twig', [
