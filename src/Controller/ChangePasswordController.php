@@ -8,15 +8,15 @@ use App\Form\Model\ChangePassword;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+//use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class ChangePasswordController extends AbstractController
 {
     /**
      * @Route("/profile/{username}/changepassword", name="changepassword")
      */
-    public function changepassword(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function changepassword(Request $request, UserPasswordHasherInterface $passwordHasher)
     {
         $changePasswordModel = new ChangePassword();
         $form = $this->createForm(ChangePasswordFormType::class, $changePasswordModel);
@@ -25,7 +25,7 @@ class ChangePasswordController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
             $user->setPassword(
-                $passwordEncoder->encodePassword(
+                $passwordHasher->hashPassword(
                     $user,
                     $form->get('newPassword')->getData()
                 )
