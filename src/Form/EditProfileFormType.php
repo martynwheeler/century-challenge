@@ -17,7 +17,7 @@ class EditProfileFormType extends AbstractType
     {
         $this->user = $security->getUser();
     }
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -76,7 +76,7 @@ class EditProfileFormType extends AbstractType
             ;
         }
     }
-    
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

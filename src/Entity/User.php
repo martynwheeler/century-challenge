@@ -181,9 +181,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function getSalt()
+    public function getSalt(): ?string
     {
         // not needed when using the "bcrypt" algorithm in security.yaml
+        return null;
     }
 
     /**
@@ -256,7 +257,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Ride[]
+     * @return Collection
      */
     public function getRides(): Collection
     {
@@ -285,7 +286,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-    
+
     //Added functionality to set private name
     public function getFirstName()
     {
@@ -312,7 +313,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return ucwords($this->getFirstName().' '.substr($this->getSurname(), 0, 1).'.');
     }
-    
+
     public function __toString()
     {
         return (string)$this->getName();

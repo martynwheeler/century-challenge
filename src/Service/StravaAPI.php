@@ -13,7 +13,7 @@ use Symfony\Component\HttpClient\HttpClient;
 
 class StravaAPI
 {
-    const API_URL = 'https://www.strava.com/api/v3/';
+    public const API_URL = 'https://www.strava.com/api/v3/';
 
     private $em;
 
@@ -32,7 +32,7 @@ class StravaAPI
      * @return mixed
      * @throws \Exception
      */
-    protected function request($token, $url, $query = [])
+    protected function request($token, $url, $query = []): mixed
     {
         try {
             //Create a new client
@@ -64,7 +64,7 @@ class StravaAPI
      * @return string
      * @throws \Exception
      */
-    public function getToken($user)
+    public function getToken($user): string
     {
         try {
             //Create a new client
@@ -105,7 +105,7 @@ class StravaAPI
      * @return array
      * @throws \Exception
      */
-    public function getAthlete($token)
+    public function getAthlete($token): array
     {
         $url = 'athlete';
         $athlete = $this->request($token, $url);
@@ -156,7 +156,7 @@ class StravaAPI
         usort($results, [$this, 'date_compare']);
         return $results;
     }
-    
+
     /**
      * Get ride data by id
      *
@@ -166,7 +166,7 @@ class StravaAPI
      * @return array
      * @throws \Exception
      */
-    public function getAthleteActivity($token, $id)
+    public function getAthleteActivity($token, $id): array
     {
         //Set up request
         $url = 'activities/'. $id;
@@ -198,7 +198,7 @@ class StravaAPI
      * @return boolean
      * @throws \Exception
      */
-    public function isClubRide($token, $id, $date)
+    public function isClubRide($token, $id, $date): bool
     {
         //Set up request
         $url = 'activities/'. $id . '/streams/latlng';
@@ -218,7 +218,7 @@ class StravaAPI
         //Must be at start between 0820 and 0900
         $startTime = \DateTime::createFromFormat('Y-m-d H:i:s', $date->format('Y-m-d')." 08:20:00", $tz);
         $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', $date->format('Y-m-d')." 09:00:00", $tz);
-        
+
         //Loop over stream to see if club ride and return
         $times = $stream_details[1]['data'];
         $clubride = false;
@@ -247,7 +247,7 @@ class StravaAPI
      *
      * @return float
      */
-    public function getGPXDistance($latitude1, $longitude1, $latitude2, $longitude2)
+    public function getGPXDistance($latitude1, $longitude1, $latitude2, $longitude2): float
     {
         $earth_radius = 6371;
         $dLat = deg2rad($latitude2 - $latitude1);
@@ -266,7 +266,7 @@ class StravaAPI
      *
      * @return date
      */
-    public function date_compare($a, $b)
+    public function date_compare($a, $b): date
     {
         $t1 = $a['date']->getTimestamp();
         $t2 = $b['date']->getTimestamp();

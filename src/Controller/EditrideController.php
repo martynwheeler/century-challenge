@@ -8,15 +8,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Persistence\ManagerRegistry;
 
 class EditrideController extends AbstractController
 {
+    public function __construct(private ManagerRegistry $doctrine) {}
+
     /**
      * @Route("/ride/{ride_id}/delete", name="deleteride")
      */
     public function delete(Request $request, $ride_id)
     {
-        $repository = $this->getDoctrine()->getRepository(Ride::class);
+        $repository = $this->doctrine->getRepository(Ride::class);
         $ride = $repository->find($ride_id);
         if (!$ride) {
             throw $this->createNotFoundException(
@@ -25,12 +28,12 @@ class EditrideController extends AbstractController
         }
         $form = $this->createFormBuilder()->getForm();
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted()) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->doctrine->getManager();
             $entityManager->remove($ride);
             $entityManager->flush();
-            
+
             // do anything else you need here, like send an email
             $this->addFlash('success', $this->getUser()->getName().', you have sucessfully deleted your ride');
             return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUsername()]);
@@ -39,13 +42,13 @@ class EditrideController extends AbstractController
             'deleterideForm' => $form->createView(),
         ]);
     }
-    
+
     /**
      * @Route("/ride/{ride_id}/editride", name="editride")
      */
     public function edit(Request $request, $ride_id)
     {
-        $repository = $this->getDoctrine()->getRepository(Ride::class);
+        $repository = $this->doctrine->getRepository(Ride::class);
         $ride = $repository->find($ride_id);
         if (!$ride) {
             throw $this->createNotFoundException(
@@ -54,13 +57,13 @@ class EditrideController extends AbstractController
         }
         $form = $this->createForm(AddrideFormType::class, $ride);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             //this could be improved by validation, but hey
             $firstdayofmonth = new \DateTime();
             $firstdayofmonth->modify('midnight')->modify('first day of this month');
             if ($form->getData()->getDate() >= $firstdayofmonth) {
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->doctrine->getManager();
                 $entityManager->flush();
 
                 // do anything else you need here, like send an email

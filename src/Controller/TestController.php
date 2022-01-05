@@ -32,40 +32,40 @@ class TestController extends AbstractController
             var_dump($segment);
             exit();
         }
-        
 
-/*
-        $gpx1 = simplexml_load_file('resources/Four_Peak.gpx');
-        $gpx2 = simplexml_load_file('resources/Afternoon_Ride.gpx');
-        $track1 = $gpx1->trk->trkseg->children();
-        $track2 = $gpx2->trk->trkseg->children();
-        $last = count($gpx1->trk->trkseg->children()) - 1;
-        echo ($last);
-        echo '<br/>';
 
-        foreach($track2 as $point)
-        {
-            $dist = $this->getGPXDistance(
-                current($track1[$last]['lat']),
-                current($track1[$last]['lon']),
-                current($point['lat']),
-                current($point['lon'])
-            );
-            if($dist < 0.040)
-            {
-                echo $dist;
+        /*
+                $gpx1 = simplexml_load_file('resources/Four_Peak.gpx');
+                $gpx2 = simplexml_load_file('resources/Afternoon_Ride.gpx');
+                $track1 = $gpx1->trk->trkseg->children();
+                $track2 = $gpx2->trk->trkseg->children();
+                $last = count($gpx1->trk->trkseg->children()) - 1;
+                echo ($last);
                 echo '<br/>';
-            }
-        }
 
-*/
+                foreach($track2 as $point)
+                {
+                    $dist = $this->getGPXDistance(
+                        current($track1[$last]['lat']),
+                        current($track1[$last]['lon']),
+                        current($point['lat']),
+                        current($point['lon'])
+                    );
+                    if($dist < 0.040)
+                    {
+                        echo $dist;
+                        echo '<br/>';
+                    }
+                }
+
+        */
         return $this->render('test/index.html.twig', [
             'controller_name' => 'TestController',
 //            'track' => $track1,
         ]);
     }
 
-        /**
+    /**
      * Get a distance between two GPS coordinates
      *
      * @param float $latitude1
@@ -75,7 +75,7 @@ class TestController extends AbstractController
      *
      * @return float
      */
-    public function getGPXDistance($latitude1, $longitude1, $latitude2, $longitude2)
+    public function getGPXDistance($latitude1, $longitude1, $latitude2, $longitude2): float
     {
         $earth_radius = 6371;
         $dLat = deg2rad($latitude2 - $latitude1);
@@ -85,5 +85,4 @@ class TestController extends AbstractController
         $d = $earth_radius * $c;
         return $d;
     }
-
 }

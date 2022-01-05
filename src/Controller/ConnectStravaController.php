@@ -8,9 +8,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Persistence\ManagerRegistry;
 
 class ConnectStravaController extends AbstractController
-{
+{    
+    public function __construct(private ManagerRegistry $doctrine) {}
+    
     /**
      * @Route("/connect/strava", name="connect_strava")
      */
@@ -55,7 +58,7 @@ class ConnectStravaController extends AbstractController
             $user->setPreferredProvider('strava');
 
             //Persist user object
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->doctrine->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
 

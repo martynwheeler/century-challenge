@@ -42,7 +42,7 @@ class RideData
         } else {
             $users = $entityManager->findBy(['username' => $username], ['id' => 'ASC']);
         }
-                
+
         $results = [];
         for ($i = 0; $i < count($users); $i++) {
             $results[$i]['id'] = $users[$i]->getId();
@@ -108,7 +108,7 @@ class RideData
         usort($results, [$this, 'sortByTotal']);
         return ['users' => $results, 'months' => $months];
     }
-    
+
     public function setPoints($km)
     {
         //For 100km, you get 10 points
@@ -119,7 +119,7 @@ class RideData
         elseif ($km >= 150) {
             //take first 100km off to work out additional points
             $km = $km - 100;
-           
+
             //Could instead / 10?
            return 10 + floor($km/50) * 5; //add
         }

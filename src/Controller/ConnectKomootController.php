@@ -8,9 +8,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Persistence\ManagerRegistry;
 
 class ConnectKomootController extends AbstractController
 {
+    public function __construct(private ManagerRegistry $doctrine) {}
+
     /**
      * @Route("/connect/komoot", name="connect_komoot")
      */
@@ -55,7 +58,7 @@ class ConnectKomootController extends AbstractController
             $user->setPreferredProvider('komoot');
 
             //Persist user object
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->doctrine->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
 

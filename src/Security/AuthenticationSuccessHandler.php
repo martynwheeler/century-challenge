@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouterInterface;
@@ -19,9 +20,9 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $this->router = $router;
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token)
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
     {
-        $providerKey = $token->getProviderKey();;
+        $firewallName = $token->getFirewallName();
         $user = $token->getUser();
         //Check for missing refresh tokens and redirect is necessary
         if ($user->getKomootID() && !$user->getKomootRefreshToken()) {
@@ -30,7 +31,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             return new RedirectResponse($this->router->generate('connect_strava'));
         }
 
-        if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
+        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
         if ($targetPath = $request->getSession()->remove('redirectTo')) {

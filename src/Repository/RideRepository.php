@@ -51,7 +51,7 @@ class RideRepository extends ServiceEntityRepository
     /**
      * @return Ride[] Returns an array of Ride objects
      */
-    public function findRidesByYear($year)
+    public function findRidesByYear($year): array
     {
         return $this->createQueryBuilder('r')
             ->andWhere('r.date >= :year')

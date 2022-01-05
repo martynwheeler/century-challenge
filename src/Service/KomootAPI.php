@@ -13,8 +13,8 @@ use Symfony\Component\HttpClient\HttpClient;
 
 class KomootAPI
 {
-    const BASE_URL = 'https://auth.komoot.de/';
-    const API_URL = 'https://external-api.komoot.de/v007/';
+    public const BASE_URL = 'https://auth.komoot.de/';
+    public const API_URL = 'https://external-api.komoot.de/v007/';
 
     private $em;
 
@@ -33,7 +33,7 @@ class KomootAPI
      * @return mixed
      * @throws \Exception
      */
-    protected function request($token, $url, $query = [])
+    protected function request($token, $url, $query = []): mixed
     {
         try {
             //Create a new client
@@ -56,7 +56,7 @@ class KomootAPI
         //Return the body of the response object as an array
         return $content;
     }
-    
+
     /**
      * Gets a new token using the current refresh token
      *
@@ -65,7 +65,7 @@ class KomootAPI
      * @return string
      * @throws \Exception
      */
-    public function getToken($user)
+    public function getToken($user): string
     {
         try {
             //Create a new client
@@ -102,7 +102,7 @@ class KomootAPI
      * @return array
      * @throws \Exception
      */
-    public function getAthlete($token, $user)
+    public function getAthlete($token, $user): array
     {
         $url = 'users/' . $user;
         $athlete = $this->request($token, $url);
@@ -123,7 +123,7 @@ class KomootAPI
      * @return array
      * @throws \Exception
      */
-    public function getAthleteActivitiesThisMonth($token, $user)
+    public function getAthleteActivitiesThisMonth($token, $user): array
     {
         //Get date of first day of month
         $after = new \DateTime();
@@ -157,8 +157,8 @@ class KomootAPI
                         'date' => \DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $athleteactivity['date']),
                         'distance' => $athleteactivity['distance'],
                         'average' => $athleteactivity['distance']/$athleteactivity['time_in_motion'] * 3600,
-                    ];  
-                }   
+                    ];
+                }
             }
         }
 
@@ -176,7 +176,7 @@ class KomootAPI
      * @return array
      * @throws \Exception
      */
-    public function getAthleteActivity($token, $id)
+    public function getAthleteActivity($token, $id): array
     {
         //Set up request
         $url = 'tours/' . $id;
@@ -208,7 +208,7 @@ class KomootAPI
      * @return boolean
      * @throws \Exception
      */
-    public function isClubRide($token, $id, $date)
+    public function isClubRide($token, $id, $date): bool
     {
         //Set up request
         $url = 'tours/' . $id . '/coordinates';
@@ -255,7 +255,7 @@ class KomootAPI
      *
      * @return float
      */
-    public function getGPXDistance($latitude1, $longitude1, $latitude2, $longitude2)
+    public function getGPXDistance($latitude1, $longitude1, $latitude2, $longitude2): float
     {
         $earth_radius = 6371;
         $dLat = deg2rad($latitude2 - $latitude1);
@@ -274,7 +274,7 @@ class KomootAPI
      *
      * @return date
      */
-    public function date_compare($a, $b)
+    public function date_compare($a, $b): date
     {
         $t1 = $a['date']->getTimestamp();
         $t2 = $b['date']->getTimestamp();

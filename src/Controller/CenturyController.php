@@ -10,14 +10,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CenturyController extends AbstractController
 {
-    /**
-     * @Route("/", name="homepage")
-     */
+    #[Route('/', name: 'homepage')]
     public function index(Request $request, RideData $rd)
     {
         //Read latest ride data
         $data = $rd->getRideData(null);
-        
+
         //Read in any warning messages
         @$motd = file_get_contents('resources/motd.json');
         if (!$motd) {
@@ -30,7 +28,7 @@ class CenturyController extends AbstractController
             }
             $motd['message'] = $message;
         }
-        
+
         //render the page
         return $this->render('index.html.twig', [
             'users' => $data['users'],

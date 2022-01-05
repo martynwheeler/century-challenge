@@ -11,7 +11,7 @@ class LeaderboardController extends AbstractController
     /**
      * @Route("/leaderboard/{year}", name="leaderboard")
      */
-    public function leaderboard($year = null, RideData $rd)
+    public function leaderboard(RideData $rd, $year = null)
     {
         $data = $rd->getRideData($year);
 

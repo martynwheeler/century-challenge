@@ -10,9 +10,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 //use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 class ChangePasswordController extends AbstractController
 {
+    public function __construct(private ManagerRegistry $doctrine) {}
+
     /**
      * @Route("/profile/{username}/changepassword", name="changepassword")
      */
@@ -21,7 +24,7 @@ class ChangePasswordController extends AbstractController
         $changePasswordModel = new ChangePassword();
         $form = $this->createForm(ChangePasswordFormType::class, $changePasswordModel);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
             $user->setPassword(
@@ -30,7 +33,7 @@ class ChangePasswordController extends AbstractController
                     $form->get('newPassword')->getData()
                 )
             );
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->doctrine->getManager();
             $entityManager->flush();
 
             // do anything else you need here, like send an email

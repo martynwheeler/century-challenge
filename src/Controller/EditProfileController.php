@@ -9,17 +9,11 @@ use App\Service\StravaAPI;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Persistence\ManagerRegistry;
 
 class EditProfileController extends AbstractController
 {
-    private $komoot_api;
-    private $strava_api;
-
-    public function __construct(StravaAPI $strava_api, KomootAPI $komoot_api)
-    {
-        $this->komoot_api = $komoot_api;
-        $this->strava_api = $strava_api;
-    }
+    public function __construct(private ManagerRegistry $doctrine, private StravaAPI $strava_api, private KomootAPI $komoot_api) {}
 
     /**
      * @Route("/profile/{username}/editprofile", name="editprofile")
@@ -62,17 +56,17 @@ class EditProfileController extends AbstractController
             'stravaAthlete' => $stravaAthlete,
         ]);
         $form->handleRequest($request);
-        
+
         //Process form data
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->doctrine->getManager();
             $entityManager->flush();
 
             // do anything else you need here, like send an email
             $this->addFlash('success', $user->getName().', you have sucessfully updated your profile');
             return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUsername()]);
         }
-        
+
         return $this->render('registration/edit.html.twig', [
             'registrationForm' => $form->createView(),
 //            'service' => $user->getPreferredProvider(),

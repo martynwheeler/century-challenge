@@ -15,9 +15,12 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
+use Doctrine\Persistence\ManagerRegistry;
 
 class ForgotPasswordController extends AbstractController
 {
+    public function __construct(private ManagerRegistry $doctrine) {}
+
     /**
      * @Route("/resetpassword", name="resetpassword")
      */
@@ -25,7 +28,7 @@ class ForgotPasswordController extends AbstractController
     {
         $form = $this->createForm(ForgotPasswordFormType::class);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             //Get the data from the submitted form
             $email = $form->getData()['email'];
@@ -36,7 +39,7 @@ class ForgotPasswordController extends AbstractController
                 ->subject('Message from Century Challenge')
             ;
             //Check that the user exists
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->doctrine->getManager();
             $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
             if (!$user instanceof User) {
                 //User not found --> send warning email
@@ -90,7 +93,7 @@ class ForgotPasswordController extends AbstractController
     public function resetPasswordCheck(Request $request, $token, UserPasswordHasherInterface $passwordHasher, UserAuthenticatorInterface $userAuthenticator, FormLoginAuthenticator $formLoginAuthenticator)
     {
         //test whether the link is valid
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->doctrine->getManager();
         $user = $entityManager->getRepository(User::class)->findOneBy(['passwordRequestToken' => hash("md5", $token)]);
         if (!$user instanceof User || !$token) {
             $this->addFlash('danger', "This reset link is invalid, please request a new link.");
@@ -103,10 +106,10 @@ class ForgotPasswordController extends AbstractController
                 return $this->redirectToRoute('resetpassword');
             }
         }
-        
+
         $form = $this->createForm(ResetPasswordFormType::class);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $form->get('newPassword')->getData();
             $password = $passwordHasher->hashPassword($user, $plainPassword);

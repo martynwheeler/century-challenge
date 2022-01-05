@@ -13,9 +13,12 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
+use Doctrine\Persistence\ManagerRegistry;
 
 class RegistrationController extends AbstractController
 {
+    public function __construct(private ManagerRegistry $doctrine) {}
+    
     /**
      * @Route("/register", name="register")
      */
@@ -35,7 +38,7 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->doctrine->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
@@ -47,7 +50,7 @@ class RegistrationController extends AbstractController
                 $request
             );
         }
-        
+
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView()
         ]);

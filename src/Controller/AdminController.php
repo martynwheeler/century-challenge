@@ -16,7 +16,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin/email", name="email")
      */
-    public function sendEmail(Request $request, $year = null, RideData $rd, MailerInterface $mailer)
+    public function sendEmail(Request $request, RideData $rd, MailerInterface $mailer, $year = null)
     {
         //Create a form for text entry
         $form = $this->createFormBuilder()
@@ -30,7 +30,7 @@ class AdminController extends AbstractController
         ])
         ->getForm();
 
-        
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $emailFormData = $form->getData();

@@ -10,9 +10,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Persistence\ManagerRegistry;
 
 class AddrideController extends AbstractController
 {
+    public function __construct(private ManagerRegistry $doctrine) {}
+
     /**
      * @Route("/addride", name="addride")
      */
@@ -93,7 +96,7 @@ class AddrideController extends AbstractController
                 }
             }
             //Maybe do some error checking here?
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->doctrine->getManager();
             $entityManager->persist($ride);
             $entityManager->flush();
 
@@ -101,14 +104,14 @@ class AddrideController extends AbstractController
             $this->addFlash('success', $this->getUser()->getName().', you have sucessfully added your ride');
             return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUsername()]);
         }
-        
+
         return $this->render('modifyridedata/ride.html.twig', [
             'addrideForm' => $form->createView(),
             'name' => $athleteName,
             'service' => $user->getPreferredProvider(),
         ]);
     }
-    
+
     /**
      * @Route("/addride/manual", name="addridemanual")
      */
@@ -118,7 +121,7 @@ class AddrideController extends AbstractController
         $ride = new Ride();
         $ride->setUser($user);
         $ride->setClubRide(false);
-        
+
         //This could be a dropdown on the form
         $ride->setSource($user->getPreferredProvider());
 
@@ -177,7 +180,7 @@ class AddrideController extends AbstractController
             } elseif (!$isValidID) {
                 $this->addFlash('danger', 'Invalid Ride ID, please check and try again.');
             } else {
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->doctrine->getManager();
                 $entityManager->persist($ride);
                 $entityManager->flush();
 

@@ -1,5 +1,7 @@
 <?php
+
 // src/Form/Model/ChangePassword.php
+
 namespace App\Form\Model;
 
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
@@ -13,7 +15,7 @@ class ChangePassword
      * )
      */
     protected $oldPassword;
-         
+
     public function getOldPassword()
     {
         return $this->oldPassword;
@@ -22,7 +24,7 @@ class ChangePassword
     public function setOldPassword($oldPassword)
     {
         $this->oldPassword = $oldPassword;
-        
+
         return $this;
     }
 }
