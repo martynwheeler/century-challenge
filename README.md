@@ -1,2 +1,2 @@
 # centurychallenge
-Century Challenge rewritten for symfony 5
+Century Challenge rewritten for symfony 6
