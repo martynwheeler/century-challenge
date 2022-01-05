@@ -14,9 +14,7 @@ class ConnectKomootController extends AbstractController
 {
     public function __construct(private ManagerRegistry $doctrine) {}
 
-    /**
-     * @Route("/connect/komoot", name="connect_komoot")
-     */
+    #[Route('/connect/komoot', name: 'connect_komoot')]
     public function connectAction(ClientRegistry $clientRegistry)
     {
         // on Symfony 3.3 or lower, $clientRegistry = $this->get('knpu.oauth2.registry');
@@ -32,9 +30,8 @@ class ConnectKomootController extends AbstractController
      * After going to Komoot, you're redirected back here
      * because this is the "redirect_route" you configured
      * in config/packages/knpu_oauth2_client.yaml
-     *
-     * @Route("/connect/komoot/check", name="connect_komoot_check")
      */
+    #[Route('/connect/komoot/check', name: 'connect_komoot_check')]
     public function connectCheckAction(Request $request, ClientRegistry $clientRegistry)
     {
         /** @var \MartynWheeler\OAuth2\Client\Provider\Komoot $client */

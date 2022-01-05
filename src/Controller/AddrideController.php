@@ -16,9 +16,7 @@ class AddrideController extends AbstractController
 {
     public function __construct(private ManagerRegistry $doctrine) {}
 
-    /**
-     * @Route("/addride", name="addride")
-     */
+    #[Route('/addride', name: 'addride')]
     public function addride(Request $request, StravaAPI $strava_api, KomootAPI $komoot_api)
     {
         //Get the user and set up ride object
@@ -112,9 +110,7 @@ class AddrideController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/addride/manual", name="addridemanual")
-     */
+    #[Route('/addride/manual', name: 'addridemanual')]
     public function addridemanual(Request $request, StravaAPI $strava_api, KomootAPI $komoot_api)
     {
         $user = $this->getUser();

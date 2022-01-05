@@ -8,9 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class LeaderboardController extends AbstractController
 {
-    /**
-     * @Route("/leaderboard/{year}", name="leaderboard")
-     */
+    #[Route('/leaderboard/{year}', name: 'leaderboard')]
     public function leaderboard(RideData $rd, $year = null)
     {
         $data = $rd->getRideData($year);

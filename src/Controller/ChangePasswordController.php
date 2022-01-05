@@ -16,9 +16,7 @@ class ChangePasswordController extends AbstractController
 {
     public function __construct(private ManagerRegistry $doctrine) {}
 
-    /**
-     * @Route("/profile/{username}/changepassword", name="changepassword")
-     */
+    #[Route('/profile/{username}/changepassword', name: 'changepassword')]
     public function changepassword(Request $request, UserPasswordHasherInterface $passwordHasher)
     {
         $changePasswordModel = new ChangePassword();

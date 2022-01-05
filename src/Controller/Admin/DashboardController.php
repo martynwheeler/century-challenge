@@ -14,9 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractDashboardController
 {
-    /**
-     * @Route("/admin")
-     */
+    #[Route('/admin', name: 'easyadmin')]
     public function index(): Response
     {
         // redirect to some CRUD controller

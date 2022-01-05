@@ -13,9 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AdminController extends AbstractController
 {
-    /**
-     * @Route("/admin/email", name="email")
-     */
+    #[Route('/admin/email', name: 'email')]
     public function sendEmail(Request $request, RideData $rd, MailerInterface $mailer, $year = null)
     {
         //Create a form for text entry

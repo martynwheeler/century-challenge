@@ -21,9 +21,7 @@ class ForgotPasswordController extends AbstractController
 {
     public function __construct(private ManagerRegistry $doctrine) {}
 
-    /**
-     * @Route("/resetpassword", name="resetpassword")
-     */
+    #[Route('/resetpassword', name: 'resetpassword')]
     public function resetPassword(Request $request, MailerInterface $mailer)
     {
         $form = $this->createForm(ForgotPasswordFormType::class);
@@ -87,9 +85,7 @@ class ForgotPasswordController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/resetpassword/confirm/{token}", name="resetpassword_confirm")
-     */
+    #[Route('/resetpassword/confirm/{token}', name: 'resetpassword_confirm')]
     public function resetPasswordCheck(Request $request, $token, UserPasswordHasherInterface $passwordHasher, UserAuthenticatorInterface $userAuthenticator, FormLoginAuthenticator $formLoginAuthenticator)
     {
         //test whether the link is valid

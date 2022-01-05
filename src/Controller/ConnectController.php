@@ -8,9 +8,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ConnectController extends AbstractController
 {
-    /**
-     * @Route("/connect", name="connect")
-     */
+    #[Route('/connect', name: 'connect')]
     public function index()
     {
         try {

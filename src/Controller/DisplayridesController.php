@@ -8,9 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DisplayridesController extends AbstractController
 {
-    /**
-    * @Route("/profile/{username}", name="displayrides")
-     */
+    #[Route('/profile/{username}', name: 'displayrides')]
     public function index($username, RideData $rd)
     {
         $data = $rd->getRideData(null, $username);

@@ -15,9 +15,7 @@ class EditProfileController extends AbstractController
 {
     public function __construct(private ManagerRegistry $doctrine, private StravaAPI $strava_api, private KomootAPI $komoot_api) {}
 
-    /**
-     * @Route("/profile/{username}/editprofile", name="editprofile")
-     */
+    #[Route('/profile/{username}/editprofile', name: 'editprofile')]
     public function register(Request $request)
     {
         //Get the current user

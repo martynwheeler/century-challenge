@@ -14,9 +14,7 @@ class ConnectStravaController extends AbstractController
 {    
     public function __construct(private ManagerRegistry $doctrine) {}
     
-    /**
-     * @Route("/connect/strava", name="connect_strava")
-     */
+    #[Route('/connect/strava', name: 'connect_strava')]
     public function connectAction(ClientRegistry $clientRegistry)
     {
         // on Symfony 3.3 or lower, $clientRegistry = $this->get('knpu.oauth2.registry');
@@ -32,9 +30,8 @@ class ConnectStravaController extends AbstractController
      * After going to Strava, you're redirected back here
      * because this is the "redirect_route" you configured
      * in config/packages/knpu_oauth2_client.yaml
-     *
-     * @Route("/connect/strava/check", name="connect_strava_check")
      */
+    #[Route('/connect/strava/check', name: 'connect_strava_check')]
     public function connectCheckAction(Request $request, ClientRegistry $clientRegistry)
     {
         /** @var \MartynWheeler\OAuth2\Client\Provider\Strava $client */

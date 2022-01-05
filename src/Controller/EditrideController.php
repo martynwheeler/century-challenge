@@ -14,9 +14,7 @@ class EditrideController extends AbstractController
 {
     public function __construct(private ManagerRegistry $doctrine) {}
 
-    /**
-     * @Route("/ride/{ride_id}/delete", name="deleteride")
-     */
+    #[Route('/ride/{ride_id}/delete', name: 'deleteride')]
     public function delete(Request $request, $ride_id)
     {
         $repository = $this->doctrine->getRepository(Ride::class);
@@ -43,9 +41,7 @@ class EditrideController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/ride/{ride_id}/editride", name="editride")
-     */
+    #[Route('/ride/{ride_id}/editride', name: 'editride')]
     public function edit(Request $request, $ride_id)
     {
         $repository = $this->doctrine->getRepository(Ride::class);
