@@ -67,7 +67,7 @@ class EditProfileController extends AbstractController
 
         return $this->render('registration/edit.html.twig', [
             'registrationForm' => $form->createView(),
-//            'service' => $user->getPreferredProvider(),
+            'service' => $user->getPreferredProvider(),
         ]);
     }
 }

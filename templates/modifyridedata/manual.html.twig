@@ -6,26 +6,20 @@ Add Ride
 Edit Ride
 {% endif %}
 {% endblock %}
-{% block stylesheets %}
-{{ parent() }}
-<link href="https://unpkg.com/gijgo@1.9.11/css/gijgo.min.css" rel="stylesheet" type="text/css" />
-{% endblock %}
+
 {% block body %}
-<div class="row justify-content-center">
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-header text-center">
+{% if app.request.attributes.get("_route") == 'addridemanual' %}
+<h3 class="text-center">Add Ride</h3>
+{% else %}
+<h3 class="text-center">Edit Ride</h3>
+{% endif %}
+<div class="form-signup">
 	{% if app.request.attributes.get("_route") == 'addridemanual' %}
-	<h2>Add Ride</h2>
 	<p class="text-left">Please note that uploading via Strava/Komoot 
 		is the preferred method of registering your rides if you wish to be considered for the Century Challenge trophy.  If you 
 		are trying to enter a Ride ID on this page ensure that your default provider (Strava/Komoot) is correct by editing your 
 		<a href="{{ path('editprofile', {'username': app.user.username}) }}">profile</a>.</p>
-	{% else %}
-	<h2>Edit Ride</h2>
 	{% endif %}
-      </div>
-      <div class="card-body">
 	{{ form_start(addrideForm) }}
 	<div class="row">
 	  <div class="col">
@@ -62,23 +56,7 @@ Edit Ride
 	  </div>
 	</div>
 	<div class="help-inline pb-2 text-danger">* denotes required field</div>
-	<button type="submit" class="btn btn-success btn-block" name="submit">Submit Ride Data</button>
+	<button type="submit" class="btn btn-primary" name="submit">Submit Ride</button>
 	{{ form_end(addrideForm) }}
-      </div>
-    </div>
-  </div>
 </div>
-{% endblock %}
-{% block javascripts %}
-{{ parent() }}
-<script src="https://unpkg.com/gijgo@1.9.11/js/gijgo.min.js" type="text/javascript"></script>
-<script>
-  $(function(){
-      $('.datepicker').datepicker({
-          format: 'yyyy-mm-dd',
-	  uiLibrary: 'bootstrap4',
-	  iconsLibrary: 'fontawesome',
-      });
-  });
-</script>
 {% endblock %}

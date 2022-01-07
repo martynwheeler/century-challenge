@@ -1,25 +1,15 @@
 {% extends 'base.html.twig' %}
 {% block title %}Register{% endblock %}
 {% block body %}
-<div class="row justify-content-center">
-  <div class="col-md-7">
-    <div class="card">
-      <div class="card-header text-center">
-	    <h2>Enter your details below</h2>
-	      <p class="text-left">If the Strava name/ID displayed below is incorrect please click <a href="{{ path('logout') }}?redirect=https://www.strava.com">here</a>
-	       and log out of strava. Then log back in with the correct account.</p>
-      </div>
-      <div class="card-body">
-        {{ form_start(registrationForm) }}
-	    {{ form_row(registrationForm.username) }}
-	    {{ form_row(registrationForm.email) }}
-	    {{ form_row(registrationForm.name) }}
-	    {{ form_row(registrationForm.plainPassword) }}
-	    <div class="help-inline pb-2 text-danger">* denotes required field</div>
-	    <button type="submit" class="btn btn-success btn-block" name="submit">Register</button>
-	    {{ form_end(registrationForm) }}
-      </div>
-    </div>
-  </div>
+<h3 class="text-center">Enter your details below</h3>
+<div class="form-signup">
+	{{ form_start(registrationForm) }}
+		{{ form_row(registrationForm.username) }}
+		{{ form_row(registrationForm.email) }}
+		{{ form_row(registrationForm.name) }}
+		{{ form_row(registrationForm.plainPassword) }}
+		<div class="help-inline pb-2 text-danger">* denotes required field</div>
+		<button type="submit" class="btn btn-primary" name="submit">Register</button>
+	{{ form_end(registrationForm) }}
 </div>
 {% endblock %}

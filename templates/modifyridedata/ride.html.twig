@@ -1,25 +1,16 @@
 {% extends 'base.html.twig' %}
 {% block title %}Add Ride{% endblock %}
 {% block body %}
-<div class="row justify-content-center">
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-header text-center">
-	    <h2>Add Ride</h2>
-		  <p class="text-left">You are currently logged into {{ service|capitalize }} as <b>{{ name }}</b>. If this is incorrect please 
-         click <a href="{{ path('logout') }}?redirect={% if service == 'komoot' %}https://www.komoot.com{% elseif service == 'strava' %}https://www.strava.com{% endif %}">here</a>
-	       and log out of {{ service|capitalize }}. Then log back in with the correct account.</p>
-          <p class="text-left">If you would like to enter the ride manually then follow <a href="{{ path('addridemanual') }}">this link</a><p>
-      </div>
-      <div class="card-body">
-	    {{ form_start(addrideForm) }}
-	    {{ form_row(addrideForm.ride_id) }}
-	    <button type="submit" class="btn btn-success btn-block" name="submit">Submit Ride Data</button>
-	    {{ form_end(addrideForm) }}
-      </div>
-    </div>
-  </div>
-</div>
+<h3 class="text-center">Add Ride</h3>
+<div class="form-signup">
+<p class="text-left">You are currently logged into {{ service|capitalize }} as <b>{{ name }}</b>. If this is incorrect please 
+    click <a href="{{ path('logout') }}?redirect={% if service == 'komoot' %}https://www.komoot.com{% elseif service == 'strava' %}https://www.strava.com{% endif %}">here</a>
+    and log out of {{ service|capitalize }}. Then log back in with the correct account.</p>
+    <p class="text-left">If you would like to enter the ride manually then follow <a href="{{ path('addridemanual') }}">this link</a><p>
+{{ form_start(addrideForm) }}
+{{ form_row(addrideForm.ride_id) }}
+<button type="submit" class="btn btn-primary" name="submit">Submit Ride</button>
+{{ form_end(addrideForm) }}
 {% endblock %}
 
 		

@@ -4,7 +4,7 @@
 <h1>Leaderboard</h1>
 <p>Previous years: 
   {% set thisyear = "now"|date("Y") %}
-  {% for year in (thisyear - 4)..(thisyear - 1) %}
+  {% for year in (thisyear - 5)..(thisyear - 1) %}
   <a href="{{ path('leaderboard', {'year': year}) }}">{{ year }}</a>
   {% endfor %}
 </p>

@@ -28,7 +28,6 @@ security:
 
             logout:
                 path:   logout
-                target: homepage
 
             remember_me:
                 secret:   '%kernel.secret%'

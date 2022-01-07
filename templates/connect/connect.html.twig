@@ -1,13 +1,8 @@
 {% extends 'base.html.twig' %}
 {% block title %}Connect{% endblock %}
 {% block body %}
-<div class="row justify-content-center">
-  <div class="col-md-7">
-    <div class="card">
-      <div class="card-header text-center">
-	<h2>Connect to External Services</h2>
-      </div>
-      <div class="card-body">
+<h3 class="text-center">Connect to External Services</h3>
+<div class="form-signup" style="background-color:#ffffff">
 	<p>If you would like to register your rides from Strava you will need to authorise this site to have read access to your Strava account. 
 	  Clicking the button below will redirect you to the Strava website, you will then need to sign in and grant access.</p>
 	<div class="row justify-content-center pb-3">
@@ -26,8 +21,5 @@
 	<div class="row justify-content-center pb-3">
 	  <a class="btn btn-secondary col-md-3" href="{{ path('homepage') }}" role="button">No thanks</a>
 	</div>
-      </div>
-    </div>
-  </div>
 </div>
 {% endblock %}

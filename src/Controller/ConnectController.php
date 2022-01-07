@@ -17,7 +17,7 @@ class ConnectController extends AbstractController
         } catch (Exception $e) {
             print $e->getMessage();
         }
-        return $this->render('connect/index.html.twig', [
+        return $this->render('connect/connect.html.twig', [
             'stravaurl' => $stravaurl,
             'komooturl' => $komooturl,
         ]);

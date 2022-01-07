@@ -1,32 +1,25 @@
 {% extends 'base.html.twig' %}
 {% block title %}Message Users{% endblock %}
 {% block body %}
-<div class="row justify-content-center">
-  <div class="col-md-7">
-    <div class="card">
-      <div class="card-header text-center">
-	      <h2>Message Users</h2>
-      </div>
-      <div class="card-body">
+<h3 class="text-center">Message Users</h3>
+<div class="form-signup">
 	{{ form_start(email_form) }}
-	{{ form_widget(email_form) }}
-        <div class="row">
-          <div class="col-sm">
-            <button type="button" onclick="monthReminder()" class="btn btn-light btn-block">Monthly Message</button>
-          </div>
-          <div class="col-sm">
-            <button type="button" onclick="annualMessage()" class="btn btn-light btn-block">Annual Message</button>
-          </div>
-        </div>
-	<div class="help-inline pb-2 text-danger">* denotes required field</div>
-	<button type="submit" class="btn btn-success btn-block" name="submit">Send</button>
-	{{ form_end(email_form) }}
+    {{ form_widget(email_form) }}
+    <div class="row mb-1">
+      <div class="d-grid col-6">
+          <button type="button" onclick="monthReminder()" class="btn btn-outline-secondary" style="width:auto">Monthly Message</button>
+      </div>
+      <div class="d-grid col-6">
+          <button type="button" onclick="annualMessage()" class="btn btn-outline-secondary" style="width:auto">Annual Message</button>
       </div>
     </div>
-  </div>
+    <div class="help-inline pb-2 text-danger">* denotes required field</div>
+    <button type="submit" class="btn btn-primary" name="submit">Send</button>
+	{{ form_end(email_form) }}
 </div>
 
 {% endblock %}
+
 {% block javascripts %}
 {{ parent() }}
 <script>

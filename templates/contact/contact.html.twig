@@ -1,20 +1,12 @@
 {% extends 'base.html.twig' %}
-{% block title %}Contact Form{% endblock %}
+{% block title %}Contact{% endblock %}
 {% block body %}
-<div class="row justify-content-center">
-  <div class="col-md-7">
-    <div class="card">
-      <div class="card-header text-center">
-	<h2>Contact Form</h2>
-      </div>
-      <div class="card-body">
+<h3 class="text-center">Contact Century Challenge</h3>
+<div class="form-signup">
 	{{ form_start(email_form) }}
-	{{ form_widget(email_form) }}
-	<div class="help-inline pb-2 text-danger">* denotes required field</div>
-	<button type="submit" class="btn btn-success btn-block" name="submit">Send</button>
+    {{ form_widget(email_form) }}
+    <div class="help-inline pb-2 text-danger">* denotes required field</div>
+    <button type="submit" class="btn btn-primary" name="submit">Send</button>
 	{{ form_end(email_form) }}
-      </div>
-    </div>
-  </div>
 </div>
 {% endblock %}

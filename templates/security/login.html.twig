@@ -1,37 +1,31 @@
 {% extends 'base.html.twig' %}
-{% block title %}Log in{% endblock %}
+{% block title %}Sign in{% endblock %}
 {% block body %}
-<div class="row justify-content-center ">
-  <div class="col-md-4">
-    <div class="card">
-      <div class="card-header text-center">
-	<h2>Log in</h2>
-      </div>
-      <div class="card-body">
-	<form method="post">
-	  {% if error %}
-	  <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-	  {% endif %}
-	  <div class="form-group">
-	    <input type="text" value="{{ last_username }}" name="_username" id="inputUsername" class="form-control" placeholder="Username" required autofocus/>
-	  </div>
-	  <div class="form-group">
-	    <input type="password" name="_password" id="inputPassword" class="form-control" placeholder="Password" required/>
-	  </div>
-	  <div class="form-group">
-	    <button type="submit" class="btn btn-success btn-block">Log in</button>
-	  </div>
-	  <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
-	  <div class="clearfix">
-	    <label class="pull-left checkbox-inline">
-	      <input type="checkbox" name="_remember_me"/> Remember me
-	    </label>
-	    <a href="{{ path('resetpassword') }}" class="float-right">Forgot Password?</a>
-	  </div>	
-	</form>
-	<p class="text-center pt-3"><a href="{{ path('register') }}">Create an Account</a></p>
-      </div>
-    </div>
-  </div>
+<h3 class="text-center">Please sign in</h3>
+<div class="form-signin text-center">
+    <form action="" method="post" novalidate>
+		{% if error %}
+	  		<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+	  	{% endif %}
+        <div class="form-floating">
+		    <input type="text" value="{{ last_username }}" name="_username" id="floatingInput" class="form-control" placeholder="Username" required autofocus/>
+			<label for="floatingInput">Username</label>
+        </div>
+        <div class="form-floating">
+		    <input type="password" name="_password" id="floatingPassword" class="form-control" placeholder="Password" required/>
+			<label for="floatingInput">Password</label>
+        </div>
+
+        <div class="checkbox mb-3">
+			<label class="pull-left checkbox-inline">
+				<input type="checkbox" name="_remember_me"/> Remember me
+			</label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+		<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
+    </form>
 </div>
+<p class="text-center">Forgot Your Password? <a href="{{ path('resetpassword') }}">Click to Reset</a></p>
+<p class="text-center pt-3"><a href="{{ path('register') }}">Create an Account</a></p>
+
 {% endblock %}

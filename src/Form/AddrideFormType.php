@@ -29,11 +29,6 @@ class AddrideFormType extends AbstractType
             ->add('date', DateType::class, [
                 'label' => 'Date of ride *',
                 'widget' => 'single_text',
-                'html5' => false,
-                'format' => 'yyyy-MM-dd',
-                'attr' => [
-                    'class' => 'datepicker',
-                ],
             ])
             ->add('details', TextareaType::class, [
                 'label' => 'Notes',

@@ -28,7 +28,6 @@ class AdminController extends AbstractController
         ])
         ->getForm();
 
-
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $emailFormData = $form->getData();
