@@ -8,73 +8,75 @@
   <a href="{{ path('leaderboard', {'year': year}) }}">{{ year }}</a>
   {% endfor %}
 </p>
-<table class="table table-striped table-bordered table-sm table-responsive-sm">
-  <thead>
-    <tr>
-      <th style="width:40px">Rank</th>
-      <th>Name</th>
-      <th>Total</th>
-      <th>Clubride Centuries</th>
-      {% for month in months %}
-      <th>{{ month }}</th>
-      {% endfor %}
-    </tr>
-  </thead>
-  <tbody>
-    {% set counter = 0 %}
-    {% for user in users %}
-    {% if user.isDisqualified != true %}
-    <tr>
-      <td style="width:40px; text-align:right">
-	{% set counter = counter + 1 %}{{ counter }}
-      </td>
-      <td>
-	{% if is_granted('ROLE_USER') %}
-	<a href="{{ path('displayrides', {'username': user.username}) }}">{{ user.name }}</a>
-	{% else %}
-	{{ user.privatename }}
-	{% endif %}
-      </td>
-      <td>
-	{{ user.totalpoints }}				
-      </td>
-      <td>
-	{{ user.totalclubrides }}				
-      </td>
-      {% for month in user.months %}
-      <td>
-	{{ month.points }}
-      </td>
-      {% endfor %}
-    </tr>
-    {% endif %}
-    {% endfor %}
-    <tr><td class="center" colspan="{{ months | length + 3}}"><strong>Disqualified</strong></td></tr>
-    {% for user in users %}
-    {% if user.isDisqualified == true %}
-    <tr>
-      <td></td>
-      <td>
-	{% if is_granted('ROLE_USER') %}
-	<a href="{{ path('displayrides', {'username': user.username}) }}">{{ user.name }}</a>
-	{% else %}
-	{{ user.privatename }}
-	{% endif %}			
-      </td>
-      <td>
-	{{ user.totalpoints }}				
-      </td>
-      <td>
-	{{ user.totalclubrides }}				
-      </td>
-      {% for month in user.months %}
-      <td>
-	{{ month.points }}
-      </td>
-      {% endfor %}
-    </tr>
-    {% endif %}
-    {% endfor %}
-  </tbody>
-</table>
+<div class="table-responsive">
+      <table class="table table-striped table-bordered table-sm">
+            <thead>
+            <tr>
+                  <th style="width:40px">Rank</th>
+                  <th>Name</th>
+                  <th>Total</th>
+                  <th>Clubride Centuries</th>
+                  {% for month in months %}
+                  <th>{{ month }}</th>
+                  {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% set counter = 0 %}
+            {% for user in users %}
+            {% if user.isDisqualified != true %}
+            <tr>
+                  <td style="width:40px; text-align:right">
+                  {% set counter = counter + 1 %}{{ counter }}
+                  </td>
+                  <td>
+                  {% if is_granted('ROLE_USER') %}
+                  <a href="{{ path('displayrides', {'username': user.username}) }}">{{ user.name }}</a>
+                  {% else %}
+                  {{ user.privatename }}
+                  {% endif %}
+                  </td>
+                  <td>
+                  {{ user.totalpoints }}				
+                  </td>
+                  <td>
+                  {{ user.totalclubrides }}				
+                  </td>
+                  {% for month in user.months %}
+                  <td>
+                  {{ month.points }}
+                  </td>
+                  {% endfor %}
+            </tr>
+            {% endif %}
+            {% endfor %}
+            <tr><td class="center" colspan="{{ months | length + 3}}"><strong>Disqualified</strong></td></tr>
+            {% for user in users %}
+            {% if user.isDisqualified == true %}
+            <tr>
+                  <td></td>
+                  <td>
+                  {% if is_granted('ROLE_USER') %}
+                  <a href="{{ path('displayrides', {'username': user.username}) }}">{{ user.name }}</a>
+                  {% else %}
+                  {{ user.privatename }}
+                  {% endif %}			
+                  </td>
+                  <td>
+                  {{ user.totalpoints }}				
+                  </td>
+                  <td>
+                  {{ user.totalclubrides }}				
+                  </td>
+                  {% for month in user.months %}
+                  <td>
+                  {{ month.points }}
+                  </td>
+                  {% endfor %}
+            </tr>
+            {% endif %}
+            {% endfor %}
+            </tbody>
+      </table>
+</div>
 {% endblock %}

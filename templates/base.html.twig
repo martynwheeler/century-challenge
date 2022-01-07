@@ -96,12 +96,12 @@
                   <li><a class="dropdown-item" aria-current="page" href="{{ path('connect') }}">Connect Services</a></li>
                   <li><a class="dropdown-item" aria-current="page" href="{{ path('editprofile', {'username': app.user.username}) }}">Edit profile</a></li>
                   <li><a class="dropdown-item" aria-current="page" href="{{ path('changepassword', {'username': app.user.username}) }}">Change password</a></li>
-                  <li><a class="dropdown-item" aria-current="page" href="{{ path('logout') }}">Logout <i class="fas fa-sign-out-alt"></i></a></li>
+                  <li><a class="dropdown-item" aria-current="page" href="{{ path('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 </ul>
               </li>
 			  {% else %}
 			  <li class="nav-item">
-				<a class="nav-link" aria-current="page" href="{{ path('login') }}">Sign in <i class="fas fa-sign-in-alt"></i></a>
+				<a class="nav-link" aria-current="page" href="{{ path('login') }}"><i class="fas fa-sign-in-alt"></i> Sign in</a>
 	  		  </li>
 			  {% endif %}
             </ul>
@@ -115,7 +115,7 @@
       {% for type, messages in app.session.flashbag.all() %}
         {% for message in messages %}
         <div class="alert alert-{{ type }} alert-dismissible text-center col-sm-8 col-md-8 mx-auto" role="alert">
-          <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           {{ message | raw }}
         </div>
         {% endfor %}
