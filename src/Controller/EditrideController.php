@@ -36,8 +36,8 @@ class EditrideController extends AbstractController
             $this->addFlash('success', $this->getUser()->getName().', you have sucessfully deleted your ride');
             return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUsername()]);
         }
-        return $this->render('modifyridedata/delete.html.twig', [
-            'deleterideForm' => $form->createView(),
+        return $this->renderForm('modifyridedata/delete.html.twig', [
+            'deleterideForm' => $form,
         ]);
     }
 
@@ -69,8 +69,8 @@ class EditrideController extends AbstractController
                 $this->addFlash('danger', 'You cannot enter a ride for last month!');
             }
         }
-        return $this->render('modifyridedata/manual.html.twig', [
-            'addrideForm' => $form->createView(),
+        return $this->renderForm('modifyridedata/manual.html.twig', [
+            'addrideForm' => $form,
         ]);
     }
 }

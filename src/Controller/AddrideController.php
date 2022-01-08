@@ -103,8 +103,8 @@ class AddrideController extends AbstractController
             return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUsername()]);
         }
 
-        return $this->render('modifyridedata/ride.html.twig', [
-            'addrideForm' => $form->createView(),
+        return $this->renderForm('modifyridedata/ride.html.twig', [
+            'addrideForm' => $form,
             'name' => $athleteName,
             'service' => $user->getPreferredProvider(),
         ]);
@@ -185,8 +185,8 @@ class AddrideController extends AbstractController
                 return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUsername()]);
             }
         }
-        return $this->render('modifyridedata/manual.html.twig', [
-            'addrideForm' => $form->createView(),
+        return $this->renderForm('modifyridedata/manual.html.twig', [
+            'addrideForm' => $form,
         ]);
     }
 }

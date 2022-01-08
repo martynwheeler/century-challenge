@@ -19,6 +19,7 @@ class ChangePasswordController extends AbstractController
     #[Route('/profile/{username}/changepassword', name: 'changepassword')]
     public function changepassword(Request $request, UserPasswordHasherInterface $passwordHasher)
     {
+        //if ($this->isCsrfTokenValid('delete-item', $submittedToken)) {
         $changePasswordModel = new ChangePassword();
         $form = $this->createForm(ChangePasswordFormType::class, $changePasswordModel);
         $form->handleRequest($request);
@@ -38,8 +39,8 @@ class ChangePasswordController extends AbstractController
             $this->addFlash('success', $user->getName().', you have sucessfully changed your password.');
             return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUsername()]);
         }
-        return $this->render('security/changepassword.html.twig', [
-            'changepasswordForm' => $form->createView()
+        return $this->renderForm('security/changepassword.html.twig', [
+            'changepasswordForm' => $form,
         ]);
     }
 }

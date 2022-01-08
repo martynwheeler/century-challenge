@@ -52,7 +52,7 @@ h3 {
   outline: none !important;
 }
 
-.form-signup {
+.form {
   width: 100%;
   max-width: 700px;
 	padding: 15px;
@@ -60,87 +60,19 @@ h3 {
   background-color: #e7e7e7;
 }
 
-.form-signup .form-left {
-	background-color: #004080;
-	border-top-left-radius: 10px;
-	border-bottom-left-radius: 10px;
-	padding: 20px 40px;
-	color: #fff;
-  border: 1px solid #abb3b9;
-  border-right: none;
-}
-
-.form-signup .form-left h1 {
-  margin: 0 0 15px;
-	position: relative;
-	text-align: center;
-}
-
-.form-signup .form-left .text {
-	margin: 20px 0 25px;
-}
-
-.form-signup .form-left .form-left-last {
-	font-size: 16px;
-	padding: 5px;
-  border: none;
-  border-radius: 4px;
-  outline: none !important;
-}
-
-.form-signup .form-right {
-  background: #f2f3f7;
-  padding: 20px 40px;
-  border-top-right-radius: 10px;
-	border-bottom-right-radius: 10px;
-  border: 1px solid #abb3b9;
-  border-left: none;
-}
-
-.form-signup .form-floating:focus-within {
-  z-index: 2;
-}
-
-.form-signup .btn {
+.form .btn {
   width: 150px;
   outline: none !important;
 }
 
-/* Responsive */
-@media screen and (max-width: 576px) {
-	.form-signup .form-left {
-		border-top-right-radius: 10px;
-		border-bottom-left-radius: 0;
-	}
-	.form-signup .form-right {
-		border-top-right-radius: 0;
-		border-bottom-left-radius: 10px;
-	}
+.form .bg-white {
+  background-color: #ffffff;
 }
 
-.form-profile {
-  width: 100%;
-	max-width: 700px;
-	margin: 0 auto;
-	padding: 0px 0;
-}
-
-.form-profile .btn {
-	font-size: 16px;
-	width: 100%;
-  outline: none !important;
+.form .form-floating:focus-within {
+  z-index: 2;
 }
 
 .form-password-reset {
-  width: 100%;
 	max-width: 330px;
-	margin: 0 auto;
-	padding: 0px 0;
 }
-
-.form-password-reset .btn {
-	font-size: 16px;
-	width: 100%;
-  outline: none !important;
-}
-

@@ -2,7 +2,7 @@
 {% block title %}Add Ride{% endblock %}
 {% block body %}
 <h3 class="text-center">Add Ride</h3>
-<div class="form-signup">
+<div class="form">
 <p class="text-left">You are currently logged into {{ service|capitalize }} as <b>{{ name }}</b>. If this is incorrect please 
     click <a href="{{ path('logout') }}?redirect={% if service == 'komoot' %}https://www.komoot.com{% elseif service == 'strava' %}https://www.strava.com{% endif %}">here</a>
     and log out of {{ service|capitalize }}. Then log back in with the correct account.</p>

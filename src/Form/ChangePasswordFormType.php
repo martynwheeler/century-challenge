@@ -18,6 +18,7 @@ class ChangePasswordFormType extends AbstractType
         $builder
             ->add('oldPassword', PasswordType::class, [
                 'label' => 'Current Password',
+                'attr' => ['placeholder' => 'Current Password'],
             ])
             ->add('newPassword', RepeatedType::class, [
                 // instead of being set onto the object directly,
@@ -37,8 +38,8 @@ class ChangePasswordFormType extends AbstractType
                 ],
                 'invalid_message' => 'The password fields must match.',
                 'options' => ['attr' => ['class' => 'password-field']],
-                'first_options'  => ['label' => 'Password'],
-                'second_options' => ['label' => 'Repeat Password'],
+                'first_options'  => ['label' => 'New Password', 'attr' => ['placeholder' => 'New Password']],
+                'second_options' => ['label' => 'Repeat New Password', 'attr' => ['placeholder' => 'Repeat New Password']],
             ])
         ;
     }

@@ -80,8 +80,8 @@ class ForgotPasswordController extends AbstractController
             $this->addFlash('success', 'You have been sent an email to '.$email.' with instructions on how to reset your password, please check your inbox and your spam folder.');
             return $this->redirectToRoute('homepage');
         }
-        return $this->render('security/forgotpassword.html.twig', [
-            'resetForm' => $form->createView()
+        return $this->renderForm('security/forgotpassword.html.twig', [
+            'resetForm' => $form,
         ]);
     }
 
@@ -120,8 +120,8 @@ class ForgotPasswordController extends AbstractController
                 $request
             );
         }
-        return $this->render('security/resetpassword.html.twig', [
-            'changepasswordForm' => $form->createView()
+        return $this->renderForm('security/resetpassword.html.twig', [
+            'changepasswordForm' => $form,
         ]);
     }
 }

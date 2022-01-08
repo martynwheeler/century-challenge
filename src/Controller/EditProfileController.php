@@ -65,8 +65,8 @@ class EditProfileController extends AbstractController
             return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUsername()]);
         }
 
-        return $this->render('registration/edit.html.twig', [
-            'registrationForm' => $form->createView(),
+        return $this->renderForm('registration/edit.html.twig', [
+            'registrationForm' => $form,
             'service' => $user->getPreferredProvider(),
         ]);
     }

@@ -50,8 +50,8 @@ class AdminController extends AbstractController
             $sentEmail = $mailer->send($message);
             return $this->redirectToRoute('homepage');
         }
-        return $this->render('admin/sendemail.html.twig', [
-            'email_form' => $form->createView(),
+        return $this->renderForm('admin/sendemail.html.twig', [
+            'email_form' => $form,
         ]);
     }
 }

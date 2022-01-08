@@ -32,8 +32,8 @@ class ContactController extends AbstractController
             $this->addFlash('success', 'Thank you for contacting the Century Challenge Admin, I will get back to you as soon as possible.');
             return $this->redirectToRoute('homepage');
         }
-        return $this->render('contact/contact.html.twig', [
-            'email_form' => $form->createView(),
+        return $this->renderForm('contact/contact.html.twig', [
+            'email_form' => $form,
         ]);
     }
 }

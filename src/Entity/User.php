@@ -86,7 +86,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $komootRefreshToken;
 
     /**
-     * @ORM\Column(type="bigint", nullable=true)
+     * @ORM\Column(type="bigint", nullable=true, options={"default" : 0})
      */
     private $komootTokenExpiry;
 
@@ -101,7 +101,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $stravaRefreshToken;
 
     /**
-     * @ORM\Column(type="bigint", nullable=true)
+     * @ORM\Column(type="bigint", nullable=true, options={"default" : 0})
      */
     private $stravaTokenExpiry;
 
