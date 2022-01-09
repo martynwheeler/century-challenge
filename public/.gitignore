@@ -1,4 +1,4 @@
 ###> symfony/framework-bundle ###
-/*.http
-/*.https
+/.htaccess.http
+/.htaccess.https
 ###< symfony/framework-bundle ###
