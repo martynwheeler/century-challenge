@@ -50,14 +50,14 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
-        - { path: ^/admin, roles: ROLE_SUPER_ADMIN, requires_channel: http }
-        - { path: ^/email, roles: ROLE_ADMIN, requires_channel: http }
-        - { path: ^/add, roles: ROLE_USER, requires_channel: http }
-        - { path: ^/profile, roles: ROLE_USER, requires_channel: http }
-        - { path: ^/connect, roles: ROLE_USER, requires_channel: http }
-        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: http }
-         # catch all other URLs
-        #- { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: http }
+        - { path: ^/admin, roles: ROLE_SUPER_ADMIN}
+        - { path: ^/email, roles: ROLE_ADMIN}
+        - { path: ^/add, roles: ROLE_USER}
+        - { path: ^/profile, roles: ROLE_USER}
+        - { path: ^/connect, roles: ROLE_USER}
+        - { path: ^/login, roles: PUBLIC_ACCESS}
+        # catch all other URLs
+        - { path: ^/, roles: PUBLIC_ACCESS}
 
 when@test:
     security:
