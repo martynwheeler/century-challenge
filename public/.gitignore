@@ -1,0 +1,4 @@
+###> symfony/framework-bundle ###
+/*.http
+/*.https
+###< symfony/framework-bundle ###
