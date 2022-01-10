@@ -4,7 +4,7 @@
 <h1>Century Challenge</h1>
 {% if motd != null %}
   <div class="alert alert-info text-left col-sm-8 col-md-8 mx-auto">
-    <strong>Important notice: </strong><p>{{ motd.date }} - {{ motd.message|raw }}</p>    
+    <strong>Notice to Century Challenge users: </strong><p>{{ motd.date }} - {{ motd.message|raw }}</p>    
   </div>
 {% endif %}
 <p>Welcome back to the LFCC Century Challenge{% if is_granted('ROLE_USER') %} {{ app.user.name }}{% endif %}. The current top 10 riders are:</p>
