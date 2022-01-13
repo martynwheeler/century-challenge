@@ -14,14 +14,14 @@ class CenturyController extends AbstractController
     public function index(Request $request, RideData $rd)
     {
         //Read latest ride data
-        $data = $rd->getRideData(null);
+        $data = $rd->getRideData(year: null, username: null);
 
         //Read in any warning messages
         @$motd = file_get_contents('resources/motd.json');
         if (!$motd) {
             $motd = null;
         } else {
-            $motd = json_decode($motd, true);
+            $motd = json_decode($motd, true, 512, JSON_THROW_ON_ERROR);
             $message = "";
             foreach ($motd['message'] as $line) {
                 $message .= $line;

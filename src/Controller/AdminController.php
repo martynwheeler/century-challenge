@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdminController extends AbstractController
 {
     #[Route('/admin/email', name: 'email')]
-    public function sendEmail(Request $request, RideData $rd, MailerInterface $mailer, $year = null)
+    public function sendEmail(Request $request, RideData $rd, MailerInterface $mailer)
     {
         //Create a form for text entry
         $form = $this->createFormBuilder()
@@ -40,7 +40,7 @@ class AdminController extends AbstractController
                 'Message from: '.$_ENV['MAILER_FROM']."\n\r".$emailFormData['message']
             );
             //Add BCC to non-disqualified users
-            $users = $rd->getRideData($year)['users'];
+            $users = $rd->getRideData(year: null, username: null)['users'];
             foreach ($users as $user) {
                 if (!$user['isDisqualified']) {
                     $message->addBcc($user['email']);

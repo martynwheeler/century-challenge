@@ -113,6 +113,7 @@ class AddrideController extends AbstractController
     #[Route('/addride/manual', name: 'addridemanual')]
     public function addridemanual(Request $request, StravaAPI $strava_api, KomootAPI $komoot_api)
     {
+        $athleteActivity = [];
         $user = $this->getUser();
         $ride = new Ride();
         $ride->setUser($user);

@@ -13,12 +13,7 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
     use TargetPathTrait;
-    private $router;
-
-    public function __construct(RouterInterface $router)
-    {
-        $this->router = $router;
-    }
+    public function __construct(private RouterInterface $router) {}
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
     {

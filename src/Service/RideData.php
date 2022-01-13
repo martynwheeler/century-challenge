@@ -8,13 +8,12 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class RideData
 {
-    private $em;
+    public function __construct(private EntityManagerInterface $em) {}
 
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-    public function getRideData($year, $username = null)
+    /**
+     * Gets the data for rides by user or all users
+     */
+    public function getRideData(?string $year, ?string $username): array
     {
         //Date range to loop over
         //Can change when rides need to be entered here
@@ -38,11 +37,14 @@ class RideData
         $rides = $entityManager->findRidesByYear($year);
         $entityManager = $this->em->getRepository(User::class);
         if (!$username) {
+            //Get all users
             $users = $entityManager->findBy([], ['id' => 'ASC']);
         } else {
-            $users = $entityManager->findBy(['username' => $username], ['id' => 'ASC']);
+            //Get the specified user
+            $users = $entityManager->findBy(['username' => $username]);
         }
 
+        //create results array by looping over the users
         $results = [];
         for ($i = 0; $i < count($users); $i++) {
             $results[$i]['id'] = $users[$i]->getId();
@@ -59,6 +61,7 @@ class RideData
             $results[$i]['months'] = [];
         }
 
+        //Now add the monthly rides and points to the results array
         $months = [];
         foreach ($period as $month) {
             $months[] = $month->format('M');
@@ -105,11 +108,15 @@ class RideData
         }
         exit();
         */
+        //sort the resulst by total points and return
         usort($results, [$this, 'sortByTotal']);
         return ['users' => $results, 'months' => $months];
     }
 
-    public function setPoints($km)
+    /**
+     * Sets the points for a ride based on its distance
+     */
+    public function setPoints(float $km): int
     {
         //For 100km, you get 10 points
         if ($km >= 100 && $km < 150) {
@@ -129,13 +136,13 @@ class RideData
         }
     }
 
-    public function sortByTotal($a, $b)
+    /**
+     * Comparison function to determine the order of the riders by totalpoints
+     */
+    public function sortByTotal(array $a, array $b): int
     {
         $a = $a['totalpoints'];
         $b = $b['totalpoints'];
-        if ($a == $b) {
-            return 0;
-        }
-        return ($a < $b) ? 1 : -1;
+        return $b <=> $a;
     }
 }

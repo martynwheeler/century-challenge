@@ -24,3 +24,7 @@
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
+
+###> rector/rector ###
+rector.php
+###< rector/rector ###

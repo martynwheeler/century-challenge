@@ -16,27 +16,17 @@ class KomootAPI
     public const BASE_URL = 'https://auth.komoot.de/';
     public const API_URL = 'https://external-api.komoot.de/v007/';
 
-    private $em;
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
+    public function __construct(private EntityManagerInterface $em) {}
 
     /**
      * Makes HTTP Request to the API
      *
-     * @param string $token
-     * @param string $url
-     * @param array $query
-     *
-     * @return mixed
      * @throws \Exception
      */
-    protected function request($token, $url, $query = []): mixed
+    protected function request(string $token, string $url, array $query): array
     {
         try {
-            //Create a new client
+            //Create a new client from the komoot api
             $httpClient = HttpClient::create(['base_uri' => self::API_URL]);
             //Set up request headers
             $headers = [
@@ -60,12 +50,9 @@ class KomootAPI
     /**
      * Gets a new token using the current refresh token
      *
-     * @param string $refreshToken
-     *
-     * @return string
      * @throws \Exception
      */
-    public function getToken($user): string
+    public function getToken(Object $user): string
     {
         try {
             //Create a new client
@@ -96,16 +83,12 @@ class KomootAPI
     /**
      * Gets details about authenticated rider
      *
-     * @param string $token
-     * @param string $user
-     *
-     * @return array
      * @throws \Exception
      */
-    public function getAthlete($token, $user): array
+    public function getAthlete(string $token, string $user): array
     {
         $url = 'users/' . $user;
-        $athlete = $this->request($token, $url);
+        $athlete = $this->request($token, $url, $query = []);
         //Check for error
         if (gettype($athlete) != 'array') {
             print "HTTP Error ".$athlete.". This is not a valid Komoot ID, go back and try again.";
@@ -117,13 +100,9 @@ class KomootAPI
     /**
      * Gets this month's valid rides
      *
-     * @param string $token
-     * @param string $user
-     *
-     * @return array
      * @throws \Exception
      */
-    public function getAthleteActivitiesThisMonth($token, $user): array
+    public function getAthleteActivitiesThisMonth(string $token, string $user): array
     {
         //Get date of first day of month
         $after = new \DateTime();
@@ -170,19 +149,15 @@ class KomootAPI
     /**
      * Get ride data by id
      *
-     * @param string $token
-     * @param string $id
-     *
-     * @return array
      * @throws \Exception
      */
-    public function getAthleteActivity($token, $id): array
+    public function getAthleteActivity(string $token, string $id): array
     {
         //Set up request
         $url = 'tours/' . $id;
 
         //Make request and get response from API
-        $athleteactivity = $this->request($token, $url);
+        $athleteactivity = $this->request($token, $url, $query = []);
         //Check for error
         if (gettype($athleteactivity) != 'array') {
             print "HTTP Error ".$athleteactivity.". This is not a valid ride ID, go back and try again.";
@@ -201,20 +176,15 @@ class KomootAPI
     /**
      * Check if submitted ride is a club ride
      *
-     * @param string $token
-     * @param string $id
-     * @param string $date
-     *
-     * @return boolean
      * @throws \Exception
      */
-    public function isClubRide($token, $id, $date): bool
+    public function isClubRide(string $token, string $id, \DateTime $date): bool
     {
         //Set up request
         $url = 'tours/' . $id . '/coordinates';
 
         //Make request and get response from API
-        $stream_details = $this->request($token, $url);
+        $stream_details = $this->request($token, $url, $query = []);
 
         //Set coordinates of start
         $bLat = 52.609323;
@@ -230,7 +200,7 @@ class KomootAPI
 
         //Loop over stream to see if club ride and return
         $clubride = false;
-        for ($i = 0, $l = count($stream_details['items']); $i < $l; ++$i) {
+        for ($i = 0, $l = is_countable($stream_details['items']) ? count($stream_details['items']) : 0; $i < $l; ++$i) {
             $lat = $stream_details['items'][$i]['lat'];
             $long = $stream_details['items'][$i]['lng'];
             $dist = $this->getGPXDistance($lat, $long, $bLat, $bLong);
@@ -247,15 +217,8 @@ class KomootAPI
 
     /**
      * Get a distance between two GPS coordinates
-     *
-     * @param float $latitude1
-     * @param float $longitude1
-     * @param float $latitude2
-     * @param float $longitude2
-     *
-     * @return float
      */
-    public function getGPXDistance($latitude1, $longitude1, $latitude2, $longitude2): float
+    public function getGPXDistance(float $latitude1, float $longitude1, float $latitude2, float $longitude2): float
     {
         $earth_radius = 6371;
         $dLat = deg2rad($latitude2 - $latitude1);
@@ -268,13 +231,8 @@ class KomootAPI
 
     /**
      * Compare two date stamps
-     *
-     * @param date $a
-     * @param date $b
-     *
-     * @return date
      */
-    public function date_compare($a, $b): date
+    public function date_compare(\DateTime $a, \DateTime $b): int
     {
         $t1 = $a['date']->getTimestamp();
         $t2 = $b['date']->getTimestamp();

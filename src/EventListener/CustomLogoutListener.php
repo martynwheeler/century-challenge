@@ -8,10 +8,6 @@ use Symfony\Component\Security\Http\Event\LogoutEvent;
 
 class CustomLogoutListener
 {
-    /**
-     * @param LogoutEvent $logoutEvent
-     * @return void
-     */
     #[NoReturn]
     public function onSymfonyComponentSecurityHttpEventLogoutEvent(LogoutEvent $logoutEvent): void
     {

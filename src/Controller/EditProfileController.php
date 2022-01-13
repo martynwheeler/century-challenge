@@ -45,7 +45,7 @@ class EditProfileController extends AbstractController
                 $accessToken = $this->strava_api->getToken($user);
                 $request->getSession()->set('strava.token', $accessToken);
             }
-            $stravaAthlete = $this->strava_api->getAthlete($request->getSession()->get('strava.token'), $user->getStravaID());
+            $stravaAthlete = $this->strava_api->getAthlete($request->getSession()->get('strava.token'));
         }
 
         //Create the form
