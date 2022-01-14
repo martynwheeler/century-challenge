@@ -10,7 +10,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-    #[ORM\Entity(repositoryClass: \App\Repository\UserRepository::class)]
+
+#[ORM\Entity(repositoryClass: \App\Repository\UserRepository::class)]
 #[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, \Stringable
@@ -29,7 +30,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     #[ORM\Column(type: 'string')]
     private string $password;
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\Email(message: "The email '{{ value }}' is not a valid email.", mode: 'strict')]
+    #[Assert\Email(message: "The email '{{ value }}' is not a valid email.")]
     private $email;
     #[ORM\Column(type: 'string', length: 100)]
     private $name;

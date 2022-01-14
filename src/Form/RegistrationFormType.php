@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -42,7 +43,7 @@ class RegistrationFormType extends AbstractType
                 'first_options'  => ['label' => 'Password *'],
                 'second_options' => ['label' => 'Repeat Password *'],
             ])
-            ->add('email', TextType::class, ['label' => 'Email address *'])
+            ->add('email', EmailType::class, ['label' => 'Email address *'])
             ->add('name', TextType::class, ['label' => 'Full name (First Name and Surname - this will only be shown to logged in users.) *'])
         ;
     }

@@ -7,14 +7,17 @@
   <div class="form-floating mb-2 mt-1">
     {{ form_widget(email_form.fullName) }}
 		{{ form_label(email_form.fullName) }}
+    {{ form_errors(email_form.fullName) }}
   </div>
   <div class="form-floating mb-2">
     {{ form_widget(email_form.fromEmail) }}
 		{{ form_label(email_form.fromEmail) }}
+    {{ form_errors(email_form.fromEmail) }}
   </div>
   <div class="form-floating mb-3">
     {{ form_widget(email_form.message) }}
   	{{ form_label(email_form.message) }}
+    {{ form_errors(email_form.message) }}
   </div>
   <div class="help-inline pb-2 text-danger">* denotes required field</div>
   <button type="submit" class="btn btn-primary" name="submit">Send</button>

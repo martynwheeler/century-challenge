@@ -27,16 +27,17 @@ Edit Ride
 	    <div class="input-group">
 	      {{ form_widget(addrideForm.km) }}
 	      <div class="input-group-append">
-		<span class="input-group-text">km</span>
+			<span class="input-group-text">km</span>
 	      </div>
 	    </div>
+		{{ form_errors(addrideForm.km) }}
 	  </div>
 	  <div class="col">
 	    {{ form_label(addrideForm.average_speed) }}
 	    <div class="input-group">
 	      {{ form_widget(addrideForm.average_speed) }}
 	      <div class="input-group-append">
-		<span class="input-group-text">km/h</span>
+			<span class="input-group-text">km/h</span>
 	      </div>
 	    </div>
 	  </div>
@@ -45,6 +46,7 @@ Edit Ride
 	  <div class="col">
 	    {{ form_label(addrideForm.date) }}
 	    {{ form_widget(addrideForm.date) }}
+		{{ form_errors(addrideForm.date) }}
 	  </div>
 	  <div class="col">
 	    {{ form_row(addrideForm.ride_id) }}
