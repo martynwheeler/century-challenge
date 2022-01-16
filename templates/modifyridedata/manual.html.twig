@@ -18,7 +18,7 @@ Edit Ride
 	<p class="text-left">Please note that uploading via Strava/Komoot 
 		is the preferred method of registering your rides if you wish to be considered for the Century Challenge trophy.  If you 
 		are trying to enter a Ride ID on this page ensure that your default provider (Strava/Komoot) is correct by editing your 
-		<a href="{{ path('editprofile', {'username': app.user.username}) }}">profile</a>.</p>
+		<a href="{{ path('editprofile', {'username': app.user.useridentifier}) }}">profile</a>.</p>
 	{% endif %}
 	{{ form_start(addrideForm) }}
 	<div class="row">

@@ -49,7 +49,7 @@ class RideData
         for ($i = 0; $i < count($users); $i++) {
             $results[$i]['id'] = $users[$i]->getId();
             $results[$i]['name'] = $users[$i]->getName();
-            $results[$i]['username'] = $users[$i]->getUsername();
+            $results[$i]['username'] = $users[$i]->getUserIdentifier();
             $results[$i]['privatename'] = $users[$i]->getPrivateName();
             $results[$i]['stravauserid'] = $users[$i]->getStravaId();
             $results[$i]['komootuserid'] = $users[$i]->getKomootId();

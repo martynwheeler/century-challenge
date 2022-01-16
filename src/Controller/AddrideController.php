@@ -100,7 +100,7 @@ class AddrideController extends AbstractController
 
             // do anything else you need here, like send an email
             $this->addFlash('success', $this->getUser()->getName().', you have sucessfully added your ride');
-            return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUsername()]);
+            return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUserIdentifier()]);
         }
 
         return $this->renderForm('modifyridedata/ride.html.twig', [
@@ -183,7 +183,7 @@ class AddrideController extends AbstractController
 
                 // do anything else you need here, like send an email
                 $this->addFlash('success', $this->getUser()->getName().', you have sucessfully added your ride');
-                return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUsername()]);
+                return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUserIdentifier()]);
             }
         }
         return $this->renderForm('modifyridedata/manual.html.twig', [

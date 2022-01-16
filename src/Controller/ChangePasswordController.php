@@ -37,7 +37,7 @@ class ChangePasswordController extends AbstractController
 
             // do anything else you need here, like send an email
             $this->addFlash('success', $user->getName().', you have sucessfully changed your password.');
-            return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUsername()]);
+            return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUserIdentifier()]);
         }
         return $this->renderForm('security/changepassword.html.twig', [
             'changepasswordForm' => $form,

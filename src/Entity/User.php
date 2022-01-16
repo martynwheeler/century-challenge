@@ -100,13 +100,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
         return (string) $this->username;
     }
 
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
     /**
      * @see UserInterface
      */

@@ -57,7 +57,7 @@ class ForgotPasswordController extends AbstractController
                         'emails/passwordreset.html.twig',
                         [
                             'name' => $user->getName(),
-                            'username' => $user->getUsername(),
+                            'username' => $user->getUserIdentifier(),
                             'url' => $url
                         ]
                     )
@@ -69,7 +69,7 @@ class ForgotPasswordController extends AbstractController
                                 'emails/passwordreset.txt.twig',
                                 [
                             'name' => $user->getName(),
-                            'username' => $user->getUsername(),
+                            'username' => $user->getUserIdentifier(),
                             'url' => $url
                         ]
                             )

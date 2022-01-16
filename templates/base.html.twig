@@ -43,7 +43,7 @@
               </li>
               {% if is_granted('ROLE_USER') %}
               <li class="nav-item">
-                <a class="nav-link" href="{{ path('displayrides', {'username': app.user.username}) }}">
+                <a class="nav-link" href="{{ path('displayrides', {'username': app.user.useridentifier}) }}">
                   Your Rides
                 </a>
               </li>
@@ -72,12 +72,12 @@
 			  {% if is_granted('ROLE_USER') %}
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-user"></i> {{ app.user.username }}
+                    <i class="fas fa-user"></i> {{ app.user.useridentifier }}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                   <li><a class="dropdown-item" aria-current="page" href="{{ path('connect') }}">Connect Services</a></li>
-                  <li><a class="dropdown-item" aria-current="page" href="{{ path('editprofile', {'username': app.user.username}) }}">Edit profile</a></li>
-                  <li><a class="dropdown-item" aria-current="page" href="{{ path('changepassword', {'username': app.user.username}) }}">Change password</a></li>
+                  <li><a class="dropdown-item" aria-current="page" href="{{ path('editprofile', {'username': app.user.useridentifier}) }}">Edit profile</a></li>
+                  <li><a class="dropdown-item" aria-current="page" href="{{ path('changepassword', {'username': app.user.useridentifier}) }}">Change password</a></li>
                   <li><a class="dropdown-item" aria-current="page" href="{{ path('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 </ul>
               </li>

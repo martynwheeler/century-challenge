@@ -34,7 +34,7 @@ class EditrideController extends AbstractController
 
             // do anything else you need here, like send an email
             $this->addFlash('success', $this->getUser()->getName().', you have sucessfully deleted your ride');
-            return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUsername()]);
+            return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUserIdentifier()]);
         }
         return $this->renderForm('modifyridedata/delete.html.twig', [
             'deleterideForm' => $form,
@@ -64,7 +64,7 @@ class EditrideController extends AbstractController
 
                 // do anything else you need here, like send an email
                 $this->addFlash('success', $this->getUser()->getName().', you have sucessfully edited your ride');
-                return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUsername()]);
+                return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUserIdentifier()]);
             } else {
                 $this->addFlash('danger', 'You cannot enter a ride for last month!');
             }

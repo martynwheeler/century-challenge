@@ -62,7 +62,7 @@ class EditProfileController extends AbstractController
 
             // do anything else you need here, like send an email
             $this->addFlash('success', $user->getName().', you have sucessfully updated your profile');
-            return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUsername()]);
+            return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUserIdentifier()]);
         }
 
         return $this->renderForm('registration/edit.html.twig', [

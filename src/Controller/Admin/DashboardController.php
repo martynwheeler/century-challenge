@@ -23,7 +23,7 @@ class DashboardController extends AbstractDashboardController
         return $this->redirect($adminUrlGenerator->setController(UserCrudController::class)->generateUrl());
 
         // you can also redirect to different pages depending on the current user
-        //if ('jane' === $this->getUser()->getUsername()) {
+        //if ('jane' === $this->getUser()->getUserIdentifier()) {
         //    return $this->redirect('...');
         //}
 

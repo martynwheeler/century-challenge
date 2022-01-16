@@ -23,7 +23,7 @@ class EditProfileFormType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 'label' => 'Username',
-                'data' => $this->user->getUsername(),
+                'data' => $this->user->getUserIdentifier(),
                 'disabled' => true,
             ])
             ->add('email', TextType::class, [
