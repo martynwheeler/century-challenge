@@ -232,7 +232,7 @@ class KomootAPI
     /**
      * Compare two date stamps
      */
-    public function date_compare(\DateTime $a, \DateTime $b): int
+    public function date_compare(array $a, array $b): int
     {
         $t1 = $a['date']->getTimestamp();
         $t2 = $b['date']->getTimestamp();
