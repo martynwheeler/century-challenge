@@ -14,14 +14,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username', TextType::class, [
-                'label' => 'Username (all lowercase, no spaces - use underscores instead.) *'])
+            ->add('username', TextType::class, ['label' => 'Username (all lowercase, no spaces - use underscores instead.) *'])
             ->add('plainPassword', RepeatedType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
@@ -44,7 +44,8 @@ class RegistrationFormType extends AbstractType
                 'second_options' => ['label' => 'Repeat Password *'],
             ])
             ->add('email', EmailType::class, ['label' => 'Email address *'])
-            ->add('name', TextType::class, ['label' => 'Full name (First Name and Surname - this will only be shown to logged in users.) *'])
+            ->add('forename', TextType::class, ['label' => 'First Name(s) *'])
+            ->add('surname', TextType::class, ['label' => 'Surname (this will only be shown to logged in users.) *'])
         ;
     }
 

@@ -19,50 +19,69 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
+
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private $username;
+    #[Assert\Regex(pattern: "/^[a-z0-9]+$/i", message: "Username must contain only letter or numbers.")]
+    private string $username;
+
     #[ORM\Column(type: 'json')]
     private array $roles = [];
-    /**
-     * @var string The hashed password
-     */
+
     #[ORM\Column(type: 'string')]
     private string $password;
+
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Email(message: "The email '{{ value }}' is not a valid email.")]
-    private $email;
-    #[ORM\Column(type: 'string', length: 100)]
-    private $name;
+    private string $email;
+
+    #[ORM\Column(type: 'string', length: 40)]
+    private $surname;
+
+    #[ORM\Column(type: 'string', length: 40)]
+    private $forename;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $passwordRequestToken;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTime $requestTokenExpiry;
+
+    #[ORM\OneToMany(targetEntity: \App\Entity\Ride::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Object $rides;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $komootID;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $komootRefreshToken;
+
+    #[ORM\Column(type: 'bigint', nullable: true)]
+    private ?string $komootTokenExpiry;
+
     #[ORM\Column(type: 'string', length: 25, nullable: true)]
     #[Assert\Regex(pattern: '/^\d+$/', match: true, message: 'Invalid Strava ID')]
-    private $stravaID;
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $passwordRequestToken;
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private $requestTokenExpiry;
-    #[ORM\OneToMany(targetEntity: \App\Entity\Ride::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private $rides;
+    private ?string $stravaID;
+
     #[ORM\Column(type: 'text', nullable: true)]
-    private $komootRefreshToken;
+    private ?string $stravaRefreshToken;
+
     #[ORM\Column(type: 'bigint', nullable: true)]
-    private $komootTokenExpiry;
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $komootID;
-    #[ORM\Column(type: 'text', nullable: true)]
-    private $stravaRefreshToken;
-    #[ORM\Column(type: 'bigint', nullable: true)]
-    private $stravaTokenExpiry;
+    private ?string $stravaTokenExpiry;
+
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
-    private $preferredProvider;
+    private ?string $preferredProvider;
+
     public function __construct()
     {
         $this->rides = new ArrayCollection();
     }
+    
     public function getId(): ?int
     {
         return $this->id;
     }
+
     /**
      * A visual identifier that represents this user.
      *
@@ -72,6 +91,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     {
         return (string) $this->username;
     }
+
     /**
      * @deprecated since Symfony 5.3
      */
@@ -79,12 +99,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     {
         return (string) $this->username;
     }
+
     public function setUsername(string $username): self
     {
         $this->username = $username;
 
         return $this;
     }
+
     /**
      * @see UserInterface
      */
@@ -96,12 +118,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
 
         return array_unique($roles);
     }
+
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
 
         return $this;
     }
+
     /**
      * @see UserInterface
      */
@@ -109,12 +133,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     {
         return (string) $this->password;
     }
+
     public function setPassword(string $password): self
     {
         $this->password = $password;
 
         return $this;
     }
+
     /**
      * @see UserInterface
      */
@@ -123,6 +149,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
         // not needed when using the "bcrypt" algorithm in security.yaml
         return null;
     }
+
     /**
      * @see UserInterface
      */
@@ -131,60 +158,94 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
+
+    /**
+     * getters for user fields
+     */
     public function getEmail(): ?string
     {
         return $this->email;
     }
+
     public function setEmail(string $email): self
     {
         $this->email = $email;
 
         return $this;
     }
+
+    public function getSurname(): ?string
+    {
+        return $this->surname;
+    }
+
+    public function setSurname(string $surname): self
+    {
+        $this->surname = $surname;
+
+        return $this;
+    }
+
+    public function getForename(): ?string
+    {
+        return $this->forename;
+    }
+
+    public function setForename(string $forename): self
+    {
+        $this->forename = $forename;
+
+        return $this;
+    }
+
     public function getName(): ?string
     {
-        return $this->name;
+        return $this->getForeName() . ' ' . $this->getSurname();
     }
-    public function setName(string $name): self
-    {
-        $this->name = $name;
 
-        return $this;
-    }
-    public function getStravaID(): ?string
+    /**
+     * Added functionality to set private name
+     */
+    public function getPrivateName()
     {
-        return $this->stravaID;
+        return ucwords($this->getForeName().' '.substr($this->getSurname(), 0, 1).'.');
     }
-    public function setStravaID(?string $stravaID): self
-    {
-        $this->stravaID = $stravaID;
 
-        return $this;
-    }
+    /**
+     * fields for password reset
+     */
     public function getPasswordRequestToken(): ?string
     {
         return $this->passwordRequestToken;
     }
+
     public function setPasswordRequestToken(?string $passwordRequestToken): self
     {
         $this->passwordRequestToken = $passwordRequestToken;
 
         return $this;
     }
+
     public function getRequestTokenExpiry(): ?\DateTimeInterface
     {
         return $this->requestTokenExpiry;
     }
+
     public function setRequestTokenExpiry(?\DateTimeInterface $requestTokenExpiry): self
     {
         $this->requestTokenExpiry = $requestTokenExpiry;
 
         return $this;
     }
+
+    /**
+     * access ride data
+     */
     public function getRides(): Collection
     {
         return $this->rides;
     }
+
     public function addRide(Ride $ride): self
     {
         if (!$this->rides->contains($ride)) {
@@ -194,6 +255,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
 
         return $this;
     }
+
     public function removeRide(Ride $ride): self
     {
         if ($this->rides->contains($ride)) {
@@ -203,97 +265,110 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
                 $ride->setUser(null);
             }
         }
-
         return $this;
     }
-    //Added functionality to set private name
-    public function getFirstName()
-    {
-        $names = explode(' ', $this->name);
-        $values = array_values($names);
-        $firstname = ucwords(array_shift($values));
-        if ($firstname == '' || !$firstname) {
-            return $this->username;
-        } else {
-            return $firstname;
-        }
-    }
-    public function getSurname()
-    {
-        $names = explode(' ', $this->name);
-        $surname = ucwords(end($names));
-        if ($surname == '' || !$surname) {
-            return $this->username;
-        } else {
-            return $surname;
-        }
-    }
-    public function getPrivateName()
-    {
-        return ucwords($this->getFirstName().' '.substr($this->getSurname(), 0, 1).'.');
-    }
-    public function __toString(): string
-    {
-        return (string)$this->getName();
-    }
-    public function getKomootRefreshToken(): ?string
-    {
-        return $this->komootRefreshToken;
-    }
-    public function setKomootRefreshToken(?string $komootRefreshToken): self
-    {
-        $this->komootRefreshToken = $komootRefreshToken;
 
-        return $this;
-    }
-    public function getKomootTokenExpiry(): ?string
-    {
-        return $this->komootTokenExpiry;
-    }
-    public function setKomootTokenExpiry(?string $komootTokenExpiry): self
-    {
-        $this->komootTokenExpiry = $komootTokenExpiry;
 
-        return $this;
-    }
+    /**
+     * Get and set komoot credentials
+     */
     public function getKomootID(): ?string
     {
-        return $this->komootID;
+        if (isset($this->komootID)) {
+            return $this->komootID;
+        } else {
+            return null;
+        }
     }
+
     public function setKomootID(?string $komootID): self
     {
         $this->komootID = $komootID;
 
         return $this;
     }
+
+    public function getKomootRefreshToken(): ?string
+    {
+        return $this->komootRefreshToken;
+    }
+
+    public function setKomootRefreshToken(?string $komootRefreshToken): self
+    {
+        $this->komootRefreshToken = $komootRefreshToken;
+
+        return $this;
+    }
+
+    public function getKomootTokenExpiry(): ?string
+    {
+        return $this->komootTokenExpiry;
+    }
+
+    public function setKomootTokenExpiry(?string $komootTokenExpiry): self
+    {
+        $this->komootTokenExpiry = $komootTokenExpiry;
+
+        return $this;
+    }
+
+    /**
+     * Get and set strava credentials
+     */
+    public function getStravaID(): ?string
+    {
+        if (isset($this->stravaID)) {
+            return $this->stravaID;
+        } else {
+            return null;
+        }
+    }
+
+    public function setStravaID(?string $stravaID): self
+    {
+        $this->stravaID = $stravaID;
+
+        return $this;
+    }
+
     public function getStravaRefreshToken(): ?string
     {
         return $this->stravaRefreshToken;
     }
+
     public function setStravaRefreshToken(?string $stravaRefreshToken): self
     {
         $this->stravaRefreshToken = $stravaRefreshToken;
 
         return $this;
     }
+
     public function getStravaTokenExpiry(): ?string
     {
         return $this->stravaTokenExpiry;
     }
+
     public function setStravaTokenExpiry(?string $stravaTokenExpiry): self
     {
         $this->stravaTokenExpiry = $stravaTokenExpiry;
 
         return $this;
     }
+
     public function getPreferredProvider(): ?string
     {
         return $this->preferredProvider;
     }
+
     public function setPreferredProvider(?string $preferredProvider): self
     {
         $this->preferredProvider = $preferredProvider;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return (string)$this->getName();
     }
 }

@@ -6,7 +6,8 @@
 	{{ form_start(registrationForm) }}
 		{{ form_row(registrationForm.username) }}
 		{{ form_row(registrationForm.email) }}
-		{{ form_row(registrationForm.name) }}
+		{{ form_row(registrationForm.forename) }}
+		{{ form_row(registrationForm.surname) }}
 		{{ form_row(registrationForm.plainPassword) }}
 		<div class="help-inline pb-2 text-danger">* denotes required field</div>
 		<button type="submit" class="btn btn-primary" name="submit">Register</button>

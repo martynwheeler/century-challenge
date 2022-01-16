@@ -25,16 +25,19 @@ class EditProfileFormType extends AbstractType
                 'label' => 'Username',
                 'data' => $this->user->getUsername(),
                 'disabled' => true,
-                ])
+            ])
             ->add('email', TextType::class, [
                 'label' => 'Email address *',
                 'data' => $this->user->getEmail(),
-                ])
-            ->add('name', TextType::class, [
-                'label' => 'Full name (First Name and Surname - this will only be shown to logged in users.) *',
-                'data' => $this->user->getName(),
             ])
-
+            ->add('forename', TextType::class, [
+                'label' => 'First Name(s) *',
+                'data' => $this->user->getForeName(),
+            ])
+            ->add('surname', TextType::class, [
+                'label' => 'Surname *',
+                'data' => $this->user->getSurName(),
+            ])
         ;
         if ($options['stravaAthlete']) {
             //Might want to check db and current strava id match?

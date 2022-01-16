@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
-{% block title %}Leaderboard{% endblock %}
+{% block title %}List Users{% endblock %}
 {% block body %}
-<h1>Leaderboard</h1>
+<h1>List Users</h1>
 <table class="table table-striped table-bordered table-sm table-responsive-sm">
   <thead>
     <tr>
       <th style="width:40px">Rank</th>
       <th>Name</th>
+      <th>Username</th>
       <th>Email</th>
-      <th>Disqualified</th>
     </tr>
   </thead>
   <tbody>
@@ -19,17 +19,17 @@
 	{% set counter = counter + 1 %}{{ counter }}
       </td>
       <td>
-	{% if is_granted('ROLE_USER') %}
-	<a href="{{ path('displayrides', {'username': user.username}) }}">{{ user.name }}</a>
-	{% else %}
-	{{ user.privatename }}
-	{% endif %}
+        {% if is_granted('ROLE_USER') %}
+        <a href="{{ path('displayrides', {'username': user.username}) }}">{{ user.forename }} {{ user.surname }}</a>
+        {% else %}
+        {{ user.privatename }}
+        {% endif %}
+            </td>
+      <td>
+      	{{ user.username }}				
       </td>
       <td>
-	{{ user.email }}				
-      </td>
-      <td>
-	{{ user.isDisqualified }}				
+      	{{ user.email }}				
       </td>
     </tr>
     {% endfor %}
