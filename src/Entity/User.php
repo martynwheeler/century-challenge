@@ -42,35 +42,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     private $forename;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $passwordRequestToken;
+    private ?string $passwordRequestToken = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\DateTime $requestTokenExpiry;
+    private ?\DateTime $requestTokenExpiry = null;
 
     #[ORM\OneToMany(targetEntity: \App\Entity\Ride::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Object $rides;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $komootID;
+    private ?string $komootID = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $komootRefreshToken;
+    private ?string $komootRefreshToken = null;
 
     #[ORM\Column(type: 'bigint', nullable: true)]
-    private ?string $komootTokenExpiry;
+    private ?string $komootTokenExpiry = null;
 
     #[ORM\Column(type: 'string', length: 25, nullable: true)]
     #[Assert\Regex(pattern: '/^\d+$/', match: true, message: 'Invalid Strava ID')]
-    private ?string $stravaID;
+    private ?string $stravaID = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $stravaRefreshToken;
+    private ?string $stravaRefreshToken = null;
 
     #[ORM\Column(type: 'bigint', nullable: true)]
-    private ?string $stravaTokenExpiry;
+    private ?string $stravaTokenExpiry = null;
 
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
-    private ?string $preferredProvider;
+    private ?string $preferredProvider = null;
 
     public function __construct()
     {
@@ -274,11 +274,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
      */
     public function getKomootID(): ?string
     {
-        if (isset($this->komootID)) {
-            return $this->komootID;
-        } else {
-            return null;
-        }
+        return $this->komootID;
     }
 
     public function setKomootID(?string $komootID): self
@@ -317,11 +313,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
      */
     public function getStravaID(): ?string
     {
-        if (isset($this->stravaID)) {
-            return $this->stravaID;
-        } else {
-            return null;
-        }
+        return $this->stravaID;
     }
 
     public function setStravaID(?string $stravaID): self
