@@ -54,7 +54,7 @@ class UserRepository extends ServiceEntityRepository
     public function findAllUsers(): array
     {
         return $this->createQueryBuilder('u')
-             ->select('u.id', 'u.name', 'u.username')
+             ->select('u.id', 'u.forename', 'u.surname', 'u.username')
              ->orderBy('u.id', 'ASC')
              ->getQuery()
              ->getResult()

@@ -1438,16 +1438,16 @@
         },
         {
             "name": "easycorp/easyadmin-bundle",
-            "version": "v4.0.2",
+            "version": "v4.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EasyCorp/EasyAdminBundle.git",
-                "reference": "d6e4da1266239bd1ba70f190355ad27927850c0e"
+                "reference": "7af66ec5fddae4f51165142311524600abaa92ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EasyCorp/EasyAdminBundle/zipball/d6e4da1266239bd1ba70f190355ad27927850c0e",
-                "reference": "d6e4da1266239bd1ba70f190355ad27927850c0e",
+                "url": "https://api.github.com/repos/EasyCorp/EasyAdminBundle/zipball/7af66ec5fddae4f51165142311524600abaa92ad",
+                "reference": "7af66ec5fddae4f51165142311524600abaa92ad",
                 "shasum": ""
             },
             "require": {
@@ -1513,7 +1513,7 @@
             ],
             "support": {
                 "issues": "https://github.com/EasyCorp/EasyAdminBundle/issues",
-                "source": "https://github.com/EasyCorp/EasyAdminBundle/tree/v4.0.2"
+                "source": "https://github.com/EasyCorp/EasyAdminBundle/tree/v4.0.3"
             },
             "funding": [
                 {
@@ -1521,7 +1521,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-01-09T16:20:55+00:00"
+            "time": "2022-01-15T10:24:03+00:00"
         },
         {
             "name": "edwin-luijten/oauth2-strava",

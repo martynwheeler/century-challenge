@@ -19,12 +19,8 @@
 	{% set counter = counter + 1 %}{{ counter }}
       </td>
       <td>
-        {% if is_granted('ROLE_USER') %}
-        <a href="{{ path('displayrides', {'username': user.username}) }}">{{ user.forename }} {{ user.surname }}</a>
-        {% else %}
-        {{ user.privatename }}
-        {% endif %}
-            </td>
+        <a href="{{ path('displayrides', {'username': user.useridentifier}) }}">{{ user.forename }} {{ user.surname }}</a>
+      </td>
       <td>
       	{{ user.username }}				
       </td>
