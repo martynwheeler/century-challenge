@@ -45,12 +45,18 @@ class AddrideController extends AbstractController
                 //Check if the user registered with strava
                 if ($user->getStravaID() && $user->getStravaRefreshToken()) {
                     //Get or refresh token as necessary
-                    if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 300) {
+                    if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 3) {
                         $accessToken = $strava_api->getToken($user);
                         $request->getSession()->set('strava.token', $accessToken);
                     }
                     $token = $request->getSession()->get('strava.token');
                     $athlete = $strava_api->getAthlete($token);
+                    // check for errors and redirect
+                    if (array_key_exists('errors', $athlete)) {
+                        $request->getSession()->set('reconnect.strava', true);
+                        return $this->redirectToRoute('connect_strava');
+                    }
+                    //token valid, grab the details
                     $athleteName = $athlete['firstname'].' '.$athlete['lastname'];
                     $athleteActivities = $strava_api->getAthleteActivitiesThisMonth($token);
                 }

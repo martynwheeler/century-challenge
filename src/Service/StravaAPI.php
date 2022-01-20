@@ -4,6 +4,8 @@ namespace App\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Simple PHP Library for the Stava API
@@ -15,80 +17,69 @@ class StravaAPI
 {
     public const API_URL = 'https://www.strava.com/api/v3/';
 
-    public function __construct(private EntityManagerInterface $em) {}
+    public function __construct(private EntityManagerInterface $em, private RouterInterface $router) {}
 
     /**
      * Makes HTTP Request to the API
-     *
-     * @throws \Exception
      */
-    protected function request(string $token, string $url, array $query): array
+    protected function request(?string $token, string $url, array $query): array
     {
-        try {
-            //Create a new client
-            $httpClient = HttpClient::create(['base_uri' => self::API_URL]);
-            //Set up request headers
-            $headers = [
-                'Authorization' => 'Bearer ' . $token,
-                'Content-type' => 'application/json'
-            ];
-            //Get response
-            $response = $httpClient->request('GET', $url, [
-                'headers' => $headers,
-                'query' => $query,
-            ]);
-            $content = $response->toArray();
-        } catch (\Exception $e) {
-            print $e->getMessage().'<br/>';
-            return $e->getResponse()->getStatusCode();
-        }
+        //Create a new client
+        $httpClient = HttpClient::create(['base_uri' => self::API_URL]);
+        //Set up request headers
+        $headers = [
+            'Authorization' => 'Bearer ' . $token,
+            'Content-type' => 'application/json'
+        ];
+        //Get response
+        $response = $httpClient->request('GET', $url, [
+            'headers' => $headers,
+            'query' => $query,
+        ]);
         //Return the body of the response object as an array
-        return $content;
+        return $response->toArray(false);
     }
 
     /**
      * Gets a new token using the current refresh token
-     *
-     * @throws \Exception
      */
-    public function getToken(Object $user): string
+    public function getToken(Object $user): ?string
     {
-        try {
-            //Create a new client
-            $httpClient = HttpClient::create(['base_uri' => self::API_URL]);
-            //Get the last refresh token from the user entity
-            $refreshToken = $user->getStravaRefreshToken();
-            //Get response
-            $response = $httpClient->request('POST', 'oauth/token', [
-                'body' => [
-                    'client_id' => $_ENV['STRAVA_ID'],
-                    'client_secret' => $_ENV['STRAVA_SECRET'],
-                    'grant_type' => 'refresh_token',
-                    'refresh_token' => $refreshToken,
-                ]
-            ]);
-            //Grab the token from the response
-            $accessToken = $response->toArray();
-            //Persist the new refresh token to the db
+        //Create a new client
+        $httpClient = HttpClient::create(['base_uri' => self::API_URL]);
+        //Get the last refresh token from the user entity
+        $refreshToken = $user->getStravaRefreshToken();
+        //Get response
+        $response = $httpClient->request('POST', 'oauth/token', [
+            'body' => [
+                'client_id' => $_ENV['STRAVA_ID'],
+                'client_secret' => $_ENV['STRAVA_SECRET'],
+                'grant_type' => 'refresh_token',
+                'refresh_token' => $refreshToken,
+            ]
+        ]);
+        //Grab the token from the response
+        $accessToken = $response->toArray(false);
+        //If the request is granted, persist the new refresh token to the db
+        if (!array_key_exists('errors', $accessToken)) {
+            //get an error
             $user->setStravaRefreshToken($accessToken['refresh_token']);
             $user->setStravaTokenExpiry($accessToken['expires_at']);
             $entityManager = $this->em;
             $entityManager->persist($user);
             $entityManager->flush();
-        } catch (\Exception $e) {
-            print $e->getMessage();
-            die;
+            return $accessToken['access_token'];
         }
-        return $accessToken['access_token'];
+        // if the refresh token is invalid return null
+        return null;
     }
-
 
     /**
      * Gets details about authenticated rider
      *
      * @throws \Exception
      */
-    public function getAthlete(string $token): array
+    public function getAthlete(?string $token): array
     {
         $url = 'athlete';
         $athlete = $this->request($token, $url, $query = []);

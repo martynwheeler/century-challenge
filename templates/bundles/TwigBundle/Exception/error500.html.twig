@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>{{ status_code }} Error</h1>
+
+    <p>
+        An error has occurred with status code = {{ status_code }}.
+        The request could not be carried out. Please let the admin know  
+        via the <a href="{{ path('contact') }}">contact page</a>.
+    </p>
+{% endblock %}

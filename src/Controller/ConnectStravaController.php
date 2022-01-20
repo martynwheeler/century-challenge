@@ -17,8 +17,6 @@ class ConnectStravaController extends AbstractController
     #[Route('/connect/strava', name: 'connect_strava')]
     public function connectAction(ClientRegistry $clientRegistry)
     {
-        // on Symfony 3.3 or lower, $clientRegistry = $this->get('knpu.oauth2.registry');
-
         // will redirect to Strava!
         return $clientRegistry
             ->getClient('strava_oauth') // key used in config/packages/knpu_oauth2_client.yaml
@@ -59,7 +57,10 @@ class ConnectStravaController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            //Success - return to the home page
+            //Success - redirect accordingly
+            if ($request->getSession()->remove('reconnect.strava')){
+                return $this->redirectToRoute('addride');                
+            }
             return $this->redirectToRoute('homepage');
         } catch (IdentityProviderException $e) {
             // something went wrong!

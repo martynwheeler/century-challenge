@@ -43,9 +43,16 @@ class EditProfileController extends AbstractController
             //Get or refresh token as necessary
             if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 300) {
                 $accessToken = $this->strava_api->getToken($user);
-                $request->getSession()->set('strava.token', $accessToken);
+                if ($accessToken){
+                    $request->getSession()->set('strava.token', $accessToken);
+                }
             }
+            //grab the athlete details from strava
             $stravaAthlete = $this->strava_api->getAthlete($request->getSession()->get('strava.token'));
+            //check for errors in response
+            if (array_key_exists('errors', $stravaAthlete)) {
+                $stravaAthlete = null;
+            }
         }
 
         //Create the form
