@@ -28,7 +28,7 @@ class AddrideController extends AbstractController
 
         //Switch depending on provider
         switch ($user->getPreferredProvider()) {
-            case "komoot":
+            case 'komoot':
                 //Check if the user registered with komoot
                 if ($user->getKomootID() && $user->getKomootRefreshToken()) {
                     //Get or refresh token as necessary
@@ -42,7 +42,7 @@ class AddrideController extends AbstractController
                     $athleteActivities = $komoot_api->getAthleteActivitiesThisMonth($token, $user->getKomootID());
                 }
                 break;
-            case "strava":
+            case 'strava':
                 //Check if the user registered with strava
                 if ($user->getStravaID() && $user->getStravaRefreshToken()) {
                     //Get or refresh token as necessary
@@ -91,10 +91,10 @@ class AddrideController extends AbstractController
                     $ride->setAverageSpeed($athleteActivity['average']);
                     $ride->setDate($athleteActivity['date']);
                     switch ($user->getPreferredProvider()) {
-                        case "komoot":
+                        case 'komoot':
                             $ride->setClubRide($komoot_api->isClubRide($token, $rideID, $athleteActivity['date']));
                             break;
-                        case "strava":
+                        case 'strava':
                             $ride->setClubRide($strava_api->isClubRide($token, $rideID, $athleteActivity['date']));
                             break;
                     }
@@ -142,7 +142,7 @@ class AddrideController extends AbstractController
             if ($id != null) {
                 //Switch depending on provider - could be a dropdown on form!!!!
                 switch ($user->getPreferredProvider()) {
-                    case "komoot":
+                    case 'komoot':
                         //Check if the user registered with komoot
                         if ($user->getKomootID() && $user->getKomootRefreshToken()) {
                             //Get or refresh token as necessary
@@ -158,7 +158,7 @@ class AddrideController extends AbstractController
                             $ride->setClubRide($komoot_api->isClubRide($token, $id, $athleteActivity['date']));
                         }
                         break;
-                    case "strava":
+                    case 'strava':
                         //Check if the user registered with strava
                         if ($user->getStravaID() && $user->getStravaRefreshToken()) {
                             //Get or refresh token as necessary

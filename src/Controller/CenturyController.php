@@ -22,7 +22,7 @@ class CenturyController extends AbstractController
             $motd = null;
         } else {
             $motd = json_decode($motd, true, 512, JSON_THROW_ON_ERROR);
-            $message = "";
+            $message = '';
             foreach ($motd['message'] as $line) {
                 $message .= $line;
             }

@@ -98,7 +98,7 @@ class StravaAPI
         $athlete = $this->request($token, $url, $query = []);
         //Check for error
         if (gettype($athlete) != 'array') {
-            print "HTTP Error ".$athlete.". This is not a valid Strava ID, go back and try again.";
+            print "HTTP Error $athlete. This is not a valid Strava ID, go back and try again.";
             die;
         }
         return $athlete;
@@ -163,7 +163,7 @@ class StravaAPI
         $athleteactivity = $this->request($token, $url, $query = []);
         //Check for error
         if (gettype($athleteactivity) != 'array') {
-            print "HTTP Error ".$athleteactivity.". This is not a valid ride ID, go back and try again.";
+            print "HTTP Error $athleteactivity. This is not a valid ride ID, go back and try again.";
             die;
         }
 

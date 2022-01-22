@@ -22,7 +22,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     private int $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Assert\Regex(pattern: "/^[a-z0-9_]+$/i", message: "Username must contain only letter or numbers.")]
+    #[Assert\Regex(pattern: "/^[a-z0-9_]+$/i", message: 'Username must contain only letter or numbers.')]
     private string $username;
 
     #[ORM\Column(type: 'json')]

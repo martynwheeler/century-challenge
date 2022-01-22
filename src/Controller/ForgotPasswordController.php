@@ -46,7 +46,7 @@ class ForgotPasswordController extends AbstractController
             } else {
                 //User found --> generate token and send in email
                 $token = bin2hex(random_bytes(64));
-                $hashedtoken = hash("md5", $token);
+                $hashedtoken = hash('md5', $token);
                 $user->setPasswordRequestToken($hashedtoken);
                 $date = new \DateTime();
                 $date->add(new \DateInterval('PT1H'));
@@ -96,15 +96,15 @@ class ForgotPasswordController extends AbstractController
     {
         //test whether the link is valid
         $entityManager = $this->doctrine->getManager();
-        $user = $entityManager->getRepository(User::class)->findOneBy(['passwordRequestToken' => hash("md5", $token)]);
+        $user = $entityManager->getRepository(User::class)->findOneBy(['passwordRequestToken' => hash('md5', $token)]);
         if (!$user instanceof User || !$token) {
-            $this->addFlash('danger', "This reset link is invalid, please request a new link.");
+            $this->addFlash('danger', 'This reset link is invalid, please request a new link.');
             return $this->redirectToRoute('resetpassword');
         } else {
             $currentdate = new \DateTime();
             $expired = ($currentdate > $user->getRequestTokenExpiry());
             if ($expired) {
-                $this->addFlash('danger', "The password reset link has expired, please request a new link.");
+                $this->addFlash('danger', 'The password reset link has expired, please request a new link.');
                 return $this->redirectToRoute('resetpassword');
             }
         }
