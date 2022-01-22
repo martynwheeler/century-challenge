@@ -49,7 +49,7 @@ class Ride implements \Stringable
 
         return $this;
     }
-    public function getKm()
+    public function getKm(): float
     {
         return $this->km;
     }
@@ -59,7 +59,7 @@ class Ride implements \Stringable
 
         return $this;
     }
-    public function getAverageSpeed()
+    public function getAverageSpeed(): float
     {
         return $this->average_speed;
     }

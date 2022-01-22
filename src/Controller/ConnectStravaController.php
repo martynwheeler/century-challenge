@@ -7,6 +7,7 @@ use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -15,7 +16,7 @@ class ConnectStravaController extends AbstractController
     public function __construct(private ManagerRegistry $doctrine) {}
     
     #[Route('/connect/strava', name: 'connect_strava')]
-    public function connectAction(ClientRegistry $clientRegistry)
+    public function connectAction(ClientRegistry $clientRegistry): RedirectResponse
     {
         // will redirect to Strava!
         return $clientRegistry
@@ -30,7 +31,7 @@ class ConnectStravaController extends AbstractController
      * in config/packages/knpu_oauth2_client.yaml
      */
     #[Route('/connect/strava/check', name: 'connect_strava_check')]
-    public function connectCheckAction(Request $request, ClientRegistry $clientRegistry)
+    public function connectCheckAction(Request $request, ClientRegistry $clientRegistry): RedirectResponse
     {
         /** @var \MartynWheeler\OAuth2\Client\Provider\Strava $client */
         $client = $clientRegistry->getClient('strava_oauth');

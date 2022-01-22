@@ -20,6 +20,19 @@ class StravaAPI
     public function __construct(private EntityManagerInterface $em, private RouterInterface $router) {}
 
     /**
+     * Deauthorize the app from strava
+     */
+    public function deauthorize(string $accessToken): array
+    {
+        //Create a new client
+        $httpClient = HttpClient::create(['base_uri' => self::API_URL]);
+        $response = $httpClient->request('POST', 'oauth/deauthorize', [
+            'query' => ['access_token' => $accessToken],
+        ]);
+        return $response->toArray(false);
+    }
+
+    /**
      * Makes HTTP Request to the API
      */
     protected function request(?string $token, string $url, array $query): array

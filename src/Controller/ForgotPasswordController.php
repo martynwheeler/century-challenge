@@ -7,6 +7,7 @@ use App\Form\ForgotPasswordFormType;
 use App\Form\ResetPasswordFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
@@ -22,7 +23,7 @@ class ForgotPasswordController extends AbstractController
     public function __construct(private ManagerRegistry $doctrine) {}
 
     #[Route('/resetpassword', name: 'resetpassword')]
-    public function resetPassword(Request $request, MailerInterface $mailer)
+    public function resetPassword(Request $request, MailerInterface $mailer): Response
     {
         $form = $this->createForm(ForgotPasswordFormType::class);
         $form->handleRequest($request);
@@ -86,7 +87,12 @@ class ForgotPasswordController extends AbstractController
     }
 
     #[Route('/resetpassword/confirm/{token}', name: 'resetpassword_confirm')]
-    public function resetPasswordCheck(Request $request, $token, UserPasswordHasherInterface $passwordHasher, UserAuthenticatorInterface $userAuthenticator, FormLoginAuthenticator $formLoginAuthenticator)
+    public function resetPasswordCheck(
+        Request $request, $token,
+        UserPasswordHasherInterface $passwordHasher,
+        UserAuthenticatorInterface $userAuthenticator,
+        FormLoginAuthenticator $formLoginAuthenticator
+        ): Response
     {
         //test whether the link is valid
         $entityManager = $this->doctrine->getManager();

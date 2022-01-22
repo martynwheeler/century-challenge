@@ -7,6 +7,7 @@ use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -15,7 +16,7 @@ class ConnectKomootController extends AbstractController
     public function __construct(private ManagerRegistry $doctrine) {}
 
     #[Route('/connect/komoot', name: 'connect_komoot')]
-    public function connectAction(ClientRegistry $clientRegistry)
+    public function connectAction(ClientRegistry $clientRegistry): RedirectResponse
     {
         // will redirect to Komoot!
         return $clientRegistry
@@ -30,7 +31,7 @@ class ConnectKomootController extends AbstractController
      * in config/packages/knpu_oauth2_client.yaml
      */
     #[Route('/connect/komoot/check', name: 'connect_komoot_check')]
-    public function connectCheckAction(Request $request, ClientRegistry $clientRegistry)
+    public function connectCheckAction(Request $request, ClientRegistry $clientRegistry): RedirectResponse
     {
         /** @var \MartynWheeler\OAuth2\Client\Provider\Komoot $client */
         $client = $clientRegistry->getClient('komoot_oauth');

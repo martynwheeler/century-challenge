@@ -4,14 +4,14 @@ namespace App\Controller;
 
 use App\Service\RideData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CenturyController extends AbstractController
 {
     #[Route('/', name: 'homepage')]
-    public function index(Request $request, RideData $rd)
+    public function index(Request $request, RideData $rd): Response
     {
         //Read latest ride data
         $data = $rd->getRideData(year: null, username: null);

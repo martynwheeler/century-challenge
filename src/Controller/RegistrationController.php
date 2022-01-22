@@ -9,7 +9,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
@@ -20,7 +19,12 @@ class RegistrationController extends AbstractController
     public function __construct(private ManagerRegistry $doctrine) {}
     
     #[Route('/register', name: 'register')]
-    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, UserAuthenticatorInterface $userAuthenticator, FormLoginAuthenticator $formLoginAuthenticator): Response
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $passwordHasher,
+        UserAuthenticatorInterface $userAuthenticator,
+        FormLoginAuthenticator $formLoginAuthenticator,
+        ): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);

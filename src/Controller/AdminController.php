@@ -7,6 +7,7 @@ use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
@@ -18,7 +19,7 @@ class AdminController extends AbstractController
     public function __construct(private ManagerRegistry $doctrine) {}
 
     #[Route('/admin/listusers', name: 'listusers')]
-    public function listUsers(Request $request, RideData $rd)
+    public function listUsers(Request $request, RideData $rd): Response
     {
         $users = $this->doctrine->getRepository(User::class)->findBy([], ['surname' => 'ASC']);
 
@@ -29,7 +30,7 @@ class AdminController extends AbstractController
 
     //Send an email to users
     #[Route('/admin/email', name: 'email')]
-    public function sendEmail(Request $request, RideData $rd, MailerInterface $mailer)
+    public function sendEmail(Request $request, RideData $rd, MailerInterface $mailer): Response
     {
         //Create a form for text entry
         $form = $this->createFormBuilder()

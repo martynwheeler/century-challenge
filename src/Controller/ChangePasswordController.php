@@ -7,8 +7,8 @@ use App\Form\ChangePasswordFormType;
 use App\Form\Model\ChangePassword;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-//use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,7 +17,7 @@ class ChangePasswordController extends AbstractController
     public function __construct(private ManagerRegistry $doctrine) {}
 
     #[Route('/profile/{username}/changepassword', name: 'changepassword')]
-    public function changepassword(Request $request, UserPasswordHasherInterface $passwordHasher)
+    public function changePassword(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         //if ($this->isCsrfTokenValid('delete-item', $submittedToken)) {
         $changePasswordModel = new ChangePassword();
