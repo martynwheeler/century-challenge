@@ -25,7 +25,7 @@ class UserCrudController extends AbstractCrudController
             ->setPageTitle(Crud::PAGE_INDEX, '%entity_label_singular% listing')
             ->setPageTitle(Crud::PAGE_EDIT, 'Edit %entity_label_singular% (#%entity_short_id%)')
             ->setPageTitle(Crud::PAGE_DETAIL, '%entity_label_singular% (#%entity_short_id%)')
-            ->setSearchFields(['id', 'username', 'roles', 'email', 'name', 'stravaID', 'passwordRequestToken', 'komootRefreshToken', 'komootTokenExpiry', 'komootID', 'stravaRefreshToken', 'stravaTokenExpiry', 'preferredProvider']);
+            ->setSearchFields(['id', 'username', 'roles', 'email', 'surname', 'forename', 'stravaID', 'passwordRequestToken', 'komootRefreshToken', 'komootTokenExpiry', 'komootID', 'stravaRefreshToken', 'stravaTokenExpiry', 'preferredProvider']);
     }
 
     public function configureActions(Actions $actions): Actions

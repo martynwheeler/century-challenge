@@ -96,17 +96,23 @@ class AddrideController extends AbstractController
                             break;
                         case 'strava':
                             $ride->setClubRide($strava_api->isClubRide($token, $rideID, $athleteActivity['date']));
+                            $realRide = $strava_api->isRealRide($token, $rideID);
                             break;
                     }
                 }
             }
-            //Maybe do some error checking here?
-            $entityManager = $this->doctrine->getManager();
-            $entityManager->persist($ride);
-            $entityManager->flush();
+            if ($realRide) {
+                //Maybe do some error checking here?
+                $entityManager = $this->doctrine->getManager();
+                $entityManager->persist($ride);
+                $entityManager->flush();
 
-            // do anything else you need here, like send an email
-            $this->addFlash('success', $this->getUser()->getName().', you have sucessfully added your ride');
+                // do anything else you need here, like send an email
+                $this->addFlash('success', $this->getUser()->getName().', you have sucessfully added your ride');
+            } else {
+                $this->addFlash('warning', $this->getUser()->getName().', you cannot upload virtual rides');
+            }
+
             return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUserIdentifier()]);
         }
 

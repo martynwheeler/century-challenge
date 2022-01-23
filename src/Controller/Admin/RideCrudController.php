@@ -29,7 +29,7 @@ class RideCrudController extends AbstractCrudController
             ->setPageTitle(Crud::PAGE_EDIT, 'Edit %entity_label_singular% (#%entity_short_id%)')
             ->setPageTitle(Crud::PAGE_DETAIL, '%entity_label_singular% (#%entity_short_id%)')
             ->setPageTitle(Crud::PAGE_NEW, 'Add Ride')
-            ->setSearchFields(['id', 'km', 'average_speed', 'details', 'ride_id', 'source']);
+            ->setSearchFields(['id', 'km', 'average_speed', 'details', 'ride_id', 'source', 'user.forename', 'user.surname']);
     }
 
     public function configureFields(string $pageName): iterable
@@ -40,18 +40,18 @@ class RideCrudController extends AbstractCrudController
         $date = DateTimeField::new('date');
         $dateAdded = DateTimeField::new('date_added', 'Date Added');
         $details = TextField::new('details');
-        $stravaRideId = TextareaField::new('strava_ride_id', 'Strava Ride ID');
+        $rideId = TextareaField::new('ride_id', 'Ride ID');
         $clubRide = BooleanField::new('club_ride');
         $id = IntegerField::new('id', 'ID');
 
         if (Crud::PAGE_INDEX === $pageName) {
             return [$id, $user, $km, $averageSpeed, $date, $dateAdded];
         } elseif (Crud::PAGE_DETAIL === $pageName) {
-            return [$id, $user, $km, $averageSpeed, $date, $dateAdded, $details, $stravaRideId, $clubRide];
+            return [$id, $user, $km, $averageSpeed, $date, $dateAdded, $details, $rideId, $clubRide];
         } elseif (Crud::PAGE_NEW === $pageName) {
-            return [$user, $km, $averageSpeed, $date, $dateAdded, $details, $stravaRideId, $clubRide];
+            return [$user, $km, $averageSpeed, $date, $dateAdded, $details, $rideId, $clubRide];
         } elseif (Crud::PAGE_EDIT === $pageName) {
-            return [$user, $km, $averageSpeed, $date, $dateAdded, $details, $stravaRideId, $clubRide];
+            return [$user, $km, $averageSpeed, $date, $dateAdded, $details, $rideId, $clubRide];
         }
     }
 }

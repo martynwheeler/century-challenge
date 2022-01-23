@@ -129,7 +129,8 @@ class StravaAPI
                 if ($athleteactivity['distance'] >= 100000) {
                     //convert to km and round to nearest 10m
                     $athleteactivity['distance'] = round(($athleteactivity['distance'] / 1000), 2);
-                    $date = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $athleteactivity['start_date']);
+                    //Correct tz to accomodate DST
+                    $date = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $athleteactivity['start_date'], new \DateTimeZone('Europe/London'));
                     //key is displayed in drop down box
                     $key = "Ride {$athleteactivity['id']} on ({$date->format('d-m-Y')}) of {$athleteactivity['distance']} km";
                     $results[] = [
@@ -196,11 +197,10 @@ class StravaAPI
 
         //Correct tz to accomodate DST
         $tz = new \DateTimeZone('Europe/London');
-        $date->setTimezone($tz);
 
         //Must be at start between 0820 and 0900
         $startTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 08:20:00", $tz);
-        $endTime = \DateTime::createFromFormat('Y-m-d H:i:s',   "{$date->format('Y-m-d')} 09:00:00", $tz);
+        $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:00:00", $tz);
 
         //Loop over stream to see if club ride and return
         $times = $stream_details[1]['data'];
@@ -218,6 +218,41 @@ class StravaAPI
             }
         }
         return $clubride;
+    }
+
+    /**
+     * Check if submitted ride is a real ride
+     *
+     * @throws \Exception
+     */
+    public function isRealRide(string $token, string $id): bool
+    {
+        //Set up request
+        $url = 'activities/'. $id . '/streams/latlng';
+        $query = ['resolution' => null, 'series_type' => 'time'];
+
+        //Make request and get response from API
+        $stream_details = $this->request($token, $url, $query);
+
+        //Set coordinates of start
+        $startLat = $lat = $stream_details[0]['data'][0][0];
+        $startLong = $lat = $stream_details[0]['data'][0][1];
+
+        //Loop over stream to see if club ride and return
+        $maxdist = 0;
+        for ($i = 0, $l = is_countable($stream_details[0]['data']) ? count($stream_details[0]['data']) : 0; $i < $l; ++$i) {
+            $lat = $stream_details[0]['data'][$i][0];
+            $long = $stream_details[0]['data'][$i][1];
+            $dist = $this->getGPXDistance($lat, $long, $startLat, $startLong);
+            if ($dist > $maxdist) {
+                $maxdist = $dist;
+            }
+        }
+        $realride = false;
+        if ($maxdist > 1.0) {
+            $realride = true;
+        }
+        return $realride;
     }
 
     /**

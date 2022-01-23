@@ -126,7 +126,8 @@ class KomootAPI
                     //echo '</pre>';
                     //convert to km and round to nearest 10m
                     $athleteactivity['distance'] = round(($athleteactivity['distance'] / 1000), 2);
-                    $date = \DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $athleteactivity['date']);
+                    //Correct tz to accomodate DST
+                    $date = \DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $athleteactivity['date'], new \DateTimeZone('Europe/London'));
                     //key is displayed in drop down box
                     $key = "Ride {$athleteactivity['id']} on ({$date->format('d-m-Y')}) of {$athleteactivity['distance']} km";
                     $results[] = [
@@ -192,11 +193,10 @@ class KomootAPI
 
         //Correct tz to accomodate DST
         $tz = new \DateTimeZone('Europe/London');
-        $date->setTimezone($tz);
 
         //Must be at start between 0820 and 0900
         $startTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 08:20:00", $tz);
-        $endTime = \DateTime::createFromFormat('Y-m-d H:i:s',   "{$date->format('Y-m-d')} 09:00:00", $tz);
+        $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:00:00", $tz);
 
         //Loop over stream to see if club ride and return
         $clubride = false;
