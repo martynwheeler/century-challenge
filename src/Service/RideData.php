@@ -70,6 +70,7 @@ class RideData
                 foreach ($rides as $ride) {
                     if ($ride->getUser()->getID() == $results[$i]['id'] && $ride->getDate()->format('Y M') == $month->format('Y M')) {
                         $distance = $ride->getKm();
+                        $speed = $ride->getAverageSpeed();
                         $points = $this->setPoints($distance);
                         $clubRides = 0;
                         if ($ride->getClubRide()) {
@@ -80,6 +81,7 @@ class RideData
                         $results[$i]['months'][$month->format('M')]['rides'][] = [
                             'id' => $ride->getId(),
                             'km' => $distance,
+                            'speed' => $speed,
                             'points' => $points,
                             'rideid' => $ride->getRideId(),
                             'source' => $ride->getSource(),

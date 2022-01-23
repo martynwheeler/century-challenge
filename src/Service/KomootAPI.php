@@ -126,14 +126,13 @@ class KomootAPI
                     //echo '</pre>';
                     //convert to km and round to nearest 10m
                     $athleteactivity['distance'] = round(($athleteactivity['distance'] / 1000), 2);
+                    $date = \DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $athleteactivity['date']);
                     //key is displayed in drop down box
-                    $key = 'Ride '.$athleteactivity['id'].' on ('.
-                        \DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $athleteactivity['date'])->format('d-m-Y').') of '.
-                        $athleteactivity['distance'].' km';
+                    $key = "Ride {$athleteactivity['id']} on ({$date->format('d-m-Y')}) of {$athleteactivity['distance']} km";
                     $results[] = [
                         'key' => $key,
                         'id' => $athleteactivity['id'],
-                        'date' => \DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $athleteactivity['date']),
+                        'date' => $date,
                         'distance' => $athleteactivity['distance'],
                         'average' => $athleteactivity['distance']/$athleteactivity['time_in_motion'] * 3600,
                     ];
@@ -165,8 +164,9 @@ class KomootAPI
         }
 
         //Process the results and return
+        $date = \DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $athleteactivity['date']);
         $result = [
-            'date' => \DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $athleteactivity['date']),
+            'date' => $date,
             'distance' => round(($athleteactivity['distance'] / 1000), 2),
             'average' => $athleteactivity['distance']/$athleteactivity['time_in_motion'] * 3.6,
         ];
@@ -195,8 +195,8 @@ class KomootAPI
         $date->setTimezone($tz);
 
         //Must be at start between 0820 and 0900
-        $startTime = \DateTime::createFromFormat('Y-m-d H:i:s', $date->format('Y-m-d')." 08:20:00", $tz);
-        $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', $date->format('Y-m-d')." 09:00:00", $tz);
+        $startTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 08:20:00", $tz);
+        $endTime = \DateTime::createFromFormat('Y-m-d H:i:s',   "{$date->format('Y-m-d')} 09:00:00", $tz);
 
         //Loop over stream to see if club ride and return
         $clubride = false;

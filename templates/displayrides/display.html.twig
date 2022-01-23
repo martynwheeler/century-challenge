@@ -52,7 +52,8 @@
       <thead>
 	<tr>
 	  <th>Date</th>
-	  <th>Distance</th>
+	  <th>Distance (km)</th>
+	  <th>Speed (km/h)</th>
 	  <th>Points</th>
 	  <th>Link</th>
 	  <th>Edit</th>
@@ -64,6 +65,7 @@
 	<tr>
 	  <td>{{ ride.date|date("d/m/Y") }}</td>
 	  <td>{{ ride.km }}</td>
+	  <td>{{ ride.speed }}</td>
 	  <td>{{ ride.points }}</td>
 	  <td class="text-center">
 	    {% if ride.rideid and ride.source == 'strava' %}
