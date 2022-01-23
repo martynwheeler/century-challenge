@@ -71,7 +71,7 @@
 	  <td>{{ ride.points }}</td>
 	  <td class="text-center">
 	    {% if ride.rideid and ride.source == 'strava' %}
-	    <a title="Ride Link" href="https://app.strava.com/activities/{{ ride.rideid }}">
+	    <a title="Ride Link" href="https://www.strava.com/activities/{{ ride.rideid }}">
 	      <img class="border" width="60px" src="{{ asset('assets/img/strava.jpg') }}" alt="strava logo" />
 	    </a>
 		{% elseif ride.rideid and ride.source == 'komoot' %}
