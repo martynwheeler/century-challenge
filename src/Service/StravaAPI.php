@@ -198,9 +198,15 @@ class StravaAPI
         //Correct tz to accomodate DST
         $tz = new \DateTimeZone('Europe/London');
 
-        //Must be at start between 0820 and 0900
-        $startTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 08:20:00", $tz);
-        $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:00:00", $tz);
+        //Must be at start between 0820 and 0900 for Saturday
+        if ($date->format('w') == 6) {
+            $startTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 08:20:00", $tz);
+            $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:00:00", $tz);    
+        } 
+        elseif ($date->format('w') == 0) {
+            $startTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 08:40:00", $tz);
+            $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:30:00", $tz);    
+        }
 
         //Loop over stream to see if club ride and return
         $times = $stream_details[1]['data'];
@@ -209,7 +215,7 @@ class StravaAPI
             $lat = $stream_details[0]['data'][$i][0];
             $long = $stream_details[0]['data'][$i][1];
             $dist = $this->getGPXDistance($lat, $long, $bLat, $bLong);
-            if ($dist < 0.05 && $date->format('w') == 6) {
+            if ($dist < 0.05 && ($date->format('w') == 0 || $date->format('w') == 6)) {
                 $tempdate = clone $date;
                 $tempdate->modify('+' . $times[$i] . 'seconds');
                 if ($tempdate > $startTime && $tempdate < $endTime) {
@@ -235,10 +241,10 @@ class StravaAPI
         $stream_details = $this->request($token, $url, $query);
 
         //Set coordinates of start
-        $startLat = $lat = $stream_details[0]['data'][0][0];
-        $startLong = $lat = $stream_details[0]['data'][0][1];
+        $startLat = $stream_details[0]['data'][0][0];
+        $startLong = $stream_details[0]['data'][0][1];
 
-        //Loop over stream to see if club ride and return
+        //Loop over stream to check distance moved and return
         $maxdist = 0;
         for ($i = 0, $l = is_countable($stream_details[0]['data']) ? count($stream_details[0]['data']) : 0; $i < $l; ++$i) {
             $lat = $stream_details[0]['data'][$i][0];

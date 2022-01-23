@@ -194,9 +194,15 @@ class KomootAPI
         //Correct tz to accomodate DST
         $tz = new \DateTimeZone('Europe/London');
 
-        //Must be at start between 0820 and 0900
-        $startTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 08:20:00", $tz);
-        $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:00:00", $tz);
+        //Must be at start between 0820 and 0900 for Saturday
+        if ($date->format('w') == 6) {
+            $startTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 08:20:00", $tz);
+            $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:00:00", $tz);    
+        } 
+        elseif ($date->format('w') == 0) {
+            $startTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 08:40:00", $tz);
+            $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:30:00", $tz);    
+        }
 
         //Loop over stream to see if club ride and return
         $clubride = false;
@@ -204,7 +210,7 @@ class KomootAPI
             $lat = $stream_details['items'][$i]['lat'];
             $long = $stream_details['items'][$i]['lng'];
             $dist = $this->getGPXDistance($lat, $long, $bLat, $bLong);
-            if ($dist < 0.05 && $date->format('w') == 6) {
+            if ($dist < 0.05 && ($date->format('w') == 0 || $date->format('w') == 6)) {
                 $tempdate = clone $date;
                 $tempdate->modify('+' . $stream_details['items'][$i]['t']/1000 . 'seconds');
                 if ($tempdate > $startTime && $tempdate < $endTime) {
@@ -213,6 +219,40 @@ class KomootAPI
             }
         }
         return $clubride;
+    }
+
+    /**
+     * Check if submitted ride is a club ride
+     *
+     * @throws \Exception
+     */
+    public function isRealRide(string $token, string $id): bool
+    {
+        //Set up request
+        $url = 'tours/' . $id . '/coordinates';
+
+        //Make request and get response from API
+        $stream_details = $this->request($token, $url, $query = []);
+
+        //Set coordinates of start
+        $startLat = $stream_details['items'][0]['lat'];
+        $startLong = $stream_details['items'][0]['lng'];
+
+        //Loop over stream to check distance moved and return
+        $maxdist = 0;
+        for ($i = 0, $l = is_countable($stream_details['items']) ? count($stream_details['items']) : 0; $i < $l; ++$i) {
+            $lat = $stream_details['items'][$i]['lat'];
+            $long = $stream_details['items'][$i]['lng'];
+            $dist = $this->getGPXDistance($lat, $long, $startLat, $startLong);
+            if ($dist > $maxdist) {
+                $maxdist = $dist;
+            }
+        }
+        $realride = false;
+        if ($maxdist > 1.0) {
+            $realride = true;
+        }
+        return $realride;
     }
 
     /**

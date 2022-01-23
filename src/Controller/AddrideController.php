@@ -93,6 +93,7 @@ class AddrideController extends AbstractController
                     switch ($user->getPreferredProvider()) {
                         case 'komoot':
                             $ride->setClubRide($komoot_api->isClubRide($token, $rideID, $athleteActivity['date']));
+                            $realRide = $komoot_api->isRealRide($token, $rideID);
                             break;
                         case 'strava':
                             $ride->setClubRide($strava_api->isClubRide($token, $rideID, $athleteActivity['date']));
