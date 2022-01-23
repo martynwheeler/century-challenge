@@ -35,15 +35,15 @@ class Ride implements \Stringable
     private $club_ride;
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
     private $source;
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
-    public function getUser(): ?User
+    public function getUser(): User
     {
         return $this->user;
     }
-    public function setUser(?User $user): self
+    public function setUser(User $user): self
     {
         $this->user = $user;
 
@@ -59,17 +59,17 @@ class Ride implements \Stringable
 
         return $this;
     }
-    public function getAverageSpeed(): float
+    public function getAverageSpeed(): ?float
     {
         return $this->average_speed;
     }
-    public function setAverageSpeed($average_speed): self
+    public function setAverageSpeed(?float $average_speed): self
     {
         $this->average_speed = $average_speed;
 
         return $this;
     }
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): \DateTimeInterface
     {
         return $this->date;
     }
@@ -79,7 +79,7 @@ class Ride implements \Stringable
 
         return $this;
     }
-    public function getDateAdded(): ?\DateTimeInterface
+    public function getDateAdded(): \DateTimeInterface
     {
         return $this->date_added;
     }
