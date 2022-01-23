@@ -35,12 +35,12 @@ class RideCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         $user = AssociationField::new('user');
-        $km = NumberField::new('km', 'KM');
-        $averageSpeed = NumberField::new('average_speed', 'Average Speed');
+        $km = NumberField::new('km', 'Distance (km)');
+        $averageSpeed = NumberField::new('average_speed', 'Average Speed (km/h)');
         $date = DateTimeField::new('date');
         $dateAdded = DateTimeField::new('date_added', 'Date Added');
-        $details = TextField::new('details');
-        $rideId = TextareaField::new('ride_id', 'Ride ID');
+        $details = TextareaField::new('details');
+        $rideId = TextField::new('ride_id', 'Ride ID');
         $clubRide = BooleanField::new('club_ride');
         $id = IntegerField::new('id', 'ID');
 

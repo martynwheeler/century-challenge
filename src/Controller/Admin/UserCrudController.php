@@ -25,7 +25,7 @@ class UserCrudController extends AbstractCrudController
             ->setPageTitle(Crud::PAGE_INDEX, '%entity_label_singular% listing')
             ->setPageTitle(Crud::PAGE_EDIT, 'Edit %entity_label_singular% (#%entity_short_id%)')
             ->setPageTitle(Crud::PAGE_DETAIL, '%entity_label_singular% (#%entity_short_id%)')
-            ->setSearchFields(['id', 'username', 'roles', 'email', 'surname', 'forename', 'stravaID', 'passwordRequestToken', 'komootRefreshToken', 'komootTokenExpiry', 'komootID', 'stravaRefreshToken', 'stravaTokenExpiry', 'preferredProvider']);
+            ->setSearchFields(['id', 'username', 'email', 'surname', 'forename', 'preferredProvider']);
     }
 
     public function configureActions(Actions $actions): Actions
@@ -38,7 +38,8 @@ class UserCrudController extends AbstractCrudController
     {
         $id = IntegerField::new('id', 'ID');
         $username = TextField::new('username');
-        $name = TextField::new('name');
+        $surname = TextField::new('surname');
+        $forename = TextField::new('forename');
         $email = EmailField::new('email');
         $stravaID = TextField::new('stravaID', 'Strava ID');
         $passwordRequestToken = TextField::new('passwordRequestToken');
@@ -46,13 +47,13 @@ class UserCrudController extends AbstractCrudController
         $rides = AssociationField::new('rides');
 
         if (Crud::PAGE_INDEX === $pageName) {
-            return [$id, $username, $name, $email, $stravaID];
+            return [$id, $username, $forename, $surname, $email];
         } elseif (Crud::PAGE_DETAIL === $pageName) {
-            return [$id, $name, $username, $email, $stravaID, $rides];
+            return [$id, $forename, $surname, $username, $email, $rides];
         } elseif (Crud::PAGE_NEW === $pageName) {
-            return [$id, $username, $name, $email, $stravaID];
+            return [$username, $forename, $surname, $email];
         } elseif (Crud::PAGE_EDIT === $pageName) {
-            return [$id, $username, $name, $email, $stravaID, $passwordRequestToken, $requestTokenExpiry];
+            return [$username, $forename, $surname, $email];
         }
     }
 }
