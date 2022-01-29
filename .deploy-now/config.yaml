@@ -22,6 +22,8 @@ deploy:
       ## php without version or executing ./bin/console directly is leading to use PHP 4.4
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:clear
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:warmup
+      # delete unwanted files
+      - rm -rf assets bin tools 
 
   # configuration part, which is taken at ALL FURTHER deployments of this branch
   recurring:
@@ -44,4 +46,4 @@ deploy:
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:clear
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:warmup
       # delete unwanted files
-      - rm -rf assets bin tests tools 
+      - rm -rf assets bin tools 
