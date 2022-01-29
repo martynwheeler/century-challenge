@@ -34,13 +34,13 @@ jobs:
         env:
           APP_DEBUG: 0
           APP_ENV: prod
-          DATABASE_URL: mysql://dbu1601154:9GjyXbEgm!mUZ4m@db5006074270.hosting-data.io:3306/dbs5086305
-          KOMOOT_ID: centurychallenge-gvwb9t
-          KOMOOT_SECRET: ud3iethoot9ol2pio4eihooyi
-          MAILER_DSN: smtp://cc@leicesterforest.com:r4UycX5ZcwhpU@smtp.ionos.co.uk:587
-          MAILER_FROM: cc@leicesterforest.com
-          STRAVA_ID: 31826
-          STRAVA_SECRET: abc43fbc0316bded6a4acf570c56c0f86eddb8f5
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          KOMOOT_ID: ${{ secrets.KOMOOT_ID }}
+          KOMOOT_SECRET: ${{ secrets.KOMOOT_SECRET }}
+          MAILER_DSN: ${{ secrets.MAILER_DSN }}
+          MAILER_FROM: ${{ secrets.MAILER_FROM }}
+          STRAVA_ID: ${{ secrets.STRAVA_ID }}
+          STRAVA_SECRET: ${{ secrets.STRAVA_SECRET }}
       - name: Build assets and run tests
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
         run: php .deploy-now/create-app-secret;
