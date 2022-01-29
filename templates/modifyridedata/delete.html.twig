@@ -7,10 +7,10 @@
 	{{ form_start(deleterideForm) }}
 		<div class="row mb-1">
 			<div class="d-grid col-6">
-				<a href="{{ app.request.headers.get('referer') }}" class="btn btn-primary" style="width:auto"><i class="far fa-hand-point-left"></i> No, take me back</a>
+				<a href="{{ app.request.headers.get('referer') }}" class="btn btn-primary" style="width:auto"><i class="fas fa-hand-point-left"></i> No, take me back</a>
 			</div>
 			<div class="d-grid col-6">
-				<button type="submit" class="btn btn-danger" name="submit" style="width:auto"><i class="far fa-trash-alt"></i> Yes, delete it already</button>
+				<button type="submit" class="btn btn-danger" name="submit" style="width:auto"><i class="fas fa-trash-alt"></i> Yes, delete it already</button>
 			</div>
 		</div>
 	{{ form_end(deleterideForm) }}
