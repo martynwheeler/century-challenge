@@ -13,7 +13,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class EditProfileController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine, private StravaAPI $strava_api, private KomootAPI $komoot_api) {}
+    public function __construct(private ManagerRegistry $doctrine, private StravaAPI $strava_api, private KomootAPI $komoot_api)
+    {
+    }
 
     #[Route('/profile/{username}/editprofile', name: 'editprofile')]
     public function editProfile(Request $request)
@@ -43,7 +45,7 @@ class EditProfileController extends AbstractController
             //Get or refresh token as necessary
             if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 300) {
                 $accessToken = $this->strava_api->getToken($user);
-                if ($accessToken){
+                if ($accessToken) {
                     $request->getSession()->set('strava.token', $accessToken);
                 }
             }

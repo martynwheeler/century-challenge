@@ -12,10 +12,10 @@ class CustomLogoutListener
     public function onSymfonyComponentSecurityHttpEventLogoutEvent(LogoutEvent $logoutEvent): void
     {
         $requestUri = $logoutEvent->getRequest()->getRequestUri();
-        if(strpos($requestUri, 'redirect')){
+        if (strpos($requestUri, 'redirect')) {
             $httpPos = strpos($requestUri, 'http');
             $redirectUrl = substr($requestUri, $httpPos);
             $logoutEvent->setResponse(new RedirectResponse($redirectUrl, Response::HTTP_MOVED_PERMANENTLY));
-    }
+        }
     }
 }

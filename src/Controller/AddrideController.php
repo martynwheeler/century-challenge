@@ -15,7 +15,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class AddrideController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine) {}
+    public function __construct(private ManagerRegistry $doctrine)
+    {
+    }
 
     #[Route('/addride', name: 'addride')]
     public function addRide(Request $request, StravaAPI $strava_api, KomootAPI $komoot_api): Response

@@ -16,7 +16,9 @@ class KomootAPI
     public const BASE_URL = 'https://auth.komoot.de/';
     public const API_URL = 'https://external-api.komoot.de/v007/';
 
-    public function __construct(private EntityManagerInterface $em) {}
+    public function __construct(private EntityManagerInterface $em)
+    {
+    }
 
     /**
      * Makes HTTP Request to the API
@@ -197,11 +199,10 @@ class KomootAPI
         //Must be at start between 0820 and 0900 for Saturday
         if ($date->format('w') == 6) {
             $startTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 08:20:00", $tz);
-            $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:00:00", $tz);    
-        } 
-        elseif ($date->format('w') == 0) {
+            $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:00:00", $tz);
+        } elseif ($date->format('w') == 0) {
             $startTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 08:40:00", $tz);
-            $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:30:00", $tz);    
+            $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:30:00", $tz);
         }
 
         //Loop over stream to see if club ride and return

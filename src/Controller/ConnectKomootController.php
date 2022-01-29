@@ -13,7 +13,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ConnectKomootController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine) {}
+    public function __construct(private ManagerRegistry $doctrine)
+    {
+    }
 
     #[Route('/connect/komoot', name: 'connect_komoot')]
     public function connectAction(ClientRegistry $clientRegistry): RedirectResponse

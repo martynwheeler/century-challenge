@@ -14,7 +14,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ChangePasswordController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine) {}
+    public function __construct(private ManagerRegistry $doctrine)
+    {
+    }
 
     #[Route('/profile/{username}/changepassword', name: 'changepassword')]
     public function changePassword(Request $request, UserPasswordHasherInterface $passwordHasher): Response

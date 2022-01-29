@@ -12,9 +12,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 
 class ConnectStravaController extends AbstractController
-{    
-    public function __construct(private ManagerRegistry $doctrine) {}
-    
+{
+    public function __construct(private ManagerRegistry $doctrine)
+    {
+    }
+
     #[Route('/connect/strava', name: 'connect_strava')]
     public function connectAction(ClientRegistry $clientRegistry): RedirectResponse
     {
@@ -59,8 +61,8 @@ class ConnectStravaController extends AbstractController
             $entityManager->flush();
 
             //Success - redirect accordingly
-            if ($request->getSession()->remove('reconnect.strava')){
-                return $this->redirectToRoute('addride');                
+            if ($request->getSession()->remove('reconnect.strava')) {
+                return $this->redirectToRoute('addride');
             }
             return $this->redirectToRoute('homepage');
         } catch (IdentityProviderException $e) {

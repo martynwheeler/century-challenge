@@ -12,7 +12,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class DeauthorizeController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine, private StravaAPI $strava_api) {}
+    public function __construct(private ManagerRegistry $doctrine, private StravaAPI $strava_api)
+    {
+    }
 
     #[Route('/deauthorize/strava', name: 'deauthorize_strava')]
     public function deauthorize(Request $request): Response
@@ -31,7 +33,7 @@ class DeauthorizeController extends AbstractController
             //Get or refresh token as necessary
             if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 300) {
                 $accessToken = $this->strava_api->getToken($user);
-                if ($accessToken){
+                if ($accessToken) {
                     $request->getSession()->set('strava.token', $accessToken);
                 }
             }

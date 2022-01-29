@@ -16,7 +16,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class AdminController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine) {}
+    public function __construct(private ManagerRegistry $doctrine)
+    {
+    }
 
     #[Route('/admin/listusers', name: 'listusers')]
     public function listUsers(Request $request, RideData $rd): Response
@@ -70,37 +72,36 @@ class AdminController extends AbstractController
             'email_form' => $form,
         ]);
     }
-/*
-    #[Route('/admin/updateusers', name: 'updateusers')]
-    public function updateUsers(Request $request, RideData $rd)
-    {
-        $entityManager = $this->doctrine->getManager();
-        $users = $this->doctrine->getRepository(User::class)->findBy([], ['name' => 'ASC']);
+    /*
+        #[Route('/admin/updateusers', name: 'updateusers')]
+        public function updateUsers(Request $request, RideData $rd)
+        {
+            $entityManager = $this->doctrine->getManager();
+            $users = $this->doctrine->getRepository(User::class)->findBy([], ['name' => 'ASC']);
 
-        foreach ($users as $user) {
-            $name = $user->getName();
-            $names = explode(' ', $name);
-            //remove null elements
-            $names = array_values(array_filter($names, fn($value) => !is_null($value) && $value !== ''));
-            //remove whitespace
-            for ($i = 0; $i < count($names); $i++) {
-                $names[$i] = preg_replace('/\s+/', '', $names[$i]);
+            foreach ($users as $user) {
+                $name = $user->getName();
+                $names = explode(' ', $name);
+                //remove null elements
+                $names = array_values(array_filter($names, fn($value) => !is_null($value) && $value !== ''));
+                //remove whitespace
+                for ($i = 0; $i < count($names); $i++) {
+                    $names[$i] = preg_replace('/\s+/', '', $names[$i]);
+                }
+                //combine first names
+                if (sizeof($names) > 2){
+                    $first = array_shift($names);
+                    $names[0] = $first . ' ' . $names[0];
+                }
+                $firstname = ucwords(array_shift($names));
+                $surname = ucwords(end($names));
+                $user->setForename($firstname);
+                $user->setSurname($surname);
+                $entityManager->flush();
             }
-            //combine first names
-            if (sizeof($names) > 2){
-                $first = array_shift($names);
-                $names[0] = $first . ' ' . $names[0]; 
-            }
-            $firstname = ucwords(array_shift($names));
-            $surname = ucwords(end($names));
-            $user->setForename($firstname);
-            $user->setSurname($surname);
-            $entityManager->flush();
+            return $this->renderForm('admin/listusers.html.twig', [
+                'users' => $users,
+            ]);
         }
-        return $this->renderForm('admin/listusers.html.twig', [
-            'users' => $users,
-        ]);
-    }
-*/
-
+    */
 }

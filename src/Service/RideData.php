@@ -8,7 +8,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class RideData
 {
-    public function __construct(private EntityManagerInterface $em) {}
+    public function __construct(private EntityManagerInterface $em)
+    {
+    }
 
     /**
      * Gets the data for rides by user or all users

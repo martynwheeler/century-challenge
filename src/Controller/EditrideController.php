@@ -13,7 +13,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class EditrideController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine) {}
+    public function __construct(private ManagerRegistry $doctrine)
+    {
+    }
 
     #[Route('/ride/{ride_id}/delete', name: 'deleteride')]
     public function delete(Request $request, $ride_id): Response

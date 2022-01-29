@@ -20,7 +20,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ForgotPasswordController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine) {}
+    public function __construct(private ManagerRegistry $doctrine)
+    {
+    }
 
     #[Route('/resetpassword', name: 'resetpassword')]
     public function resetPassword(Request $request, MailerInterface $mailer): Response
@@ -88,12 +90,12 @@ class ForgotPasswordController extends AbstractController
 
     #[Route('/resetpassword/confirm/{token}', name: 'resetpassword_confirm')]
     public function resetPasswordCheck(
-        Request $request, $token,
+        Request $request,
+        $token,
         UserPasswordHasherInterface $passwordHasher,
         UserAuthenticatorInterface $userAuthenticator,
         FormLoginAuthenticator $formLoginAuthenticator
-        ): Response
-    {
+    ): Response {
         //test whether the link is valid
         $entityManager = $this->doctrine->getManager();
         $user = $entityManager->getRepository(User::class)->findOneBy(['passwordRequestToken' => hash('md5', $token)]);

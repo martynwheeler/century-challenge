@@ -17,7 +17,9 @@ class StravaAPI
 {
     public const API_URL = 'https://www.strava.com/api/v3/';
 
-    public function __construct(private EntityManagerInterface $em, private RouterInterface $router) {}
+    public function __construct(private EntityManagerInterface $em, private RouterInterface $router)
+    {
+    }
 
     /**
      * Deauthorize the app from strava
@@ -201,11 +203,10 @@ class StravaAPI
         //Must be at start between 0820 and 0900 for Saturday
         if ($date->format('w') == 6) {
             $startTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 08:20:00", $tz);
-            $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:00:00", $tz);    
-        } 
-        elseif ($date->format('w') == 0) {
+            $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:00:00", $tz);
+        } elseif ($date->format('w') == 0) {
             $startTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 08:40:00", $tz);
-            $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:30:00", $tz);    
+            $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:30:00", $tz);
         }
 
         //Loop over stream to see if club ride and return

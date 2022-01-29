@@ -76,7 +76,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     {
         $this->rides = new ArrayCollection();
     }
-    
+
     public function getId(): ?int
     {
         return $this->id;
