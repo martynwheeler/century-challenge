@@ -20,22 +20,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: 'recursive'
-      - name: Setup composer
-        if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
-        uses: php-actions/composer@v6
-        with:
-          args: --no-dev --optimize-autoloader
-          variableNames: APP_ENV,APP_SECRET,APP_DEBUG,DATABASE_URL,STRAVA_SECRET,STRAVA_ID,KOMOOT_SECRET,KOMOOT_ID,MAILER_DSN,MAILER_FROM
-        env:
-          APP_ENV: prod
-          APP_DEBUG: 0
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          KOMOOT_ID: ${{ secrets.KOMOOT_ID }}
-          KOMOOT_SECRET: ${{ secrets.KOMOOT_SECRET }}
-          MAILER_DSN: ${{ secrets.MAILER_DSN }}
-          MAILER_FROM: ${{ secrets.MAILER_FROM }}
-          STRAVA_ID: ${{ secrets.DATABASESTRAVA_ID_URL }}
-          STRAVA_SECRET: ${{ secrets.STRAVA_SECRET }}
       - name: Make envfile
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
         uses: fmunirdev/envvar-to-dotenv-action@v0.2.0
@@ -52,6 +36,11 @@ jobs:
           MAILER_FROM: ${{ secrets.MAILER_FROM }}
           STRAVA_ID: ${{ secrets.DATABASESTRAVA_ID_URL }}
           STRAVA_SECRET: ${{ secrets.STRAVA_SECRET }}
+      - name: Setup composer
+        if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
+        uses: php-actions/composer@v6
+        with:
+          args: --no-dev --optimize-autoloader
       - name: Build assets and run tests
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
         run: php .deploy-now/create-app-secret;
