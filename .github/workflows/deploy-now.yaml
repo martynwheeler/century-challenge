@@ -34,8 +34,8 @@ jobs:
           KOMOOT_SECRET: ${{ secrets.KOMOOT_SECRET }}
           MAILER_DSN: ${{ secrets.MAILER_DSN }}
           MAILER_FROM: ${{ secrets.MAILER_FROM }}
-          STRAVA_ID: ${{ secrets.DATABASESTRAVA_ID_URL }}
-          STRAVA_SECRET: ${{ secrets.STRAVA_SECRET }}
+          STRAVA_ID: 77346
+          STRAVA_SECRET: 16847147caec15fa25b72451a2762f1b31295aa7
       - name: Setup composer
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
         uses: php-actions/composer@v6
