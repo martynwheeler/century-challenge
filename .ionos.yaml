@@ -5,7 +5,7 @@ setup:
   - name: Setup composer
     action: php-actions/composer@v6
     properties:
-      args: --no-dev --optimize-autoloader
+      args: --optimize-autoloader
   - name: Make envfile
     action: fmunirdev/envvar-to-dotenv-action@v0.2.0
     environment:
