@@ -29,7 +29,7 @@ jobs:
         env:
           APP_DEBUG: 0
           APP_ENV: prod
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: mysql://dbu1601154:9GjyXbEgm!mUZ4m@db5006074270.hosting-data.io:3306/dbs5086305?serverVersion=5.7
           KOMOOT_ID: ${{ secrets.KOMOOT_ID }}
           KOMOOT_SECRET: ${{ secrets.KOMOOT_SECRET }}
           MAILER_DSN: ${{ secrets.MAILER_DSN }}
