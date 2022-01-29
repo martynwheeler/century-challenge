@@ -5,19 +5,19 @@ setup:
   - name: Setup composer
     action: php-actions/composer@v6
     properties:
-      args: --optimize-autoloader
+      args: --no-dev --optimize-autoloader
   - name: Make envfile
     action: fmunirdev/envvar-to-dotenv-action@v0.2.0
     environment:
       APP_ENV: prod
       APP_DEBUG: 0
-      DATABASE_URL: mysql://dbu1601154:9GjyXbEgm!mUZ4m@db5006074270.hosting-data.io:3306/dbs5086305
-      STRAVA_SECRET: abc43fbc0316bded6a4acf570c56c0f86eddb8f5
-      STRAVA_ID: 31826
-      KOMOOT_SECRET: ud3iethoot9ol2pio4eihooyi
-      KOMOOT_ID: centurychallenge-gvwb9t
-      MAILER_DSN: smtp://cc@leicesterforest.com:r4UycX5ZcwhpU@smtp.ionos.co.uk:587
-      MAILER_FROM: cc@leicesterforest.com
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      STRAVA_SECRET: ${{ secrets.STRAVA_SECRET }}
+      STRAVA_ID: ${{ secrets.DATABASESTRAVA_ID_URL }}
+      KOMOOT_SECRET: ${{ secrets.KOMOOT_SECRET }}
+      KOMOOT_ID: ${{ secrets.KOMOOT_ID }}
+      MAILER_DSN: ${{ secrets.MAILER_DSN }}
+      MAILER_FROM: ${{ secrets.MAILER_FROM }}
     properties:
       variableNames: APP_ENV,APP_SECRET,APP_DEBUG,DATABASE_URL,STRAVA_SECRET,STRAVA_ID,KOMOOT_SECRET,KOMOOT_ID,MAILER_DSN,MAILER_FROM
       target: .env.local
@@ -26,6 +26,5 @@ build:
   # commands that are executed one after the other at the build servers NOT at real webspace
   # php .deploy-now/create-app-secret = call of a little PHP script which creates and sets APP_SECRET to .env.local
   command:
-    #npm run build;
     php .deploy-now/create-app-secret;
     #php ./vendor/bin/phpunit;
