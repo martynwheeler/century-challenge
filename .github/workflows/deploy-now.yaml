@@ -24,7 +24,10 @@ jobs:
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
         uses: php-actions/composer@v6
         with:
-          args: --optimize-autoloader
+          args: --no-dev --optimize-autoloader
+          variableNames: APP_ENV
+        env:
+          APP_ENV: prod
       - name: Make envfile
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
         uses: fmunirdev/envvar-to-dotenv-action@v0.2.0
