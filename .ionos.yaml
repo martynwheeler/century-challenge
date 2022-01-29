@@ -9,7 +9,7 @@ setup:
       APP_DEBUG: 0
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       STRAVA_SECRET: ${{ secrets.STRAVA_SECRET }}
-      STRAVA_ID: ${{ secrets.DATABASESTRAVA_ID_URL }}
+      STRAVA_ID: ${{ secrets.STRAVA_ID }}
       KOMOOT_SECRET: ${{ secrets.KOMOOT_SECRET }}
       KOMOOT_ID: ${{ secrets.KOMOOT_ID }}
       MAILER_DSN: ${{ secrets.MAILER_DSN }}
