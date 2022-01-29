@@ -40,6 +40,8 @@ deploy:
       - find $(pwd) -type f -not -path "$(pwd)/logs/*" -exec chmod 664 {} \;
       - find $(pwd) -type d -not -name "logs" -exec chmod 775 {} \;
       - chmod -R o+w var
+      - rm -rf node_modules
+      - rm -rf assets
       # clear caches, migrate database, install assets, warmup caches
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:clear
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:warmup
