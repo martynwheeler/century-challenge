@@ -2,10 +2,6 @@
 ---
 distFolder: ./
 setup:
-  - name: Setup composer
-    action: php-actions/composer@v6
-    properties:
-      args: --optimize-autoloader
   - name: Make envfile
     action: fmunirdev/envvar-to-dotenv-action@v0.2.0
     environment:
@@ -21,10 +17,19 @@ setup:
     properties:
       variableNames: APP_ENV,APP_SECRET,APP_DEBUG,DATABASE_URL,STRAVA_SECRET,STRAVA_ID,KOMOOT_SECRET,KOMOOT_ID,MAILER_DSN,MAILER_FROM
       target: .env.local
+  - name: Setup composer
+    action: php-actions/composer@v6
+    properties:
+      args: --no-dev --optimize-autoloader
+  - name: Optimise composer
+    action: php-actions/composer@v6
+    properties:
+      args: dump-autoload --optimize --no-dev --classmap-authoritative
 build:
   name: Build assets and run tests
   # commands that are executed one after the other at the build servers NOT at real webspace
   # php .deploy-now/create-app-secret = call of a little PHP script which creates and sets APP_SECRET to .env.local
   command:
+    #npm run build;
     php .deploy-now/create-app-secret;
     #php ./vendor/bin/phpunit;
