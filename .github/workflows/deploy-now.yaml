@@ -34,7 +34,7 @@ jobs:
           KOMOOT_SECRET: ${{ secrets.KOMOOT_SECRET }}
           MAILER_DSN: ${{ secrets.MAILER_DSN }}
           MAILER_FROM: ${{ secrets.MAILER_FROM }}
-          STRAVA_ID: ${{ secrets.DATABASESTRAVA_ID_URL }}
+          STRAVA_ID: ${{ secrets.STRAVA_ID }}
           STRAVA_SECRET: ${{ secrets.STRAVA_SECRET }}
       - name: Setup composer
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
