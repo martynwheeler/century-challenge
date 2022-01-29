@@ -24,7 +24,8 @@ setup:
   - name: Optimise composer
     action: php-actions/composer@v6
     properties:
-      args: dump-autoload --optimize --no-dev --classmap-authoritative
+      command: dump-autoload
+      args: --optimize --no-dev --classmap-authoritative
 build:
   name: Build assets and run tests
   # commands that are executed one after the other at the build servers NOT at real webspace
