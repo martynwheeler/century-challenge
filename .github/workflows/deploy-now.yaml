@@ -45,7 +45,8 @@ jobs:
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
         uses: php-actions/composer@v6
         with:
-          args: dump-autoload --optimize --no-dev --classmap-authoritative
+          command: dump-autoload
+          args: --optimize --no-dev --classmap-authoritative
       - name: Build assets and run tests
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
         run: php .deploy-now/create-app-secret;
