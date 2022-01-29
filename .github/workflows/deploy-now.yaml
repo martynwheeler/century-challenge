@@ -47,17 +47,9 @@ jobs:
         with:
           args: --optimize --no-dev --classmap-authoritative
           command: dump-autoload
-      - name: Setup Node.js v14.x
-        if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14.x
-      - name: Prepare project environment
-        if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
-        run: npm ci
       - name: Build assets and run tests
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
-        run: npm run build; php .deploy-now/create-app-secret;
+        run: php .deploy-now/create-app-secret;
       - name: Deploy build
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
         uses: ionos-deploy-now/deploy-to-ionos-action@v1
