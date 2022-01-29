@@ -1,0 +1,90 @@
+/* Custom page CSS
+-------------------------------------------------- */
+// the ~ allows you to reference things in node_modules
+// fontawsome
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~@fortawesome/fontawesome-free/scss/regular';
+@import '~@fortawesome/fontawesome-free/scss/brands';
+
+// bootstrap
+@import "~bootstrap/scss/bootstrap";
+
+main > .container {
+    padding: 60px 15px 0;
+  }
+  
+  body {
+    display: flex;
+    background-color: #f5f5f5;
+  }
+  
+  h1 {
+    font-weight: normal;
+    margin-bottom: 1rem;
+  }
+  
+  h3 {
+    font-weight: normal;
+    margin-bottom: 1rem;
+  }
+  
+  .form-signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+  }
+  
+  .form-signin .checkbox {
+    font-weight: 400;
+  }
+  
+  .form-signin .form-floating:focus-within {
+    z-index: 2;
+  }
+  
+  .form-signin input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  
+  .form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  
+  .form-signin .btn {
+      font-size: 16px;
+      width: 100%;
+    outline: none !important;
+  }
+  
+  .form {
+    width: 100%;
+    max-width: 700px;
+      padding: 15px;
+      margin: auto;
+    background-color: #e7e7e7;
+  }
+  
+  .form .btn {
+    width: 150px;
+    outline: none !important;
+  }
+  
+  .form .bg-white {
+    background-color: #ffffff;
+  }
+  
+  .form .form-floating:focus-within {
+    z-index: 2;
+  }
+  
+  .form-password-reset {
+      max-width: 330px;
+  }
+  

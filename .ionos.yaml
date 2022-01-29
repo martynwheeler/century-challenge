@@ -26,11 +26,19 @@ setup:
     properties:
       command: dump-autoload
       args: --optimize --no-dev --classmap-authoritative
+  - name: Setup Node.js v14.x
+    action: actions/setup-node@v1
+    properties:
+      node-version: 14.x
+prepare:
+  name: Prepare project environment
+  # here you can decide to run npm ci or npm install or remove the "prepare"
+  # part if you don't create assets with node/Symfony Encore
+  command: npm ci
 build:
   name: Build assets and run tests
   # commands that are executed one after the other at the build servers NOT at real webspace
   # php .deploy-now/create-app-secret = call of a little PHP script which creates and sets APP_SECRET to .env.local
   command:
-    #npm run build;
+    npm run build;
     php .deploy-now/create-app-secret;
-    #php ./vendor/bin/phpunit;
