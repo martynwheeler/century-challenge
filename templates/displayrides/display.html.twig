@@ -25,10 +25,10 @@
 		{% if is_granted('ROLE_USER') and (user.stravauserid or user.komootuserid) %}
 		<p class="float-right">Find {{ user.name }} on
     {% if is_granted('ROLE_USER') and user.stravauserid %}
-      <a href="https://app.strava.com/athletes/{{ user.stravauserid }}"><img src="{{ asset('build/img/strava.jpg') }}" width="80px"/></a>
+      <a href="https://app.strava.com/athletes/{{ user.stravauserid }}"><img src="{{ asset('build/images/strava.jpg') }}" width="80px"/></a>
     {% endif %}
 		{% if is_granted('ROLE_USER') and user.komootuserid %}
-      <a href="https://www.komoot.com/user/{{ user.komootuserid }}"><img src="{{ asset('build/img/komoot.jpg') }}" width="80px"/></a>
+      <a href="https://www.komoot.com/user/{{ user.komootuserid }}"><img src="{{ asset('build/images/komoot.jpg') }}" width="80px"/></a>
     {% endif %}
     </p>
 		{% endif %}
@@ -72,11 +72,11 @@
 	  <td class="text-center">
 	    {% if ride.rideid and ride.source == 'strava' %}
 	    <a title="Ride Link" href="https://www.strava.com/activities/{{ ride.rideid }}">
-	      <img class="border" width="60px" src="{{ asset('build/img/strava.jpg') }}" alt="strava logo" />
+	      <img class="border" width="60px" src="{{ asset('build/images/strava.jpg') }}" alt="strava logo" />
 	    </a>
 		{% elseif ride.rideid and ride.source == 'komoot' %}
 	    <a title="Ride Link" href="https://www.komoot.com/tour/{{ ride.rideid }}">
-	      <img class="border" width="60px" src="{{ asset('build/img/komoot.jpg') }}" alt="komoot logo" />
+	      <img class="border" width="60px" src="{{ asset('build/images/komoot.jpg') }}" alt="komoot logo" />
 	    </a>
 	    {% endif %}
 	  </td>
