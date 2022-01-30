@@ -87,6 +87,7 @@ class AddrideController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $rideID = $form->getData()->getRideId();
+            $realRide = null;
             foreach ($athleteActivities as $athleteActivity) {
                 if ($athleteActivity['id'] == $rideID) {
                     $ride->setKm($athleteActivity['distance']);

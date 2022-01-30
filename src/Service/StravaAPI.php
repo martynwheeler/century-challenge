@@ -201,6 +201,8 @@ class StravaAPI
         $tz = new \DateTimeZone('Europe/London');
 
         //Must be at start between 0820 and 0900 for Saturday
+        $startTime = null;
+        $endTime = null;
         if ($date->format('w') == 6) {
             $startTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 08:20:00", $tz);
             $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:00:00", $tz);
