@@ -29,7 +29,8 @@ class RideCrudController extends AbstractCrudController
             ->setPageTitle(Crud::PAGE_EDIT, 'Edit %entity_label_singular% (#%entity_short_id%)')
             ->setPageTitle(Crud::PAGE_DETAIL, '%entity_label_singular% (#%entity_short_id%)')
             ->setPageTitle(Crud::PAGE_NEW, 'Add Ride')
-            ->setSearchFields(['id', 'km', 'average_speed', 'details', 'ride_id', 'source', 'user.forename', 'user.surname']);
+            ->setSearchFields(['id', 'km', 'average_speed', 'details', 'ride_id', 'source', 'user.forename', 'user.surname'])
+            ->setDefaultSort(['user.surname' => 'ASC', 'id' => 'ASC']);
     }
 
     public function configureFields(string $pageName): iterable

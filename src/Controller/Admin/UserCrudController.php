@@ -25,7 +25,8 @@ class UserCrudController extends AbstractCrudController
             ->setPageTitle(Crud::PAGE_INDEX, '%entity_label_singular% listing')
             ->setPageTitle(Crud::PAGE_EDIT, 'Edit %entity_label_singular% (#%entity_short_id%)')
             ->setPageTitle(Crud::PAGE_DETAIL, '%entity_label_singular% (#%entity_short_id%)')
-            ->setSearchFields(['id', 'username', 'email', 'surname', 'forename', 'preferredProvider']);
+            ->setSearchFields(['id', 'username', 'email', 'surname', 'forename', 'preferredProvider'])
+            ->setDefaultSort(['id' => 'ASC']);
     }
 
     public function configureActions(Actions $actions): Actions
