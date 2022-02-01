@@ -20,6 +20,7 @@ class AdminController extends AbstractController
     {
     }
 
+    //Produce a list of users
     #[Route('/admin/listusers', name: 'listusers')]
     public function listUsers(Request $request, RideData $rd): Response
     {
@@ -72,6 +73,7 @@ class AdminController extends AbstractController
             'email_form' => $form,
         ]);
     }
+
     /*
         #[Route('/admin/updateusers', name: 'updateusers')]
         public function updateUsers(Request $request, RideData $rd)

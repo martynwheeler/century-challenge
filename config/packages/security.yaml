@@ -25,21 +25,22 @@ security:
                 login_path: login
                 check_path: login
                 success_handler: App\Security\AuthenticationSuccessHandler
+                enable_csrf: true
 
             logout:
-                path:   logout
+                path: logout
 
             remember_me:
                 secret:   '%kernel.secret%'
                 lifetime: 604800 # 1 week in seconds
-                path:     /
+
+            # configure the maximum login attempts in a custom period of time
+            login_throttling:
+                max_attempts: 3
+                interval: '15 minutes'
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             switch_user: true
-
-        secured_area:
-            form_login:
-                enable_csrf: true
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
@@ -50,14 +51,14 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
-        - { path: ^/admin, roles: ROLE_SUPER_ADMIN}
-        - { path: ^/email, roles: ROLE_ADMIN}
-        - { path: ^/add, roles: ROLE_USER}
-        - { path: ^/profile, roles: ROLE_USER}
-        - { path: ^/connect, roles: ROLE_USER}
-        - { path: ^/login, roles: PUBLIC_ACCESS}
+        - { path: ^/admin, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/email, roles: ROLE_ADMIN }
+        - { path: ^/add, roles: ROLE_USER }
+        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/connect, roles: ROLE_USER }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
         # catch all other URLs
-        - { path: ^/, roles: PUBLIC_ACCESS}
+        - { path: ^/, roles: PUBLIC_ACCESS }
 
 when@test:
     security:

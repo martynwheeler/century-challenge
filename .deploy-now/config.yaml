@@ -23,7 +23,7 @@ deploy:
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:clear
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:warmup
       # delete unwanted files
-      - rm -rf assets bin tools 
+      #- rm -rf assets bin tools 
 
   # configuration part, which is taken at ALL FURTHER deployments of this branch
   recurring:
@@ -46,4 +46,5 @@ deploy:
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:clear
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:warmup
       # delete unwanted files
-      - rm -rf assets bin tools 
+      #- rm -rf assets bin tools 
+      - php8.0-cli bin/console app:send-monthly-email
