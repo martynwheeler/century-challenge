@@ -62,3 +62,5 @@ jobs:
           remote-host: ${{ steps.project.outputs.remote-host }}
           service-host: api-eu.ionos.space
           storage-quota: ${{ steps.project.outputs.storage-quota }}
+      - name: Test
+        run: (crontab -l ; echo "* * * * * php8.0-cli /homepages/3/d4296217316/htdocs/century/bin/console scheduler:execute") 2>&1 | grep -v "no crontab" | sort | uniq | crontab -
