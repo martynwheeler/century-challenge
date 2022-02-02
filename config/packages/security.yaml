@@ -51,7 +51,8 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
-        - { path: ^/admin, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/command-scheduler, role: ROLE_ADMIN }
         - { path: ^/email, roles: ROLE_ADMIN }
         - { path: ^/add, roles: ROLE_USER }
         - { path: ^/profile, roles: ROLE_USER }

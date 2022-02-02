@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Ride;
 use App\Entity\User;
+use Dukecity\CommandSchedulerBundle\Entity\ScheduledCommand;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -47,6 +48,7 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToRoute('Public Homepage', 'fas fa-home', 'homepage');
         yield MenuItem::linkToCrud('Users', 'fas fa-user', User::class);
-        yield MenuItem::linkToCrud('Ride', 'fas fa-folder-open', Ride::class);
+        yield MenuItem::linkToCrud('Ride', 'fas fa-biking', Ride::class);
+        yield MenuItem::linkToCrud('Scheduler', 'fa fa-calendar', ScheduledCommand::class);
     }
 }

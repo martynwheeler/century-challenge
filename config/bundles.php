@@ -15,4 +15,5 @@ return [
     KnpU\OAuth2ClientBundle\KnpUOAuth2ClientBundle::class => ['all' => true],
     Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
     Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
+    Dukecity\CommandSchedulerBundle\DukecityCommandSchedulerBundle::class => ['all' => true],
 ];

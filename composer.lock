@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "07d62e5216c8e947c458e47bdbca3714",
+    "content-hash": "1bd08436778c13dd44dc36027837cb8a",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -1437,6 +1437,172 @@
             "time": "2021-11-05T11:11:14+00:00"
         },
         {
+            "name": "dragonmantank/cron-expression",
+            "version": "v3.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dragonmantank/cron-expression.git",
+                "reference": "be85b3f05b46c39bbc0d95f6c071ddff669510fa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/be85b3f05b46c39bbc0d95f6c071ddff669510fa",
+                "reference": "be85b3f05b46c39bbc0d95f6c071ddff669510fa",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2|^8.0",
+                "webmozart/assert": "^1.0"
+            },
+            "replace": {
+                "mtdowling/cron-expression": "^1.0"
+            },
+            "require-dev": {
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^1.0",
+                "phpstan/phpstan-webmozart-assert": "^1.0",
+                "phpunit/phpunit": "^7.0|^8.0|^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Cron\\": "src/Cron/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Tankersley",
+                    "email": "chris@ctankersley.com",
+                    "homepage": "https://github.com/dragonmantank"
+                }
+            ],
+            "description": "CRON for PHP: Calculate the next or previous run date and determine if a CRON expression is due",
+            "keywords": [
+                "cron",
+                "schedule"
+            ],
+            "support": {
+                "issues": "https://github.com/dragonmantank/cron-expression/issues",
+                "source": "https://github.com/dragonmantank/cron-expression/tree/v3.3.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/dragonmantank",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-01-18T15:43:28+00:00"
+        },
+        {
+            "name": "dukecity/command-scheduler-bundle",
+            "version": "v5.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Dukecity/CommandSchedulerBundle.git",
+                "reference": "e4e98e918948cb7c56b02253f82f6969c411e8ea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Dukecity/CommandSchedulerBundle/zipball/e4e98e918948cb7c56b02253f82f6969c411e8ea",
+                "reference": "e4e98e918948cb7c56b02253f82f6969c411e8ea",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/collections": "^1.6.8",
+                "doctrine/dbal": "^2.13.3 || ^3.0",
+                "doctrine/doctrine-bundle": "^2.4.2",
+                "doctrine/orm": "^2.9",
+                "doctrine/persistence": "^2.2.2",
+                "dragonmantank/cron-expression": "^3.1",
+                "laminas/laminas-code": "^4.4",
+                "lorisleiva/cron-translator": "^0.3",
+                "nesbot/carbon": "^2.53",
+                "php": ">=8.0.2",
+                "sensio/framework-extra-bundle": "^6.2",
+                "symfony/asset": "^5.4 || ^6.0",
+                "symfony/config": "^5.4 || ^6.0",
+                "symfony/console": "^5.4 || ^6.0",
+                "symfony/dependency-injection": "^5.4 || ^6.0",
+                "symfony/dotenv": "^5.4 || ^6.0",
+                "symfony/finder": "^5.4 || ^6.0",
+                "symfony/form": "^5.4 || ^6.0",
+                "symfony/framework-bundle": "^5.4 || ^6.0",
+                "symfony/http-kernel": "^5.4 || ^6.0",
+                "symfony/lock": "^5.4 || ^6.0",
+                "symfony/property-access": "^5.4 || ^6.0",
+                "symfony/routing": "^5.4 || ^6.0",
+                "symfony/translation": "^5.4 || ^6.0",
+                "symfony/twig-bundle": "^5.4 || ^6.0",
+                "symfony/validator": "^5.4 || ^6.0",
+                "symfony/var-dumper": "^5.4 || ^6.0",
+                "symfony/yaml": "^5.4 || ^6.0",
+                "twig/twig": "^3.3"
+            },
+            "require-dev": {
+                "doctrine/doctrine-fixtures-bundle": "^3.4.0",
+                "jetbrains/phpstorm-attributes": "^1.0",
+                "liip/test-fixtures-bundle": "^2.1.0",
+                "phpunit/phpunit": "^9.5.9",
+                "symfony/browser-kit": "^5.4 || ^6.0",
+                "symfony/css-selector": "^5.4 || ^6.0",
+                "symfony/debug-bundle": "^5.4 || ^6.0",
+                "symfony/dom-crawler": "^5.4 || ^6.0",
+                "symfony/maker-bundle": "^1.33",
+                "symfony/phpunit-bridge": "^5.4 || ^6.0"
+            },
+            "suggest": {
+                "ext-pcntl": "For using the scheduler daemon",
+                "ext-posix": "*",
+                "symfony/notifier": "Send Notifications (E-Mails) ^5.4 || ^6.0",
+                "twig/cssinliner-extra": "Needed for E-Mail Notification ^3.0",
+                "twig/inky-extra": "Needed for E-Mail Notification ^3.0"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "symfony": {
+                    "allow-contrib": false,
+                    "require": "^5.4 || ^6.0"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Dukecity\\CommandSchedulerBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Julien Guyon",
+                    "email": "julienguyon@hotmail.com"
+                },
+                {
+                    "name": "Dukecity",
+                    "email": "dukecity.code@gmail.com"
+                }
+            ],
+            "description": "This Symfony bundle will allow you to schedule all your commands just like UNIX crontab",
+            "homepage": "https://github.com/Dukecity/CommandSchedulerBundle",
+            "keywords": [
+                "command",
+                "cron",
+                "scheduler",
+                "symfony",
+                "task"
+            ],
+            "support": {
+                "issues": "https://github.com/Dukecity/CommandSchedulerBundle/issues",
+                "source": "https://github.com/Dukecity/CommandSchedulerBundle/tree/v5.0.0"
+            },
+            "time": "2022-01-30T15:08:19+00:00"
+        },
+        {
             "name": "easycorp/easyadmin-bundle",
             "version": "v4.0.4",
             "source": {
@@ -2247,6 +2413,62 @@
             "time": "2021-12-22T16:42:49+00:00"
         },
         {
+            "name": "lorisleiva/cron-translator",
+            "version": "v0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lorisleiva/cron-translator.git",
+                "reference": "1824d4c119fa7e4b12f940c3f086908b05ce7c12"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lorisleiva/cron-translator/zipball/1824d4c119fa7e4b12f940c3f086908b05ce7c12",
+                "reference": "1824d4c119fa7e4b12f940c3f086908b05ce7c12",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.5.21 || ^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Lorisleiva\\CronTranslator\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Loris LEIVA",
+                    "email": "loris.leiva@gmail.com",
+                    "homepage": "https://lorisleiva.com"
+                }
+            ],
+            "description": "Makes CRON expressions human-readable",
+            "homepage": "https://github.com/lorisleiva/cron-translator",
+            "keywords": [
+                "cron",
+                "expression",
+                "human"
+            ],
+            "support": {
+                "issues": "https://github.com/lorisleiva/cron-translator/issues",
+                "source": "https://github.com/lorisleiva/cron-translator/tree/v0.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/lorisleiva",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-10-01T10:04:50+00:00"
+        },
+        {
             "name": "martynwheeler/oauth2-komoot",
             "version": "dev-master",
             "source": {
@@ -2395,6 +2617,102 @@
                 }
             ],
             "time": "2021-10-01T21:08:31+00:00"
+        },
+        {
+            "name": "nesbot/carbon",
+            "version": "2.56.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/briannesbitt/Carbon.git",
+                "reference": "626ec8cbb724cd3c3400c3ed8f730545b744e3f4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/626ec8cbb724cd3c3400c3ed8f730545b744e3f4",
+                "reference": "626ec8cbb724cd3c3400c3ed8f730545b744e3f4",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^7.1.8 || ^8.0",
+                "symfony/polyfill-mbstring": "^1.0",
+                "symfony/polyfill-php80": "^1.16",
+                "symfony/translation": "^3.4 || ^4.0 || ^5.0 || ^6.0"
+            },
+            "require-dev": {
+                "doctrine/dbal": "^2.0 || ^3.0",
+                "doctrine/orm": "^2.7",
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "kylekatarnls/multi-tester": "^2.0",
+                "phpmd/phpmd": "^2.9",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^0.12.54 || ^1.0",
+                "phpunit/phpunit": "^7.5.20 || ^8.5.14",
+                "squizlabs/php_codesniffer": "^3.4"
+            },
+            "bin": [
+                "bin/carbon"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-3.x": "3.x-dev",
+                    "dev-master": "2.x-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Carbon\\Laravel\\ServiceProvider"
+                    ]
+                },
+                "phpstan": {
+                    "includes": [
+                        "extension.neon"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Carbon\\": "src/Carbon/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Brian Nesbitt",
+                    "email": "brian@nesbot.com",
+                    "homepage": "https://markido.com"
+                },
+                {
+                    "name": "kylekatarnls",
+                    "homepage": "https://github.com/kylekatarnls"
+                }
+            ],
+            "description": "An API extension for DateTime that supports 281 different languages.",
+            "homepage": "https://carbon.nesbot.com",
+            "keywords": [
+                "date",
+                "datetime",
+                "time"
+            ],
+            "support": {
+                "docs": "https://carbon.nesbot.com/docs",
+                "issues": "https://github.com/briannesbitt/Carbon/issues",
+                "source": "https://github.com/briannesbitt/Carbon"
+            },
+            "funding": [
+                {
+                    "url": "https://opencollective.com/Carbon",
+                    "type": "open_collective"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/nesbot/carbon",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-01-21T17:08:38+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
