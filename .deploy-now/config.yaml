@@ -48,3 +48,4 @@ deploy:
       # delete unwanted files
       #- rm -rf assets bin tools 
       - php8.0-cli bin/console app:send-monthly-email
+      - pwd
