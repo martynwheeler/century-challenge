@@ -47,5 +47,6 @@ deploy:
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:warmup
       # delete unwanted files
       #- rm -rf assets bin tools 
-      - php8.0-cli bin/console app:send-monthly-email
+      #- php8.0-cli bin/console app:send-monthly-email
+      - crontab -u a274206 -l
       #- (crontab -l ; echo "* * * * * php8.0-cli /homepages/3/d4296217316/htdocs/century/bin/console scheduler:execute") 2>&1 | grep -v "no crontab" | sort | uniq | crontab -
