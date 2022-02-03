@@ -12,7 +12,7 @@
     <h1>
       {% if is_granted('ROLE_USER') %}
 	  	{% if gravatar_exists(user.email) %}
-		  <img src="{{ gravatar(user.email) }}" />
+		  <img src="{{ gravatar(user.email, 40) }}" />
 		{% endif %}
       {{ user.name }}
       {% else %}
