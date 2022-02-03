@@ -35,18 +35,27 @@ class SendMonthlyEmailCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         if(date('t') == date('d')){
-            $users = $this->rd->getRideData(year: null, username: null)['users'];
             //Create a message
             $io->progressStart();
+            //Create a message
+            $messagetousers = "Just a gentle reminder to add your rides for ".date('F').".  ";
+            $messagetousers .= "The deadline for adding any rides is midnight on last day of the month.  ";
+            $messagetousers .= "If you have not submitted any rides by this time you will get the boot!\n\r";
+            $messagetousers .= "Thank you, Admin.";
             $message = (new Email())
             ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
             ->to($_ENV['MAILER_FROM'])
             ->subject('Message from Century Challenge')
             ->text(
-                'Message from: '.$_ENV['MAILER_FROM']."\n\r".'This is a test'
+                "Message from: {$_ENV['MAILER_FROM']}\n\r$messagetousers"
             );
             //Add BCC to non-disqualified users
-            $message->addBcc('martyndwheeler@gmail.com');
+            $users = $this->rd->getRideData(year: null, username: null)['users'];
+            foreach ($users as $user) {
+                if (!$user['isDisqualified']) {
+                    $message->addBcc($user['email']);
+                }
+            }
             /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
             $sentEmail = $this->mailer->send($message);
             $io->progressAdvance();
