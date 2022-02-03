@@ -11,6 +11,9 @@
   <div class="col-8">
     <h1>
       {% if is_granted('ROLE_USER') %}
+	  	{% if gravatar_exists(user.email) %}
+		  <img src="{{ gravatar(user.email) }}" />
+		{% endif %}
       {{ user.name }}
       {% else %}
       {{ user.privatename }}
