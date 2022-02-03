@@ -65,4 +65,4 @@ jobs:
       - name: Setup Cron
         run: /usr/bin/crontab ./crontab.txt
       - name: Run Cron
-        run: cron - f
+        run: more /etc/cron.allow
