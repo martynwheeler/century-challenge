@@ -39,9 +39,8 @@ class StravaWebhookController extends AbstractController
         $owner_id = $request->request->get('owner_id'); // athlete ID
         $subscription_id = $request->request->get('subscription_id'); // push subscription ID receiving the event
         $updates = $request->request->get('updates'); // activity update: {"title" | "type" | "private": true/false} ; app deauthorization: {"authorized": false}
-/*
-        $messagetousers = json_encode($request->all());
 
+        $messagetousers = json_encode($request->request->all());
         $message = (new Email())
         ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
         ->to($_ENV['MAILER_FROM'])
@@ -52,7 +51,7 @@ class StravaWebhookController extends AbstractController
         ->addBcc('martyndwheeler@gmail.com')
         ;
         $sentEmail = $this->mailer->send($message);
-*/
+
         return new Response('EVENT_RECEIVED', Response::HTTP_OK, []);
     }
 }
