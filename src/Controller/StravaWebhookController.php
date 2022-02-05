@@ -43,6 +43,7 @@ class StravaWebhookController extends AbstractController
 
         $messagetousers = "";
         if ($aspect_type == 'create' && $object_type == 'activity') {
+            //Get the user
             $entityManager = $this->em->getRepository(User::class);
             $user = $entityManager->findOneBy(['stravaID' => $owner_id]);
             //Get or refresh token as necessary
@@ -52,11 +53,15 @@ class StravaWebhookController extends AbstractController
             }
             $token = $request->getSession()->get('strava.token');
             $athleteActivity = $strava_api->getAthleteActivity($token, $object_id);
-            $messagetousers = $athleteActivity['distance'];
-//            $ride->setKm($athleteActivity['distance']);
-//            $ride->setAverageSpeed($athleteActivity['average']);
-//            $ride->setDate($athleteActivity['date']);
-//            $ride->setClubRide($strava_api->isClubRide($token, $id, $athleteActivity['date']));
+            $ride = new Ride();
+            $ride->setUser($user);
+            $ride->setKm($athleteActivity['distance']);
+            $ride->setAverageSpeed($athleteActivity['average']);
+            $ride->setDate($athleteActivity['date']);
+            $ride->setClubRide($strava_api->isClubRide($token, $id, $athleteActivity['date']));
+            if ($strava_api->isRealRide($token, $object_id)){
+                $messagetousers = $athleteActivity['distance'];
+            }
         }
 
 
