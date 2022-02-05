@@ -46,7 +46,7 @@ class StravaWebhookController extends AbstractController
                 $request->getSession()->set('strava.token', $accessToken);
             }
             $token = $request->getSession()->get('strava.token');
-            $athleteActivity = $strava_api->getAthleteActivity($token, $id);
+            $athleteActivity = $strava_api->getAthleteActivity($token, $object_id);
             $messagetousers = $athleteActivity['distance'];
 //            $ride->setKm($athleteActivity['distance']);
 //            $ride->setAverageSpeed($athleteActivity['average']);
