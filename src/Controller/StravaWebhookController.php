@@ -50,8 +50,20 @@ class StravaWebhookController extends AbstractController
             $token = $request->getSession()->get('strava.token');
             $ride = new Ride();
             $ride->setUser($user);
-            dd($object_id);
+
             $athleteActivity = $strava_api->getAthleteActivity($token, $object_id);
+            if ($athleteActivity) {
+                $ride->setKm($athleteActivity['distance']);
+                $ride->setAverageSpeed($athleteActivity['average']);
+                $ride->setDate($athleteActivity['date']);
+                $ride->setClubRide($strava_api->isClubRide($token, $object_id, $athleteActivity['date']));
+                if ($strava_api->isRealRide($token, $object_id)){
+                    $entityManager = $this->doctrine->getManager();
+                    $entityManager->persist($ride);
+                    $entityManager->flush();
+                }
+            }
+
         }
 
         return new Response('EVENT_RECEIVED', Response::HTTP_OK, []);
