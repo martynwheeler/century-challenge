@@ -12,10 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'app:SubscribeToStravaWebhookCommand',
-    description: 'Subscribes to a Strava webhook',
+    name: 'app:ViewStravaWebhookCommand',
+    description: 'Views a Strava webhook subscription',
 )]
-class SubscribeToStravaWebhookCommand extends Command
+class ViewStravaWebhookCommand extends Command
 {
     public function __construct(private StravaWebhookService $stravawebhookservice)
     {
@@ -30,11 +30,12 @@ class SubscribeToStravaWebhookCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $id = $this->stravawebhookservice->subscribe();
+        $id = $this->stravawebhookservice->view();
+
         if ($id != null){
-            $io->success("A new subcription was initiated with id = $id");
+            $io->success("There is currently a subcription with id = $id");
         } else {
-            $io->warning("Subcribe failed");
+            $io->info("There are currently no subscriptions");
         }
 
         return Command::SUCCESS;
