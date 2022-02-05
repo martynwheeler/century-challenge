@@ -38,7 +38,7 @@ class StravaWebhookController extends AbstractController
         $object_type = $request->get('object_type'); // "activity" | "athlete"
         $owner_id = $request->get('owner_id'); // athlete ID
 
-        if ($aspect_type == 'update' && $object_type == 'activity') {
+        if ($aspect_type == 'create' && $object_type == 'activity') {
             //Does ride exist
             $entityManager = $this->em->getRepository(Ride::class);
             if ($entityManager->findOneBy(['ride_id' => $object_id]) == null){
@@ -64,8 +64,8 @@ class StravaWebhookController extends AbstractController
                     $ride->setClubRide($strava_api->isClubRide($token, $object_id, $athleteActivity['date']));
                     if ($strava_api->isRealRide($token, $object_id)){
                         $entityManager = $this->doctrine->getManager();
-                        $entityManager->persist($ride);
-                        $entityManager->flush();
+//                        $entityManager->persist($ride);
+//                        $entityManager->flush();
                     }
                 }
             }
