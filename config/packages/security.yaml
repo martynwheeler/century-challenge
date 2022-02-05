@@ -58,6 +58,7 @@ security:
         - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/connect, roles: ROLE_USER }
         - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/strava, roles: PUBLIC_ACCESS }
         # catch all other URLs
         - { path: ^/, roles: PUBLIC_ACCESS }
 

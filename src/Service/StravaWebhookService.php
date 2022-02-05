@@ -24,6 +24,7 @@ class StravaWebhookService
             ]
         ]);
 
+        dd($response);
         if ($response->getStatusCode() === Response::HTTP_CREATED) {
             return json_decode($response->getContent())->id;
         }
