@@ -11,14 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
-
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
+use Doctrine\Persistence\ManagerRegistry;
 
 class StravaWebhookController extends AbstractController
 {
-    public function __construct(private StravaWebhookService $stravawebhookservice, private MailerInterface $mailer, private EntityManagerInterface $em)
+    public function __construct(private StravaWebhookService $stravawebhookservice, private EntityManagerInterface $em, private ManagerRegistry $doctrine)
     {
     }
 
@@ -41,7 +38,6 @@ class StravaWebhookController extends AbstractController
         $object_type = $request->get('object_type'); // "activity" | "athlete"
         $owner_id = $request->get('owner_id'); // athlete ID
 
-        $messagetousers = "";
         if ($aspect_type == 'create' && $object_type == 'activity') {
             //Get the user
             $entityManager = $this->em->getRepository(User::class);
@@ -60,22 +56,11 @@ class StravaWebhookController extends AbstractController
             $ride->setDate($athleteActivity['date']);
             $ride->setClubRide($strava_api->isClubRide($token, $object_id, $athleteActivity['date']));
             if ($strava_api->isRealRide($token, $object_id)){
-                $messagetousers = $athleteActivity['distance'];
+                $entityManager = $this->doctrine->getManager();
+                $entityManager->persist($ride);
+//                $entityManager->flush();
             }
         }
-
-
-
-        $message = (new Email())
-        ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
-        ->to($_ENV['MAILER_FROM'])
-        ->subject('Message from Century Challenge')
-        ->text(
-            "Message from: {$_ENV['MAILER_FROM']}\n\r$messagetousers"
-        )
-        ->addBcc('martyndwheeler@gmail.com')
-        ;
-        $sentEmail = $this->mailer->send($message);
 
         return new Response('EVENT_RECEIVED', Response::HTTP_OK, []);
     }
