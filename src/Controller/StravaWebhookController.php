@@ -41,6 +41,8 @@ class StravaWebhookController extends AbstractController
             $messagetousers = $object_id;
         }
 
+        $messagetousers = $request;
+
         $message = (new Email())
         ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
         ->to($_ENV['MAILER_FROM'])
