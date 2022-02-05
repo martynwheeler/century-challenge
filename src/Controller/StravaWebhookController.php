@@ -53,6 +53,7 @@ class StravaWebhookController extends AbstractController
 
             $athleteActivity = $strava_api->getAthleteActivity($token, $object_id);
             if ($athleteActivity) {
+                $ride->setRideId($object_id);
                 $ride->setKm($athleteActivity['distance']);
                 $ride->setAverageSpeed($athleteActivity['average']);
                 $ride->setDate($athleteActivity['date']);
