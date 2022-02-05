@@ -48,9 +48,8 @@ class StravaWebhookService
     if ($mode && $token) {
         // Verifies that the mode and token sent are valid
         if ($mode === 'subscribe' && $token === 'STRAVA') {
-            $response = new JsonResponse(['hub.challenge' => $challenge], Response::HTTP_OK, []);
             // Responds with the challenge token from the request
-            return $response;
+            return new JsonResponse(['hub.challenge' => $challenge], Response::HTTP_OK, []);
         } else {
             // Responds with '403 Forbidden' if verify tokens do not match
             return new Response('', Response::HTTP_FORBIDDEN, []);
