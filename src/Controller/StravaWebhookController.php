@@ -44,7 +44,8 @@ class StravaWebhookController extends AbstractController
         $messagetousers = "";
         if ($aspect_type == 'create' && $object_type == 'activity') {
             $entityManager = $this->em->getRepository(User::class);
-            $user = $entityManager->findBy(['stravaID' => $owner_id]);
+            $user = $entityManager->findBy(['stravaid' => $owner_id]);
+            dd($user);
             //Get or refresh token as necessary
             if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 300) {
                 $accessToken = $strava_api->getToken($user);
