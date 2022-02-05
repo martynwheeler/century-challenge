@@ -38,6 +38,7 @@ class HeavyTaskListener
                 ->addBcc('martyndwheeler@gmail.com');
                 /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
                 $sentEmail = $this->mailer->send($message);
+                
                 $aspect_type = $request->get('aspect_type'); // "create" | "update" | "delete"
                 $object_id = $request->get('object_id'); // activity ID | athlete ID
                 $object_type = $request->get('object_type'); // "activity" | "athlete"
