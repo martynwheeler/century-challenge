@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\StravaWebhookService;
+use App\Service\StravaAPI;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,7 +31,7 @@ class StravaWebhookController extends AbstractController
     }
 
     #[Route('/strava/webhook', name:'webhook', methods: ['POST'])]
-    public function data(Request $request): Response
+    public function data(Request $request, StravaAPI $strava_api): Response
     {
         $aspect_type = $request->get('aspect_type'); // "create" | "update" | "delete"
         $object_id = $request->get('object_id'); // activity ID | athlete ID
@@ -39,8 +40,21 @@ class StravaWebhookController extends AbstractController
 
         $messagetousers = "";
         if ($aspect_type == 'create' && $object_type == 'activity') {
-            $messagetousers = $object_id;
+            //Get or refresh token as necessary
+            if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 300) {
+                $accessToken = $strava_api->getToken($user);
+                $request->getSession()->set('strava.token', $accessToken);
+            }
+            $token = $request->getSession()->get('strava.token');
+            $athleteActivity = $strava_api->getAthleteActivity($token, $id);
+            $messagetousers = $athleteActivity['distance'];
+//            $ride->setKm($athleteActivity['distance']);
+//            $ride->setAverageSpeed($athleteActivity['average']);
+//            $ride->setDate($athleteActivity['date']);
+//            $ride->setClubRide($strava_api->isClubRide($token, $id, $athleteActivity['date']));
         }
+
+
 
         $message = (new Email())
         ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
