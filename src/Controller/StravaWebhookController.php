@@ -50,7 +50,7 @@ class StravaWebhookController extends AbstractController
             $token = $request->getSession()->get('strava.token');
             $ride = new Ride();
             $ride->setUser($user);
-            dd($user);
+            dd($object_id);
             $athleteActivity = $strava_api->getAthleteActivity($token, $object_id);
         }
 
