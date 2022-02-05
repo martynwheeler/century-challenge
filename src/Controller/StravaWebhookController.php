@@ -48,17 +48,19 @@ class StravaWebhookController extends AbstractController
                 $request->getSession()->set('strava.token', $accessToken);
             }
             $token = $request->getSession()->get('strava.token');
-            $athleteActivity = $strava_api->getAthleteActivity($token, $object_id);
             $ride = new Ride();
             $ride->setUser($user);
-            $ride->setKm($athleteActivity['distance']);
-            $ride->setAverageSpeed($athleteActivity['average']);
-            $ride->setDate($athleteActivity['date']);
-            $ride->setClubRide($strava_api->isClubRide($token, $object_id, $athleteActivity['date']));
-            if ($strava_api->isRealRide($token, $object_id)){
-                $entityManager = $this->doctrine->getManager();
-                $entityManager->persist($ride);
-//                $entityManager->flush();
+            $athleteActivity = $strava_api->getAthleteActivity($token, $object_id);
+            if ($athleteActivity) {
+                $ride->setKm($athleteActivity['distance']);
+                $ride->setAverageSpeed($athleteActivity['average']);
+                $ride->setDate($athleteActivity['date']);
+                $ride->setClubRide($strava_api->isClubRide($token, $object_id, $athleteActivity['date']));
+                if ($strava_api->isRealRide($token, $object_id)){
+                    $entityManager = $this->doctrine->getManager();
+                    $entityManager->persist($ride);
+                    $entityManager->flush();
+                }
             }
         }
 

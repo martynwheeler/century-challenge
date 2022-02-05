@@ -129,8 +129,6 @@ class StravaAPI
         if (is_array($athleteactivities) || $athleteactivities instanceof Countable) {
             foreach ($athleteactivities as $athleteactivity) {
                 if ($athleteactivity['distance'] >= 100000) {
-                    //convert to km and round to nearest 10m
-                    $athleteactivity['distance'] = round(($athleteactivity['distance'] / 1000), 2);
                     //Correct tz to accomodate DST
                     $date = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $athleteactivity['start_date'], new \DateTimeZone('Europe/London'));
                     //key is displayed in drop down box
@@ -139,7 +137,7 @@ class StravaAPI
                         'key' => $key,
                         'id' => $athleteactivity['id'],
                         'date' => $date,
-                        'distance' => $athleteactivity['distance'],
+                        'distance' => round(($athleteactivity['distance'] / 1000), 2),
                         'average' => $athleteactivity['average_speed'] * 3.6,
                     ];
                 }
@@ -170,12 +168,16 @@ class StravaAPI
         }
 
         //Process the results and return
-        $date = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $athleteactivity['start_date']);
-        $result = [
-            'date' => $date,
-            'distance' => round(($athleteactivity['distance'] / 1000), 2),
-            'average' => $athleteactivity['average_speed'] * 3.6,
-        ];
+        $result = null;
+        if ($athleteactivity['distance'] >= 100000) {
+            $date = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $athleteactivity['start_date']);
+            $result = [
+                'id' => $athleteactivity['id'],
+                'date' => $date,
+                'distance' => round(($athleteactivity['distance'] / 1000), 2),
+                'average' => $athleteactivity['average_speed'] * 3.6,
+            ];
+        }
         return $result;
     }
 

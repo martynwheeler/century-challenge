@@ -178,10 +178,12 @@ class AddrideController extends AbstractController
                             }
                             $token = $request->getSession()->get('strava.token');
                             $athleteActivity = $strava_api->getAthleteActivity($token, $id);
-                            $ride->setKm($athleteActivity['distance']);
-                            $ride->setAverageSpeed($athleteActivity['average']);
-                            $ride->setDate($athleteActivity['date']);
-                            $ride->setClubRide($strava_api->isClubRide($token, $id, $athleteActivity['date']));
+                            if ($athleteActivity) {
+                                $ride->setKm($athleteActivity['distance']);
+                                $ride->setAverageSpeed($athleteActivity['average']);
+                                $ride->setDate($athleteActivity['date']);
+                                $ride->setClubRide($strava_api->isClubRide($token, $id, $athleteActivity['date']));
+                            }
                         }
                         break;
                 }
