@@ -8,14 +8,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
+
 class StravaWebhookController extends AbstractController
 {
-    public function __construct(private StravaWebhookService $stravawebhookservice)
+    public function __construct(private StravaWebhookService $stravawebhookservice, private MailerInterface $mailer)
     {
     }
 
-    #[Route('/strava/webhook', methods: ['GET'])]
-    public function index(Request $request): Response
+    #[Route('/strava/webhook', name:'webhook_create', methods: ['GET'])]
+    public function create(Request $request): Response
     {
         $mode = $request->query->get('hub_mode'); // hub.mode
         $token = $request->query->get('hub_verify_token'); // hub.verify_token
@@ -23,5 +27,31 @@ class StravaWebhookController extends AbstractController
 
         $response = $this->stravawebhookservice->validate($mode, $token, $challenge);
         return $response;
+    }
+
+    #[Route('/strava/webhook', name:'webhook', methods: ['POST'])]
+    public function data(Request $request): Response
+    {
+        $aspect_type = $request['aspect_type']; // "create" | "update" | "delete"
+        $event_time = $request['event_time']; // time the event occurred
+        $object_id = $request['object_id']; // activity ID | athlete ID
+        $object_type = $request['object_type']; // "activity" | "athlete"
+        $owner_id = $request['owner_id']; // athlete ID
+        $subscription_id = $request['subscription_id']; // push subscription ID receiving the event
+        $updates = $request['updates']; // activity update: {"title" | "type" | "private": true/false} ; app deauthorization: {"authorized": false}
+
+        $messagetousers = json_encode($request->all());
+        $message = (new Email())
+        ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
+        ->to($_ENV['MAILER_FROM'])
+        ->subject('Message from Century Challenge')
+        ->text(
+            "Message from: {$_ENV['MAILER_FROM']}\n\r$messagetousers"
+        )
+        ->addBcc('martyndwheeler@gmail.com')
+        ;
+        $sentEmail = $this->mailer->send($message);
+
+        return new Response('EVENT_RECEIVED', Response::HTTP_OK, []);
     }
 }

@@ -19,7 +19,7 @@ class StravaWebhookService
             'body' => [
                 'client_id' => $_ENV['STRAVA_ID'],
                 'client_secret' => $_ENV['STRAVA_SECRET'],
-                'callback_url' => 'https://cc.leicesterforest.com/strava/webhook',
+                'callback_url' => 'https://cc.leicesterforest.com/strava/webhook', //this needs fixing
                 'verify_token' => 'STRAVA',
             ]
         ]);
