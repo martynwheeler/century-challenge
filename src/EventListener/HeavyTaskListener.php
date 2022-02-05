@@ -22,8 +22,8 @@ class HeavyTaskListener
             $request = $event->getRequest();
             $currentRoute = $this->router->match($request->getPathInfo());
             if ('webhook' === $currentRoute['_route']) {
-                /*
                 $aspect_type = $request->get('aspect_type'); // "create" | "update" | "delete"
+                /*
                 $object_id = $request->get('object_id'); // activity ID | athlete ID
                 $object_type = $request->get('object_type'); // "activity" | "athlete"
                 $owner_id = $request->get('owner_id'); // athlete ID
