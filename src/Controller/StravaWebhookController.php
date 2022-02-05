@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Service\StravaWebhookService;
 use App\Service\StravaAPI;
+use App\Entity\Ride;
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,7 +17,7 @@ use Symfony\Component\Mime\Email;
 
 class StravaWebhookController extends AbstractController
 {
-    public function __construct(private StravaWebhookService $stravawebhookservice, private MailerInterface $mailer)
+    public function __construct(private StravaWebhookService $stravawebhookservice, private MailerInterface $mailer, private EntityManagerInterface $em)
     {
     }
 
@@ -40,6 +42,8 @@ class StravaWebhookController extends AbstractController
 
         $messagetousers = "";
         if ($aspect_type == 'create' && $object_type == 'activity') {
+            $entityManager = $this->em->getRepository(User::class);
+            $user = $entityManager->findBy(['stravaID' => $owner_id]);
             //Get or refresh token as necessary
             if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 300) {
                 $accessToken = $strava_api->getToken($user);
