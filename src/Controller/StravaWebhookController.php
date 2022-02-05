@@ -32,7 +32,6 @@ class StravaWebhookController extends AbstractController
     #[Route('/strava/webhook', name:'webhook', methods: ['POST'])]
     public function data(Request $request): Response
     {
-        dd($request);
         $aspect_type = $request['aspect_type']; // "create" | "update" | "delete"
         $event_time = $request['event_time']; // time the event occurred
         $object_id = $request['object_id']; // activity ID | athlete ID
