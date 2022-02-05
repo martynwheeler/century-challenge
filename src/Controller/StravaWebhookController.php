@@ -39,32 +39,36 @@ class StravaWebhookController extends AbstractController
         $owner_id = $request->get('owner_id'); // athlete ID
 
         if ($aspect_type == 'create' && $object_type == 'activity') {
-            //Get the user
-            $entityManager = $this->em->getRepository(User::class);
-            $user = $entityManager->findOneBy(['stravaID' => $owner_id]);
-            //Get or refresh token as necessary
-            if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 300) {
-                $accessToken = $strava_api->getToken($user);
-                $request->getSession()->set('strava.token', $accessToken);
-            }
-            $token = $request->getSession()->get('strava.token');
-            $ride = new Ride();
-            $ride->setUser($user);
+            //Does ride exist
+            $entityManager = $this->em->getRepository(Ride::class);
+            if ($entityManager->findOneBy(['ride_id' => $object_id])){
+                //Get the user
+                $entityManager = $this->em->getRepository(User::class);
+                $user = $entityManager->findOneBy(['stravaID' => $owner_id]);
+                //Get or refresh token as necessary
+                if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 300) {
+                    $accessToken = $strava_api->getToken($user);
+                    $request->getSession()->set('strava.token', $accessToken);
+                }
+                $token = $request->getSession()->get('strava.token');
+                $ride = new Ride();
+                $ride->setUser($user);
+                $ride->setSource($user->getPreferredProvider());
 
-            $athleteActivity = $strava_api->getAthleteActivity($token, $object_id);
-            if ($athleteActivity) {
-                $ride->setRideId($object_id);
-                $ride->setKm($athleteActivity['distance']);
-                $ride->setAverageSpeed($athleteActivity['average']);
-                $ride->setDate($athleteActivity['date']);
-                $ride->setClubRide($strava_api->isClubRide($token, $object_id, $athleteActivity['date']));
-                if ($strava_api->isRealRide($token, $object_id)){
-                    $entityManager = $this->doctrine->getManager();
-                    $entityManager->persist($ride);
-                    $entityManager->flush();
+                $athleteActivity = $strava_api->getAthleteActivity($token, $object_id);
+                if ($athleteActivity) {
+                    $ride->setRideId($object_id);
+                    $ride->setKm($athleteActivity['distance']);
+                    $ride->setAverageSpeed($athleteActivity['average']);
+                    $ride->setDate($athleteActivity['date']);
+                    $ride->setClubRide($strava_api->isClubRide($token, $object_id, $athleteActivity['date']));
+                    if ($strava_api->isRealRide($token, $object_id)){
+                        $entityManager = $this->doctrine->getManager();
+                        $entityManager->persist($ride);
+                        $entityManager->flush();
+                    }
                 }
             }
-
         }
 
         return new Response('EVENT_RECEIVED', Response::HTTP_OK, []);
