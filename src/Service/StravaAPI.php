@@ -172,7 +172,7 @@ class StravaAPI
         //Process the results and return
         $result = null;
         if ($athleteactivity['distance'] >= 100000) {
-            $date = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $athleteactivity['start_date']);
+            $date = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $athleteactivity['start_date'], new \DateTimeZone('Europe/London'));
             $result = [
                 'id' => $athleteactivity['id'],
                 'date' => $date,

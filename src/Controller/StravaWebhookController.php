@@ -61,7 +61,6 @@ class StravaWebhookController extends AbstractController
                     $ride->setKm($athleteActivity['distance']);
                     $ride->setAverageSpeed($athleteActivity['average']);
                     $ride->setDate($athleteActivity['date']);
-                    dd($athleteActivity['date']);
                     $ride->setClubRide($strava_api->isClubRide($token, $object_id, $athleteActivity['date']));
                     if ($strava_api->isRealRide($token, $object_id)){
                         $entityManager = $this->doctrine->getManager();
