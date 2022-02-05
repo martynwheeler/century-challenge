@@ -21,8 +21,6 @@ class StravaWebhookController extends AbstractController
         $token = $request->query('hub_verify_token'); // hub.verify_token
         $challenge = $request->query('hub_challenge'); // hub.challenge
         
-        dd($request->query());
-
         return $this->stravawebhookservice->validate($mode, $token, $challenge);
     }
 }

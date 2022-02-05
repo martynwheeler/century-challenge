@@ -24,10 +24,10 @@ class StravaWebhookService
             ]
         ]);
 
-//        if ($response->status() === Response::HTTP_CREATED) {
-//            return json_decode($response->body())->id;
-//        }
-//        dd($response);
+        if ($response->status() === Response::HTTP_CREATED) {
+            return json_decode($response->body())->id;
+        }
+
         return null;
     }
 
@@ -46,7 +46,7 @@ class StravaWebhookService
     // Checks if a token and mode is in the query string of the request
     if ($mode && $token) {
         // Verifies that the mode and token sent are valid
-        if ($mode === 'subscribe' && $token === $this->verify_token) {
+        if ($mode === 'subscribe' && $token === 'STRAVA') {
             // Responds with the challenge token from the request
             return response()->json(['hub.challenge' => $challenge]);
         } else {
