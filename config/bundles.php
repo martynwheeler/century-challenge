@@ -17,4 +17,5 @@ return [
     Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
     Dukecity\CommandSchedulerBundle\DukecityCommandSchedulerBundle::class => ['all' => true],
     Pyrrah\GravatarBundle\PyrrahGravatarBundle::class => ['all' => true],
+    SymfonyBundles\JsonRequestBundle\JsonRequestBundle::class => ['all' => true],
 ];

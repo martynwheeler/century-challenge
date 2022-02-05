@@ -304,6 +304,9 @@
             "config/packages/sensio_framework_extra.yaml"
         ]
     },
+    "symfony-bundles/json-request-bundle": {
+        "version": "4.1.1"
+    },
     "symfony/apache-pack": {
         "version": "1.0",
         "recipe": {
