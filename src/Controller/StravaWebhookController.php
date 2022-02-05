@@ -12,6 +12,7 @@ class StravaWebhookController extends AbstractController
 {
     public function __construct()
     {
+
     }
 
     #[Route('/strava/webhook', name:'webhook_create', methods: ['GET'])]
