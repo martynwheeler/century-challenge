@@ -48,7 +48,8 @@ class StravaWebhookController extends AbstractController
                 $request->getSession()->set('strava.token', $accessToken);
             }
             $token = $request->getSession()->get('strava.token');
-
+            $ride = new Ride();
+            $ride->setUser($user);
         }
 
         return new Response('EVENT_RECEIVED', Response::HTTP_OK, []);
