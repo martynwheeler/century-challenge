@@ -58,7 +58,7 @@ class StravaWebhookController extends AbstractController
             if ($strava_api->isRealRide($token, $object_id)){
                 $entityManager = $this->doctrine->getManager();
                 $entityManager->persist($ride);
-//                $entityManager->flush();
+                $entityManager->flush();
             }
         }
 
