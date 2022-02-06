@@ -22,6 +22,7 @@ class HeavyTaskListener
 
     public function onKernelTerminate(TerminateEvent $event)
     {
+        /*
         // What’s the current route?
         $request = $event->getRequest();
         $currentRoute = $this->router->match($request->getPathInfo());
@@ -71,10 +72,10 @@ class HeavyTaskListener
                     ->subject('Message from Century Challenge')
                     ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r"."hello")
                     ->addBcc('martyndwheeler@gmail.com');
-                    /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
                     $sentEmail = $this->mailer->send($message);
                 }
             }
         }
+*/
     }
 }
