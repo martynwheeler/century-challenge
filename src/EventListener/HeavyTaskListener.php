@@ -38,11 +38,12 @@ class HeavyTaskListener
                     //Get the user
                     $entityManager = $this->em->getRepository(User::class);
                     $user = $entityManager->findOneBy(['stravaID' => $owner_id]);
-                    /*
 
                     //set access token
                     $token = $this->strava_api->getToken($user);
 
+
+                    /*
                     //create ride object
                     $ride = new Ride();
                     $ride->setUser($user);
