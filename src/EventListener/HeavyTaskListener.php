@@ -31,7 +31,7 @@ class HeavyTaskListener
             $object_type = $request->get('object_type'); // "activity" | "athlete"
             $owner_id = $request->get('owner_id'); // athlete ID
 
-            if ($aspect_type == 'create' && $object_type == 'activity') {
+            if ($aspect_type == 'update' && $object_type == 'activity') {
                 //Does ride already exist in the database
                 $entityManager = $this->em->getRepository(Ride::class);
                 if ($entityManager->findOneBy(['ride_id' => $object_id]) == null) {
