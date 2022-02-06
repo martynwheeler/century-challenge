@@ -34,7 +34,7 @@ class NewRideMessageHandler
             ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
             ->to($_ENV['MAILER_FROM'])
             ->subject('Message from Century Challenge')
-            ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r".$data->aspect_type)
+            ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r".$data->get('aspect_type'))
             ->addBcc('martyndwheeler@gmail.com');
         $sentEmail = $this->mailer->send($emailmessage);
     }
