@@ -32,7 +32,7 @@ class HeavyTaskListener
             $owner_id = $request->get('owner_id'); // athlete ID
 
             if ($aspect_type == 'create' && $object_type == 'activity') {
-                //Does ride exist
+                //Does ride already exist in the database
                 $entityManager = $this->em->getRepository(Ride::class);
                 if ($entityManager->findOneBy(['ride_id' => $object_id]) == null) {
                     //Get the user
@@ -56,7 +56,7 @@ class HeavyTaskListener
                         $ride->setKm($athleteActivity['distance']);
                         $ride->setAverageSpeed($athleteActivity['average']);
                         $ride->setDate($athleteActivity['date']);
-                        $ride->setClubRide($strava_api->isClubRide($token, $object_id, $athleteActivity['date']));
+                        $ride->setClubRide($this->strava_api->isClubRide($token, $object_id, $athleteActivity['date']));
                     }
 
                     //Create a message
@@ -68,7 +68,6 @@ class HeavyTaskListener
                     ->addBcc('martyndwheeler@gmail.com');
                     /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
                     $sentEmail = $this->mailer->send($message);
-                
                 }
             }
         }
