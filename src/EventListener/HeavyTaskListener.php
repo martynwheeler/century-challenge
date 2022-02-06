@@ -7,6 +7,7 @@ use App\Entity\Ride;
 use App\Entity\User;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,7 +17,14 @@ use Symfony\Component\Mime\Email;
 
 class HeavyTaskListener
 {
-    public function __construct(private MailerInterface $mailer, private RouterInterface $router, private StravaAPI $strava_api, private EntityManagerInterface $em, private ManagerRegistry $doctrine)
+    public function __construct(
+        private MailerInterface $mailer, 
+        private RouterInterface $router,
+        private StravaAPI $strava_api,
+        private EntityManagerInterface $em,
+        private ManagerRegistry $doctrine,
+        private ValidatorInterface $validator,
+        )
     {
     }
 
@@ -34,7 +42,7 @@ class HeavyTaskListener
             if ($aspect_type == 'create' && $object_type == 'activity') {
                 //Does ride already exist in the database
                 $entityManager = $this->em->getRepository(Ride::class);
-                if ($entityManager->findOneBy(['ride_id' => $object_id]) == null) {
+                if ($entityManager->findOneBy(['ride_id' => $object_id]) != null) {
                     //Get the user
                     $entityManager = $this->em->getRepository(User::class);
                     $user = $entityManager->findOneBy(['stravaID' => $owner_id]);
@@ -57,11 +65,14 @@ class HeavyTaskListener
                         $ride->setAverageSpeed($athleteActivity['average']);
                         $ride->setDate($athleteActivity['date']);
                         $ride->setClubRide($this->strava_api->isClubRide($token, $object_id, $athleteActivity['date']));
-//                        if ($this->strava_api->isRealRide($token, $object_id)){
-                            $entityManager = $this->doctrine->getManager();
-//                            $entityManager->persist($ride);
-//                            $entityManager->flush();
-//                        }
+                        $errors = $this->validator->validate($ride);
+                        if (count($errors) == 0) {
+                            if ($this->strava_api->isRealRide($token, $object_id)){
+                                $entityManager = $this->doctrine->getManager();
+                                $entityManager->persist($ride);
+                                $entityManager->flush();
+                            }
+                        }
                     }
 
                     //Create a message
