@@ -24,12 +24,16 @@ class NewRideMessageHandler
     public function __invoke(NewRideMessage $message)
     {
         $data = json_decode($message->getContent(), true);
+//        $aspect_type = $data['aspect_type']; // "create" | "update" | "delete"
+//        $object_id = $data['object_id']; // activity ID | athlete ID
+//        $object_type = $data['object_type']; // "activity" | "athlete"
+//        $owner_id = $data['owner_id']; // athlete ID
         //Create a message
         $emailmessage = (new Email())
             ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
             ->to($_ENV['MAILER_FROM'])
             ->subject('Message from Century Challenge')
-            ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r".$data["aspect_type"])
+            ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r".$data)
             ->addBcc('martyndwheeler@gmail.com');
         $sentEmail = $this->mailer->send($emailmessage);
     }
