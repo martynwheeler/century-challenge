@@ -47,10 +47,8 @@ class HeavyTaskListener
                     $ride->setUser($user);
                     $ride->setSource($user->getPreferredProvider());
 
-                    /*
                     //get activity
                     $athleteActivity = $this->strava_api->getAthleteActivity($token, $object_id);
-*/
 
                     //Create a message
                     $message = (new Email())
