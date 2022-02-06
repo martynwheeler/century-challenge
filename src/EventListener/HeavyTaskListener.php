@@ -39,10 +39,10 @@ class HeavyTaskListener
             $object_type = $request->get('object_type'); // "activity" | "athlete"
             $owner_id = $request->get('owner_id'); // athlete ID
 
-            if ($aspect_type == 'create' && $object_type == 'activity') {
+            if ($aspect_type == 'update' && $object_type == 'activity') {
                 //Does ride already exist in the database
                 $entityManager = $this->em->getRepository(Ride::class);
-                if ($entityManager->findOneBy(['ride_id' => $object_id]) != null) {
+                if ($entityManager->findOneBy(['ride_id' => $object_id]) == null) {
                     //Get the user
                     $entityManager = $this->em->getRepository(User::class);
                     $user = $entityManager->findOneBy(['stravaID' => $owner_id]);
@@ -80,7 +80,7 @@ class HeavyTaskListener
                     ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
                     ->to($_ENV['MAILER_FROM'])
                     ->subject('Message from Century Challenge')
-                    ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r"."hello")
+                    ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r".$user['username'])
                     ->addBcc('martyndwheeler@gmail.com');
                     /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
                     $sentEmail = $this->mailer->send($message);
