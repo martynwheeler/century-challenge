@@ -9,7 +9,6 @@ use App\Message\NewRideMessage;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
@@ -25,7 +24,7 @@ class NewRideMessageHandler
     public function __invoke(NewRideMessage $message)
     {
         
-        $data = new Request($message->getContent());
+        $data = $message->getContent();
 
 //        $aspect_type = $data['aspect_type']; // "create" | "update" | "delete"
 //        $object_id = $data['object_id']; // activity ID | athlete ID

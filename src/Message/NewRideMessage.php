@@ -1,15 +1,14 @@
 <?php
 
 namespace App\Message;
-use Symfony\Component\HttpFoundation\Request;
 
 class NewRideMessage
 {
-    public function __construct(private Request $content)
+    public function __construct(private string $content)
     {
     }
 
-    public function getContent(): Request
+    public function getContent(): string
     {
         return $this->content;
     }
