@@ -64,7 +64,7 @@ class NewRideMessageHandler
                 }
 
                 //emailmessage a message
-                $message = (new Email())
+                $emailmessage = (new Email())
                 ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
                 ->to($_ENV['MAILER_FROM'])
                 ->subject('Message from Century Challenge')
