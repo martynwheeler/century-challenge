@@ -31,9 +31,7 @@ class StravaWebhookController extends AbstractController
     #[Route('/strava/webhook', name:'webhook', methods: ['POST'])]
     public function data(Request $request, MessageBusInterface $bus): Response
     {
-        $response = new Response('EVENT_RECEIVED', Response::HTTP_OK, []);
-        $response->send();
-        $bus->dispatch(new NewRideMessage($request->getContent()));
-        return $response;
+//        $bus->dispatch(new NewRideMessage($request->getContent()));
+        return new Response('EVENT_RECEIVED', Response::HTTP_OK, []);
     }
 }
