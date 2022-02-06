@@ -17,12 +17,13 @@ class StravaWebhookController extends AbstractController
     #[Route('/strava/webhook', name:'webhook_create', methods: ['GET'])]
     public function create(Request $request, StravaWebhookService $stravawebhookservice): Response
     {
+        //Process query string
         $mode = $request->query->get('hub_mode'); // hub.mode
         $token = $request->query->get('hub_verify_token'); // hub.verify_token
         $challenge = $request->query->get('hub_challenge'); // hub.challenge
 
-        $response = $stravawebhookservice->validate($mode, $token, $challenge);
-        return $response;
+        //Validate with strava
+        return $stravawebhookservice->validate($mode, $token, $challenge);
     }
 
     #[Route('/strava/webhook', name:'webhook', methods: ['POST'])]
