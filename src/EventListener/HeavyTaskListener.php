@@ -81,7 +81,7 @@ class HeavyTaskListener
                     ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
                     ->to($_ENV['MAILER_FROM'])
                     ->subject('Message from Century Challenge')
-                    ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r".$user->getUsername())
+                    ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r"."$user->getUsername() added a ride of $ride->getKm().")
                     ->addBcc('martyndwheeler@gmail.com');
                     /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
                     $sentEmail = $this->mailer->send($message);

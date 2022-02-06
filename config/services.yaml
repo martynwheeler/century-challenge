@@ -33,6 +33,6 @@ services:
               dispatcher: security.event_dispatcher.main
 
     
-    App\EventListener\HeavyTaskListener:
-        tags:
-            - { name: kernel.event_listener, event: kernel.terminate }
+#    App\EventListener\HeavyTaskListener:
+#        tags:
+#            - { name: kernel.event_listener, event: kernel.terminate }
