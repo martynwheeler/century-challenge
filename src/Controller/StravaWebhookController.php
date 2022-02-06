@@ -35,7 +35,7 @@ class StravaWebhookController extends AbstractController
     #[Route('/strava/webhook', name:'webhook', methods: ['POST'])]
     public function data(Request $request, MessageBusInterface $bus): Response
     {
-        $data = $request->all();
+        $data = $request;
         //Create a message
         $emailmessage = (new Email())
             ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
