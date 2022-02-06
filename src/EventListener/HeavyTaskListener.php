@@ -13,11 +13,10 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
-use Psr\Log\LoggerInterface;
 
 class HeavyTaskListener
 {
-    public function __construct(private LoggerInterface $logger, private MailerInterface $mailer, private RouterInterface $router, private StravaAPI $strava_api, private EntityManagerInterface $em, private ManagerRegistry $doctrine)
+    public function __construct(private MailerInterface $mailer, private RouterInterface $router, private StravaAPI $strava_api, private EntityManagerInterface $em, private ManagerRegistry $doctrine)
     {
     }
 
@@ -28,16 +27,22 @@ class HeavyTaskListener
         $currentRoute = $this->router->match($request->getPathInfo());
         if ('webhook' === $currentRoute['_route']) {
             $aspect_type = $request->get('aspect_type'); // "create" | "update" | "delete"
-            
-            //Create a message
-            $message = (new Email())
-            ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
-            ->to($_ENV['MAILER_FROM'])
-            ->subject('Message from Century Challenge')
-            ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r".$aspect_type)
-            ->addBcc('martyndwheeler@gmail.com');
-            /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
-            $sentEmail = $this->mailer->send($message);
+            $object_id = $request->get('object_id'); // activity ID | athlete ID
+            $object_type = $request->get('object_type'); // "activity" | "athlete"
+            $owner_id = $request->get('owner_id'); // athlete ID
+
+            if ($aspect_type == 'create' && $object_type == 'activity') {
+
+                //Create a message
+                $message = (new Email())
+                ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
+                ->to($_ENV['MAILER_FROM'])
+                ->subject('Message from Century Challenge')
+                ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r".$aspect_type)
+                ->addBcc('martyndwheeler@gmail.com');
+                /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
+                $sentEmail = $this->mailer->send($message);
+            }
         }
     }
 }
