@@ -39,14 +39,20 @@ class HeavyTaskListener
                     $entityManager = $this->em->getRepository(User::class);
                     $user = $entityManager->findOneBy(['stravaID' => $owner_id]);
 
-
-
+                    //set access token
+                    $token = $this->strava_api->getToken($user);
+                    //create ride object
+                    $ride = new Ride();
+                    $ride->setUser($user);
+                    $ride->setSource($user->getPreferredProvider());
+                    //get activity
+                    $athleteActivity = $this->strava_api->getAthleteActivity($token, $object_id);
                     //Create a message
                     $message = (new Email())
                     ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
                     ->to($_ENV['MAILER_FROM'])
                     ->subject('Message from Century Challenge')
-                    ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r".$user['surname'])
+                    ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r"."hello")
                     ->addBcc('martyndwheeler@gmail.com');
                     /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
                     $sentEmail = $this->mailer->send($message);
