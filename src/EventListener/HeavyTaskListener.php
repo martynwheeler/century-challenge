@@ -46,6 +46,7 @@ class HeavyTaskListener
                     //Get the user
                     $entityManager = $this->em->getRepository(User::class);
                     $user = $entityManager->findOneBy(['stravaID' => $owner_id]);
+                    //is the user dqed
 
                     //set access token
                     $token = $this->strava_api->getToken($user);
@@ -80,7 +81,7 @@ class HeavyTaskListener
                     ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
                     ->to($_ENV['MAILER_FROM'])
                     ->subject('Message from Century Challenge')
-                    ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r".$user['username'])
+                    ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r".$user->getUsername())
                     ->addBcc('martyndwheeler@gmail.com');
                     /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
                     $sentEmail = $this->mailer->send($message);
