@@ -35,6 +35,7 @@ class HeavyTaskListener
                 //Does ride exist
                 $entityManager = $this->em->getRepository(Ride::class);
                 if ($entityManager->findOneBy(['ride_id' => $object_id]) == null) {
+                    /*
                     //Get the user
                     $entityManager = $this->em->getRepository(User::class);
                     $user = $entityManager->findOneBy(['stravaID' => $owner_id]);
@@ -49,6 +50,7 @@ class HeavyTaskListener
 
                     //get activity
                     $athleteActivity = $this->strava_api->getAthleteActivity($token, $object_id);
+*/
 
                     //Create a message
                     $message = (new Email())
