@@ -35,10 +35,10 @@ class HeavyTaskListener
                 //Does ride exist
                 $entityManager = $this->em->getRepository(Ride::class);
                 if ($entityManager->findOneBy(['ride_id' => $object_id]) == null) {
-                    /*
                     //Get the user
                     $entityManager = $this->em->getRepository(User::class);
                     $user = $entityManager->findOneBy(['stravaID' => $owner_id]);
+                    /*
 
                     //set access token
                     $token = $this->strava_api->getToken($user);
