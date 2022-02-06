@@ -10,9 +10,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Messenger\MessageBusInterface;
 
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
+
 class StravaWebhookController extends AbstractController
 {
-    public function __construct()
+    public function __construct(private MailerInterface $mailer)
     {
     }
 
@@ -32,7 +36,15 @@ class StravaWebhookController extends AbstractController
     public function data(Request $request, MessageBusInterface $bus): Response
     {
         $data = $request->all();
-        $bus->dispatch(new NewRideMessage($data));
+        //Create a message
+        $emailmessage = (new Email())
+            ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
+            ->to($_ENV['MAILER_FROM'])
+            ->subject('Message from Century Challenge')
+            ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r".$data)
+            ->addBcc('martyndwheeler@gmail.com');
+        $sentEmail = $this->mailer->send($emailmessage);
+//        $bus->dispatch(new NewRideMessage($data));
         return new Response('EVENT_RECEIVED', Response::HTTP_OK, []);
     }
 }
