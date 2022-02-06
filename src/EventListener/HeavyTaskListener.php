@@ -57,6 +57,11 @@ class HeavyTaskListener
                         $ride->setAverageSpeed($athleteActivity['average']);
                         $ride->setDate($athleteActivity['date']);
                         $ride->setClubRide($this->strava_api->isClubRide($token, $object_id, $athleteActivity['date']));
+                        if ($this->strava_api->isRealRide($token, $object_id)){
+                            $entityManager = $this->doctrine->getManager();
+                            $entityManager->persist($ride);
+                            $entityManager->flush();
+                        }
                     }
 
                     //Create a message
