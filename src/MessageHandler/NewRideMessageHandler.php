@@ -23,6 +23,7 @@ class NewRideMessageHandler
 
     public function __invoke(NewRideMessage $message)
     {
+        /*
         //Create a message
         $emailmessage = (new Email())
         ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
@@ -30,7 +31,8 @@ class NewRideMessageHandler
         ->subject('Message from Century Challenge')
         ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r".$message)
         ->addBcc('martyndwheeler@gmail.com');
-        /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
+        /** @var Symfony\Component\Mailer\SentMessage $sentEmail
         $sentEmail = $this->mailer->send($emailmessage);
+        */
     }
 }
