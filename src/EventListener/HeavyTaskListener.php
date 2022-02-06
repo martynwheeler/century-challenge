@@ -38,22 +38,15 @@ class HeavyTaskListener
                     //Get the user
                     $entityManager = $this->em->getRepository(User::class);
                     $user = $entityManager->findOneBy(['stravaID' => $owner_id]);
-                    //Get or refresh token as necessary
-                    if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 300) {
-                        $accessToken = $this->strava_api->getToken($user);
-                        $request->getSession()->set('strava.token', $accessToken);
-                    }
-                    $token = $request->getSession()->get('strava.token');
-                    $ride = new Ride();
-                    $ride->setUser($user);
-                    $ride->setSource($user->getPreferredProvider());
+
+
 
                     //Create a message
                     $message = (new Email())
                     ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
                     ->to($_ENV['MAILER_FROM'])
                     ->subject('Message from Century Challenge')
-                    ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r".$token)
+                    ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r".$user['surname'])
                     ->addBcc('martyndwheeler@gmail.com');
                     /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
                     $sentEmail = $this->mailer->send($message);
