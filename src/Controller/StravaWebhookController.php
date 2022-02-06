@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Service\StravaWebhookService;
+use App\Message\NewRideMessage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class StravaWebhookController extends AbstractController
 {
@@ -27,8 +29,9 @@ class StravaWebhookController extends AbstractController
     }
 
     #[Route('/strava/webhook', name:'webhook', methods: ['POST'])]
-    public function data(Request $request): Response
+    public function data(Request $request, MessageBusInterface $bus): Response
     {
+        $bus->dispatch(new NewRideMessage('Look! I created a message!'));
         return new Response('EVENT_RECEIVED', Response::HTTP_OK, []);
     }
 }
