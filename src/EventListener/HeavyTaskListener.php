@@ -34,7 +34,7 @@ class HeavyTaskListener
             if ($aspect_type == 'create' && $object_type == 'activity') {
                 //Does ride already exist in the database
                 $entityManager = $this->em->getRepository(Ride::class);
-                if ($entityManager->findOneBy(['ride_id' => $object_id]) != null) {
+                if ($entityManager->findOneBy(['ride_id' => $object_id]) == null) {
                     //Get the user
                     $entityManager = $this->em->getRepository(User::class);
                     $user = $entityManager->findOneBy(['stravaID' => $owner_id]);
@@ -57,11 +57,11 @@ class HeavyTaskListener
                         $ride->setAverageSpeed($athleteActivity['average']);
                         $ride->setDate($athleteActivity['date']);
                         $ride->setClubRide($this->strava_api->isClubRide($token, $object_id, $athleteActivity['date']));
-                        if ($this->strava_api->isRealRide($token, $object_id)){
+//                        if ($this->strava_api->isRealRide($token, $object_id)){
                             $entityManager = $this->doctrine->getManager();
-                            $entityManager->persist($ride);
-                            $entityManager->flush();
-                        }
+//                            $entityManager->persist($ride);
+//                            $entityManager->flush();
+//                        }
                     }
 
                     //Create a message
