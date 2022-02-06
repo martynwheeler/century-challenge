@@ -27,12 +27,14 @@ class HeavyTaskListener
         $request = $event->getRequest();
         $currentRoute = $this->router->match($request->getPathInfo());
         if ('webhook' === $currentRoute['_route']) {
+            $aspect_type = $request->get('aspect_type'); // "create" | "update" | "delete"
+            
             //Create a message
             $message = (new Email())
             ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
             ->to($_ENV['MAILER_FROM'])
             ->subject('Message from Century Challenge')
-            ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r".$request)
+            ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r".$aspect_type)
             ->addBcc('martyndwheeler@gmail.com');
             /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
             $sentEmail = $this->mailer->send($message);
