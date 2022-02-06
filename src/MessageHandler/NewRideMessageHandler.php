@@ -23,7 +23,7 @@ class NewRideMessageHandler
 
     public function __invoke(NewRideMessage $message)
     {
-        $data = json_decode($message->getContent());
+        $data = $message->getContent();
 
 //        $aspect_type = $data['aspect_type']; // "create" | "update" | "delete"
 //        $object_id = $data['object_id']; // activity ID | athlete ID
