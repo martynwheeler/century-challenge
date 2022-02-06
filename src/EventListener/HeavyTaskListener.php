@@ -42,13 +42,12 @@ class HeavyTaskListener
                     //set access token
                     $token = $this->strava_api->getToken($user);
 
-
-                    /*
                     //create ride object
                     $ride = new Ride();
                     $ride->setUser($user);
                     $ride->setSource($user->getPreferredProvider());
 
+                    /*
                     //get activity
                     $athleteActivity = $this->strava_api->getAthleteActivity($token, $object_id);
 */
