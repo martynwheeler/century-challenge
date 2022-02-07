@@ -30,7 +30,7 @@ class NewRideMessageHandler
         $object_type = $data['object_type']; // "activity" | "athlete"
         $owner_id = $data['owner_id']; // athlete ID
 
-        if ($aspect_type == 'create' && $object_type == 'activity') {
+        if ($aspect_type == 'update' && $object_type == 'activity') {
             //Does ride already exist in the database
             $entityManager = $this->em->getRepository(Ride::class);
             if ($entityManager->findOneBy(['ride_id' => $object_id]) == null) {
@@ -58,8 +58,8 @@ class NewRideMessageHandler
                     $ride->setClubRide($this->strava_api->isClubRide($token, $object_id, $athleteActivity['date']));
                     if ($this->strava_api->isRealRide($token, $object_id)){
                         $entityManager = $this->doctrine->getManager();
-//                            $entityManager->persist($ride);
-//                            $entityManager->flush();
+                            $entityManager->persist($ride);
+                            $entityManager->flush();
                     }
                 }
 
