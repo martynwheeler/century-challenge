@@ -23,7 +23,7 @@ deploy:
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:clear
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:warmup
       # start worker command
-      - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console messenger:consume
+      - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console messenger:consume &
       # delete unwanted files
       #- rm -rf assets bin tools 
 
@@ -48,7 +48,7 @@ deploy:
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:clear
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:warmup
       # start worker command
-      - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console messenger:consume
+      - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console messenger:consume &
       # delete unwanted files
       #- rm -rf assets bin tools 
       #- php8.0-cli bin/console app:send-monthly-email
