@@ -30,7 +30,7 @@ class NewRideMessageHandler
         $object_type = $data['object_type']; // "activity" | "athlete"
         $owner_id = $data['owner_id']; // athlete ID
 
-        if ($aspect_type == 'update' && $object_type == 'activity') {//should be create
+        if ($aspect_type == 'create' && $object_type == 'activity') {//should be create
             //Does ride already exist in the database
             $entityManager = $this->em->getRepository(Ride::class);
             if ($entityManager->findOneBy(['ride_id' => $object_id]) == null) {
