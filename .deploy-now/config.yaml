@@ -45,8 +45,8 @@ deploy:
       - find $(pwd) -type d -not -name "logs" -exec chmod 775 {} \;
       - chmod -R o+w var
       # clear caches, migrate database, install assets, warmup caches
-      - APP_ENV=dev APP_DEBUG=1 php8.0-cli bin/console cache:clear
-      - APP_ENV=dev APP_DEBUG=1 php8.0-cli bin/console cache:warmup
+      - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:clear
+      - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:warmup
       # start worker command
 #      - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console messenger:consume &
       # delete unwanted files
