@@ -53,7 +53,7 @@ class SendMonthlyEmailCommand extends Command
             $users = $this->rd->getRideData(year: null, username: null)['users'];
             foreach ($users as $user) {
                 if (!$user['isDisqualified']) {
-                    $message->addBcc($user['email']);
+//                    $message->addBcc($user['email']);
                 }
             }
             /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
