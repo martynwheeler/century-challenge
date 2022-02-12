@@ -2,22 +2,29 @@
 
 namespace App\MessageHandler;
 
-use App\Service\StravaAPI;
 use App\Entity\Ride;
 use App\Entity\User;
 use App\Message\NewRideMessage;
+use App\Service\RideData;
+use App\Service\StravaAPI;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
+//use Symfony\Component\Mailer\MailerInterface;
+//use Symfony\Component\Mime\Address;
+//use Symfony\Component\Mime\Email;
 
 #[AsMessageHandler]
 class NewRideMessageHandler
 {
-    public function __construct(private MailerInterface $mailer, private StravaAPI $strava_api, private EntityManagerInterface $em, private ManagerRegistry $doctrine)
+    public function __construct(
+//        private MailerInterface $mailer,
+        private StravaAPI $strava_api,
+        private EntityManagerInterface $em,
+        private ManagerRegistry $doctrine,
+        private RideData $rd,
+        )
     {
     }
 
@@ -39,7 +46,7 @@ class NewRideMessageHandler
                 $user = $entityManager->findOneBy(['stravaID' => $owner_id]);
 
                 //if not dq'ed then process
-                if (!$rd->getRideData(year: null, username: $user->getUsername())['users'][0]['isDisqualified']){
+                if (!$this->rd->getRideData(year: null, username: $user->getUsername())['users'][0]['isDisqualified']){
                     //set access token
                     $token = $this->strava_api->getToken($user);
 
