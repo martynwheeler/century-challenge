@@ -122,7 +122,7 @@ class RideData
     /**
      * Sets the points for a ride based on its distance
      */
-    public function setPoints(float $km): int
+    protected function setPoints(float $km): int
     {
         //For 100km, you get 10 points
         if ($km >= 100 && $km < 150) {
@@ -145,7 +145,7 @@ class RideData
     /**
      * Comparison function to determine the order of the riders by totalpoints
      */
-    public function sortByTotal(array $a, array $b): int
+    protected function sortByTotal(array $a, array $b): int
     {
         $a = $a['totalpoints'];
         $b = $b['totalpoints'];

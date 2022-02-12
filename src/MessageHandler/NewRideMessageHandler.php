@@ -38,42 +38,45 @@ class NewRideMessageHandler
                 $entityManager = $this->em->getRepository(User::class);
                 $user = $entityManager->findOneBy(['stravaID' => $owner_id]);
 
-                //set access token
-                $token = $this->strava_api->getToken($user);
+                //if not dq'ed then process
+                if (!$rd->getRideData(year: null, username: $user->getUsername())['users'][0]['isDisqualified']){
+                    //set access token
+                    $token = $this->strava_api->getToken($user);
 
-                //create ride object
-                $ride = new Ride();
-                $ride->setUser($user);
-                $ride->setSource($user->getPreferredProvider());
+                    //create ride object
+                    $ride = new Ride();
+                    $ride->setUser($user);
+                    $ride->setSource($user->getPreferredProvider());
 
-                //get the activity from strava
-                $athleteActivity = $this->strava_api->getAthleteActivity($token, $object_id);
+                    //get the activity from strava
+                    $athleteActivity = $this->strava_api->getAthleteActivity($token, $object_id);
 
-                //if a valid activity is returned
-                if ($athleteActivity) {
-                    $ride->setRideId($object_id);
-                    $ride->setKm($athleteActivity['distance']);
-                    $ride->setAverageSpeed($athleteActivity['average']);
-                    $ride->setDate($athleteActivity['date']);
-                    $ride->setClubRide($athleteActivity['isClubride']);
-                    
-                    //If the ride is real then add to db
-                    if ($athleteActivity['isRealride']) {
-                        $entityManager = $this->doctrine->getManager();
-                        $entityManager->persist($ride);
-                        $entityManager->flush();
+                    //if a valid activity is returned
+                    if ($athleteActivity) {
+                        $ride->setRideId($object_id);
+                        $ride->setKm($athleteActivity['distance']);
+                        $ride->setAverageSpeed($athleteActivity['average']);
+                        $ride->setDate($athleteActivity['date']);
+                        $ride->setClubRide($athleteActivity['isClubride']);
+                        
+                        //If the ride is real then add to db
+                        if ($athleteActivity['isRealride']) {
+                            $entityManager = $this->doctrine->getManager();
+                            $entityManager->persist($ride);
+                            $entityManager->flush();
+                        }
                     }
+    /*
+                    //emailmessage a message
+                    $emailmessage = (new Email())
+                    ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
+                    ->to($_ENV['MAILER_FROM'])
+                    ->subject('Message from Century Challenge')
+                    ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r"."hello")
+                    ->addBcc('martyndwheeler@gmail.com');
+                    $sentEmail = $this->mailer->send($emailmessage);
+    */
                 }
-/*
-                //emailmessage a message
-                $emailmessage = (new Email())
-                ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
-                ->to($_ENV['MAILER_FROM'])
-                ->subject('Message from Century Challenge')
-                ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r"."hello")
-                ->addBcc('martyndwheeler@gmail.com');
-                $sentEmail = $this->mailer->send($emailmessage);
-*/
             }
         }
     }
