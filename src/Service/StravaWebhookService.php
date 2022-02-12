@@ -19,6 +19,12 @@ class StravaWebhookService
 
     public function subscribe(): ?int
     {
+        //Check for existing subscription
+        $id = $this->view();
+        if ($id) {
+            return -1;
+        }
+
         //Create a new client
         $httpClient = HttpClient::create(['base_uri' => self::API_URL]);
         //Get response
