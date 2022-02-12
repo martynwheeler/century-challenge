@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service;
 
 use Symfony\Component\HttpClient\HttpClient;
@@ -6,11 +7,17 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * Simple PHP Library for the Strava Webhook
+ *
+ * @author Martyn Wheeler
+ */
+
 class StravaWebhookService
 {
     public const API_URL = 'https://www.strava.com/api/v3/';
 
-    public function subscribe(): int|null
+    public function subscribe(): ?int
     {
         //Create a new client
         $httpClient = HttpClient::create(['base_uri' => self::API_URL]);
@@ -56,7 +63,7 @@ class StravaWebhookService
         return false;
     }
 
-    public function view(): int|null
+    public function view(): ?int
     {
         //Create a new client
         $httpClient = HttpClient::create(['base_uri' => self::API_URL]);

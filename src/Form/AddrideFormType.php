@@ -26,10 +26,6 @@ class AddrideFormType extends AbstractType
                 'required' => false,
                 'scale' =>2,
             ])
-            ->add('ride_id', TextType::class, [
-                'label' => 'Ride ID',
-                'required' => false,
-            ])
             ->add('date', DateType::class, [
                 'label' => 'Date of ride *',
                 'widget' => 'single_text',

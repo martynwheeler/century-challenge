@@ -16,9 +16,8 @@ Edit Ride
 <div class="form">
 	{% if app.request.attributes.get("_route") == 'addridemanual' %}
 	<p class="text-left">Please note that uploading via Strava/Komoot 
-		is the preferred method of registering your rides if you wish to be considered for the Century Challenge trophy.  If you 
-		are trying to enter a Ride ID on this page ensure that your default provider (Strava/Komoot) is correct by editing your 
-		<a href="{{ path('editprofile', {'username': app.user.useridentifier}) }}">profile</a>.</p>
+		is the preferred method of registering your rides if you wish to be considered for the Century Challenge trophy. You can connect to Strava/Komoot
+		by following <a href="{{ path('connect') }}">this link</a>.</p>
 	{% endif %}
 	{{ form_start(addrideForm) }}
 	<div class="row">
@@ -43,16 +42,13 @@ Edit Ride
 	  </div>
 	</div>
 	<div class="row pt-3">
-	  <div class="col">
+	  <div class="col-6">
 	    {{ form_label(addrideForm.date) }}
 	    {{ form_widget(addrideForm.date) }}
 		{{ form_errors(addrideForm.date) }}
 	  </div>
-	  <div class="col">
-	    {{ form_row(addrideForm.ride_id) }}
-	  </div>
 	</div>
-	<div class="row">
+	<div class="row pt-3">
 	  <div class="col">
 	    {{ form_row(addrideForm.details) }}
 	  </div>
