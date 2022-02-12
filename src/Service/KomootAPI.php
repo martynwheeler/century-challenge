@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpClient\HttpClient;
 
 /**
@@ -16,7 +16,7 @@ class KomootAPI
     public const BASE_URL = 'https://auth.komoot.de/';
     public const API_URL = 'https://external-api.komoot.de/v007/';
 
-    public function __construct(private EntityManagerInterface $em)
+    public function __construct(private ManagerRegistry $doctrine)
     {
     }
 
@@ -59,22 +59,24 @@ class KomootAPI
         try {
             //Create a new client
             $httpClient = HttpClient::create(['base_uri' => self::BASE_URL]);
+
             //Get the last refresh token from the user entity
             $refreshToken = $user->getKomootRefreshToken();
+            
             //Get response
             $response = $httpClient->request('POST', 'oauth/token', [
                 'headers' => ['Accept' => 'application/json'],
                 'auth_basic' => [$_ENV['KOMOOT_ID'], $_ENV['KOMOOT_SECRET']],
                 'query' => ['refresh_token' => $refreshToken, 'grant_type' => 'refresh_token'],
             ]);
+
             //Grab the token from the response
             $accessToken = $response->toArray();
+
             //Persist the new refresh token to the db
             $user->setKomootRefreshToken($accessToken['refresh_token']);
             $user->setKomootTokenExpiry($accessToken['expires_in'] + time());
-            $entityManager = $this->em;
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $this->doctrine->getManager()->flush();
         } catch (\Exception $e) {
             print $e->getMessage();
             die;

@@ -4,11 +4,11 @@ namespace App\Service;
 
 use App\Entity\Ride;
 use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 class RideData
 {
-    public function __construct(private EntityManagerInterface $em)
+    public function __construct(private ManagerRegistry $doctrine)
     {
     }
 
@@ -35,9 +35,8 @@ class RideData
         $period = new \Dateperiod($start, $interval, $end);
 
         //Get data from repos
-        $entityManager = $this->em->getRepository(Ride::class);
-        $rides = $entityManager->findRidesByYear($year);
-        $entityManager = $this->em->getRepository(User::class);
+        $rides = $this->doctrine->getRepository(Ride::class)->findRidesByYear($year);
+        $entityManager = $this->doctrine->getRepository(User::class);
         if (!$username) {
             //Get all users
             $users = $entityManager->findBy([], ['id' => 'ASC']);

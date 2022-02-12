@@ -8,7 +8,6 @@ use App\Message\NewRideMessage;
 use App\Service\RideData;
 use App\Service\StravaAPI;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 use Symfony\Component\Mailer\MailerInterface;
@@ -21,7 +20,6 @@ class NewRideMessageHandler
     public function __construct(
         private MailerInterface $mailer,
         private StravaAPI $strava_api,
-        private EntityManagerInterface $em,
         private ManagerRegistry $doctrine,
         private RideData $rd,
         )
@@ -39,11 +37,9 @@ class NewRideMessageHandler
 
         if ($aspect_type == 'create' && $object_type == 'activity') {//should be create
             //Does ride already exist in the database
-            $entityManager = $this->em->getRepository(Ride::class);
-            if ($entityManager->findOneBy(['ride_id' => $object_id]) == null) {
+            if ($this->doctrine->getRepository(Ride::class)->findOneBy(['ride_id' => $object_id]) == null) {
                 //Get the user
-                $entityManager = $this->em->getRepository(User::class);
-                $user = $entityManager->findOneBy(['stravaID' => $owner_id]);
+                $user = $this->doctrine->getRepository(User::class)->findOneBy(['stravaID' => $owner_id]);
 
                 //if not dq'ed then process
                 if (!$this->rd->getRideData(year: null, username: $user->getUsername())['users'][0]['isDisqualified']){

@@ -56,9 +56,7 @@ class ConnectStravaController extends AbstractController
             $user->setPreferredProvider('strava');
 
             //Persist user object
-            $entityManager = $this->doctrine->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $this->doctrine->getManager()->flush();
 
             //Success - redirect accordingly
             if ($request->getSession()->remove('reconnect.strava')) {

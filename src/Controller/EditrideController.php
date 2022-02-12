@@ -20,8 +20,7 @@ class EditrideController extends AbstractController
     #[Route('/ride/{ride_id}/delete', name: 'deleteride')]
     public function delete(Request $request, $ride_id): Response
     {
-        $repository = $this->doctrine->getRepository(Ride::class);
-        $ride = $repository->find($ride_id);
+        $ride = $this->doctrine->getRepository(Ride::class)->find($ride_id);
         if (!$ride) {
             throw $this->createNotFoundException(
                 'No ride found for id '.$ride_id
@@ -47,8 +46,7 @@ class EditrideController extends AbstractController
     #[Route('/ride/{ride_id}/editride', name: 'editride')]
     public function edit(Request $request, $ride_id): Response
     {
-        $repository = $this->doctrine->getRepository(Ride::class);
-        $ride = $repository->find($ride_id);
+        $ride = $this->doctrine->getRepository(Ride::class)->find($ride_id);
         if (!$ride) {
             throw $this->createNotFoundException(
                 'No ride found for id '.$ride_id
@@ -62,8 +60,7 @@ class EditrideController extends AbstractController
             $firstdayofmonth = new \DateTime();
             $firstdayofmonth->modify('midnight')->modify('first day of this month');
             if ($form->getData()->getDate() >= $firstdayofmonth) {
-                $entityManager = $this->doctrine->getManager();
-                $entityManager->flush();
+                $this->doctrine->getManager()->flush();
 
                 // do anything else you need here, like send an email
                 $this->addFlash('success', $this->getUser()->getName().', you have sucessfully edited your ride');

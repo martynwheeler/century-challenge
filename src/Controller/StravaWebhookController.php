@@ -12,10 +12,6 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 class StravaWebhookController extends AbstractController
 {
-    public function __construct()
-    {
-    }
-
     #[Route('/strava/webhook', name:'webhook_create', methods: ['GET'])]
     public function create(Request $request, StravaWebhookService $stravawebhookservice): Response
     {

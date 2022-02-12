@@ -56,9 +56,7 @@ class ConnectKomootController extends AbstractController
             $user->setPreferredProvider('komoot');
 
             //Persist user object
-            $entityManager = $this->doctrine->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $this->doctrine->getManager()->flush();
 
             //Success - return to the home page
             return $this->redirectToRoute('homepage');

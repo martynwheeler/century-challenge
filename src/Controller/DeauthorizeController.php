@@ -58,8 +58,7 @@ class DeauthorizeController extends AbstractController
             }
 
             //Persist user object
-            $entityManager = $this->doctrine->getManager();
-            $entityManager->flush();
+            $this->doctrine->getManager()->flush();
             $this->addFlash('success', $user->getName().', you have sucessfully unlinked from Strava');
         }
 

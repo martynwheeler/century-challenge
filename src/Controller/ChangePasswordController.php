@@ -34,8 +34,7 @@ class ChangePasswordController extends AbstractController
                     $form->get('newPassword')->getData()
                 )
             );
-            $entityManager = $this->doctrine->getManager();
-            $entityManager->flush();
+            $this->doctrine->getManager()->flush();
 
             // do anything else you need here, like send an email
             $this->addFlash('success', $user->getName().', you have sucessfully changed your password.');

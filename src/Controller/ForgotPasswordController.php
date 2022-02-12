@@ -40,8 +40,7 @@ class ForgotPasswordController extends AbstractController
                 ->subject('Message from Century Challenge')
             ;
             //Check that the user exists
-            $entityManager = $this->doctrine->getManager();
-            $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+            $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => $email]);
             if (!$user instanceof User) {
                 //User not found --> send warning email
                 $message->html($this->renderView('emails/usernotfound.html.twig', []));
@@ -53,7 +52,7 @@ class ForgotPasswordController extends AbstractController
                 $date = new \DateTime();
                 $date->add(new \DateInterval('PT1H'));
                 $user->setRequestTokenExpiry($date);
-                $entityManager->flush();
+                $this->doctrine->getManager()->flush();
                 $url = $this->generateUrl('resetpassword_confirm', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
                 $message->html(
                     $this->renderView(
@@ -97,8 +96,7 @@ class ForgotPasswordController extends AbstractController
         FormLoginAuthenticator $formLoginAuthenticator
     ): Response {
         //test whether the link is valid
-        $entityManager = $this->doctrine->getManager();
-        $user = $entityManager->getRepository(User::class)->findOneBy(['passwordRequestToken' => hash('md5', $token)]);
+        $user = $this->doctrine->getRepository(User::class)->findOneBy(['passwordRequestToken' => hash('md5', $token)]);
         if (!$user instanceof User || !$token) {
             $this->addFlash('danger', 'This reset link is invalid, please request a new link.');
             return $this->redirectToRoute('resetpassword');
@@ -119,7 +117,7 @@ class ForgotPasswordController extends AbstractController
             $password = $passwordHasher->hashPassword($user, $plainPassword);
             $user->setPassword($password);
             $user->setPasswordRequestToken(null);
-            $entityManager->flush();
+            $this->doctrine->getManager()->flush();
 
             //Everyhting has gone smoothly so authenticate the user
             return $userAuthenticator->authenticateUser(

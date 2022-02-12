@@ -25,7 +25,6 @@ class AdminController extends AbstractController
     public function listUsers(Request $request, RideData $rd): Response
     {
         $users = $this->doctrine->getRepository(User::class)->findBy([], ['surname' => 'ASC']);
-
         return $this->renderForm('admin/listusers.html.twig', [
             'users' => $users,
         ]);

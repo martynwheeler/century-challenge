@@ -66,8 +66,7 @@ class EditProfileController extends AbstractController
 
         //Process form data
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->doctrine->getManager();
-            $entityManager->flush();
+            $this->doctrine->getManager()->flush();
 
             // do anything else you need here, like send an email
             $this->addFlash('success', $user->getName().', you have sucessfully updated your profile');

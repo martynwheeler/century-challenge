@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpClient\HttpClient;
 
 /**
@@ -15,7 +15,7 @@ class StravaAPI
 {
     public const API_URL = 'https://www.strava.com/api/v3/';
 
-    public function __construct(private EntityManagerInterface $em)
+    public function __construct(private ManagerRegistry $doctrine)
     {
     }
 
@@ -64,7 +64,7 @@ class StravaAPI
         if (!array_key_exists('errors', $accessToken)) {
             $user->setStravaRefreshToken($accessToken['refresh_token']);
             $user->setStravaTokenExpiry($accessToken['expires_at']);
-            $this->em->flush();
+            $this->doctrine->getManager()->flush();
             return $accessToken['access_token'];
         }
 
