@@ -35,7 +35,13 @@ class EditProfileController extends AbstractController
                     $request->getSession()->set('komoot.token', $accessToken);
                 }
             }
+            //grab the athlete details from komoot
             $komootAthlete = $komoot_api->getAthlete($request->getSession()->get('komoot.token'), $user->getKomootID());
+
+            // check for errors in response
+            if (array_key_exists('error', $komootAthlete)) {
+                $komootAthlete = null;
+            }
         }
 
         $stravaAthlete = null;
@@ -50,6 +56,7 @@ class EditProfileController extends AbstractController
             }
             //grab the athlete details from strava
             $stravaAthlete = $strava_api->getAthlete($request->getSession()->get('strava.token'));
+
             //check for errors in response
             if (array_key_exists('errors', $stravaAthlete)) {
                 $stravaAthlete = null;

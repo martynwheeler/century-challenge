@@ -37,33 +37,33 @@ class ConnectKomootController extends AbstractController
         try {
             // the exact class depends on which provider you're using
             /** @var \MartynWheeler\OAuth2\Client\Provider\KomootResourceOwner $user */
-            //Get hold of the accesstoken object and get importantstauff
+            //Get hold of the accesstoken object and get important stuff
             $accessToken = $client->getAccessToken();
-            $request->getSession()->set('komoot.token', $accessToken);
-            $username = $client->fetchUserFromToken($accessToken)->getId();
-            $refresh = $accessToken->getRefreshToken();
-            $expires = $accessToken->getExpires();
+
+            //save the short-lived token in the session 
+            $request->getSession()->set('komoot.token', $accessToken->getToken());
 
             //Now store the refresh token and the expiry time of the access token in the user object
             $user = $this->getUser();
-            $user->setKomootRefreshToken($refresh);
-            $user->setKomootTokenExpiry($expires);
-            $user->setKomootID($username);
+            $user->setKomootRefreshToken($accessToken->getRefreshToken());
+            $user->setKomootTokenExpiry($accessToken->getExpires());
+            $user->setKomootID($client->fetchUserFromToken($accessToken)->getId());
             $user->setPreferredProvider('komoot');
 
-            //Persist user object
+            //update user object
             $doctrine->getManager()->flush();
 
             //Success - redirect accordingly
             if ($request->getSession()->remove('reconnect.komoot')) {
+                //you were redirected here because of an invalid token
                 return $this->redirectToRoute('addride');
             }
+
             return $this->redirectToRoute('homepage');
         } catch (IdentityProviderException $e) {
             // something went wrong!
             // probably you should return the reason to the user
-            var_dump($e->getMessage());
-            die;
+            dd($e->getMessage());
         }
     }
 }

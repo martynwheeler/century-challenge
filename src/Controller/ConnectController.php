@@ -13,14 +13,15 @@ class ConnectController extends AbstractController
     #[Route('/connect', name: 'connect')]
     public function connect(Request $request): Response
     {
-        try {
-            $request->getSession()->remove('reconnect.strava');
-            $request->getSession()->remove('reconnect.komoot');
-            $stravaurl = $this->generateUrl('connect_strava');
-            $komooturl = $this->generateUrl('connect_komoot');
-        } catch (Exception $e) {
-            print $e->getMessage();
-        }
+        //Remove flag in session
+        $request->getSession()->remove('reconnect.strava');
+        $request->getSession()->remove('reconnect.komoot');
+ 
+        //generate urls
+        $stravaurl = $this->generateUrl('connect_strava');
+        $komooturl = $this->generateUrl('connect_komoot');
+
+        //return page as response
         return $this->render('connect/connect.html.twig', [
             'stravaurl' => $stravaurl,
             'komooturl' => $komooturl,

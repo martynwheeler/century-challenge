@@ -18,14 +18,9 @@ class DeauthorizeController extends AbstractController
     {
         //Get the current user
         $user = $this->getUser();
-        if (!$user) {
-            throw $this->createNotFoundException(
-                'User not found'
-            );
-        }
 
-        $success = null;
         //Check if the user registered with strava
+        $success = null;
         if ($user->getStravaID() && $user->getStravaRefreshToken()) {
             //Get or refresh token as necessary
             if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 30) {
@@ -34,8 +29,10 @@ class DeauthorizeController extends AbstractController
                     $request->getSession()->set('strava.token', $accessToken);
                 }
             }
+
             //deauthorize from strava
             $success = $strava_api->deauthorize($request->getSession()->get('strava.token'));
+
             //check for errors in response
             if (array_key_exists('errors', $success)) {
                 $success = null;
@@ -67,23 +64,11 @@ class DeauthorizeController extends AbstractController
     {
         //Get the current user
         $user = $this->getUser();
-        if (!$user) {
-            throw $this->createNotFoundException(
-                'User not found'
-            );
-        }
 
+        //Check if the user registered with komoot
         $success = null;
-        //Check if the user registered with strava
         if ($user->getKomootID() && $user->getKomootRefreshToken()) {
-            //Get or refresh token as necessary
-            if (!$request->getSession()->get('komoot.token') || $user->getKomootTokenExpiry() - time() < 30) {
-                $accessToken = $komoot_api->getToken($user);
-                if ($accessToken) {
-                    $request->getSession()->set('komoot.token', $accessToken);
-                }
-            }
-            //deauthorize from strava
+            //deauthorize from komoot
             $success = $komoot_api->deauthorize($user->getKomootRefreshToken());
             if ($success != Response::HTTP_OK) {
                 $success = null;
@@ -92,7 +77,7 @@ class DeauthorizeController extends AbstractController
         }
 
         if ($success) {
-            //Now remove strava from the user object
+            //Now remove komoot from the user object
             $user->setKomootRefreshToken(null);
             $user->setKomootTokenExpiry(null);
             $user->setKomootID(null);

@@ -39,31 +39,31 @@ class ConnectStravaController extends AbstractController
             /** @var \MartynWheeler\OAuth2\Client\Provider\KomootResourceOwner $user */
             //Get hold of the accesstoken object and get importantstauff
             $accessToken = $client->getAccessToken();
-            $request->getSession()->set('strava.token', $accessToken);
-            $username = $client->fetchUserFromToken($accessToken)->getId();
-            $refresh = $accessToken->getRefreshToken();
-            $expires = $accessToken->getExpires();
+
+            //save the short-lived token in the session 
+            $request->getSession()->set('strava.token', $accessToken->getToken());
 
             //Now store the refresh token and the expiry time of the access token in the user object
             $user = $this->getUser();
-            $user->setStravaRefreshToken($refresh);
-            $user->setStravaTokenExpiry($expires);
-            $user->setStravaID($username);
+            $user->setStravaRefreshToken($accessToken->getRefreshToken());
+            $user->setStravaTokenExpiry($accessToken->getExpires());
+            $user->setStravaID($client->fetchUserFromToken($accessToken)->getId());
             $user->setPreferredProvider('strava');
 
-            //Persist user object
+            //update user object
             $doctrine->getManager()->flush();
 
             //Success - redirect accordingly
             if ($request->getSession()->remove('reconnect.strava')) {
+                //you were redirected here because of an invalid token
                 return $this->redirectToRoute('addride');
             }
+
             return $this->redirectToRoute('homepage');
         } catch (IdentityProviderException $e) {
             // something went wrong!
             // probably you should return the reason to the user
-            var_dump($e->getMessage());
-            die;
+            dd($e->getMessage());
         }
     }
 }

@@ -23,7 +23,8 @@ class RegistrationController extends AbstractController
         UserAuthenticatorInterface $userAuthenticator,
         FormLoginAuthenticator $formLoginAuthenticator,
         ManagerRegistry $doctrine,
-    ): Response {
+    ): Response
+    {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
