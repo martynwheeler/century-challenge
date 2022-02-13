@@ -13,10 +13,6 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ConnectStravaController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine)
-    {
-    }
-
     #[Route('/connect/strava', name: 'connect_strava')]
     public function connectAction(ClientRegistry $clientRegistry): RedirectResponse
     {
@@ -33,7 +29,7 @@ class ConnectStravaController extends AbstractController
      * in config/packages/knpu_oauth2_client.yaml
      */
     #[Route('/connect/strava/check', name: 'connect_strava_check')]
-    public function connectCheckAction(Request $request, ClientRegistry $clientRegistry): RedirectResponse
+    public function connectCheckAction(Request $request, ClientRegistry $clientRegistry, ManagerRegistry $doctrine): RedirectResponse
     {
         /** @var \MartynWheeler\OAuth2\Client\Provider\Strava $client */
         $client = $clientRegistry->getClient('strava_oauth');
@@ -56,7 +52,7 @@ class ConnectStravaController extends AbstractController
             $user->setPreferredProvider('strava');
 
             //Persist user object
-            $this->doctrine->getManager()->flush();
+            $doctrine->getManager()->flush();
 
             //Success - redirect accordingly
             if ($request->getSession()->remove('reconnect.strava')) {

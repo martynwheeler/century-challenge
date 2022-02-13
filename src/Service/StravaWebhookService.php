@@ -38,7 +38,7 @@ class StravaWebhookService
         ]);
 
         if ($response->getStatusCode() === Response::HTTP_CREATED) {
-            return json_decode($response->getContent())->id;
+            return json_decode($response->getContent(), null, 512, JSON_THROW_ON_ERROR)->id;
         }
 
         return null;
@@ -51,7 +51,7 @@ class StravaWebhookService
         if (!$id) {
             return false;
         }
-    
+
         //Create a new client
         $httpClient = HttpClient::create(['base_uri' => self::API_URL]);
         //Get response
@@ -61,11 +61,11 @@ class StravaWebhookService
                 'client_secret' => $_ENV['STRAVA_SECRET'],
             ]
         ]);
-    
+
         if ($response->getStatusCode() === Response::HTTP_NO_CONTENT) {
             return true;
         }
-    
+
         return false;
     }
 
@@ -80,17 +80,17 @@ class StravaWebhookService
                 'client_secret' => $_ENV['STRAVA_SECRET'],
             ]
         ]);
-            
+
         if ($response->getStatusCode() === Response::HTTP_OK) {
-            $body = json_decode($response->getContent());
-    
+            $body = json_decode($response->getContent(), null, 512, JSON_THROW_ON_ERROR);
+
             if ($body) {
                 return $body[0]->id; // each application can have only 1 subscription
             } else {
                 return null; // no subscription found
             }
         }
-    
+
         return null;
     }
 

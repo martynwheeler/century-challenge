@@ -32,7 +32,7 @@ class ViewStravaWebhookCommand extends Command
 
         $id = $this->stravawebhookservice->view();
 
-        if ($id != null){
+        if ($id != null) {
             $io->success("There is currently a subcription with id = $id");
         } else {
             $io->info("There are currently no subscriptions");

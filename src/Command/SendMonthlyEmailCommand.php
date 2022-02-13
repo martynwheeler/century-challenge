@@ -14,7 +14,6 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
-
 #[AsCommand(
     name: 'app:send-monthly-email',
     description: 'Send a monthly email to users',
@@ -34,7 +33,7 @@ class SendMonthlyEmailCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        if(date('t') == date('d')){
+        if (date('t') == date('d')) {
             //Create a message
             $io->progressStart();
             //Create a message
@@ -60,7 +59,7 @@ class SendMonthlyEmailCommand extends Command
             $sentEmail = $this->mailer->send($message);
             $io->progressAdvance();
             $io->progressFinish();
-    
+
             $io->success('Monthly email message sent.');
         }
         return Command::SUCCESS;

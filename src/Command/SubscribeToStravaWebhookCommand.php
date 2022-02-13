@@ -31,7 +31,7 @@ class SubscribeToStravaWebhookCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $id = $this->stravawebhookservice->subscribe();
-        if ($id != null && $id > 0){
+        if ($id != null && $id > 0) {
             $io->success("A new subcription was initiated with id = $id");
         } elseif ($id != null && $id < 0) {
             $io->info("A subscription already exists");

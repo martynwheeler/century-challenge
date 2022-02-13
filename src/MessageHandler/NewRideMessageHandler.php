@@ -22,14 +22,13 @@ class NewRideMessageHandler
         private StravaAPI $strava_api,
         private ManagerRegistry $doctrine,
         private RideData $rd,
-        )
-    {
+    ) {
     }
 
     public function __invoke(NewRideMessage $message)
     {
         //Decode json string
-        $data = json_decode($message->getContent(),true);
+        $data = json_decode($message->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $aspect_type = $data['aspect_type']; // "create" | "update" | "delete"
         $object_id = $data['object_id']; // activity ID | athlete ID
         $object_type = $data['object_type']; // "activity" | "athlete"
@@ -42,7 +41,7 @@ class NewRideMessageHandler
                 $user = $this->doctrine->getRepository(User::class)->findOneBy(['stravaID' => $owner_id]);
 
                 //if not dq'ed then process
-                if (!$this->rd->getRideData(year: null, username: $user->getUsername())['users'][0]['isDisqualified']){
+                if (!$this->rd->getRideData(year: null, username: $user->getUsername())['users'][0]['isDisqualified']) {
                     //set access token
                     $token = $this->strava_api->getToken($user);
 
@@ -61,7 +60,7 @@ class NewRideMessageHandler
                         $ride->setAverageSpeed($athleteActivity['average']);
                         $ride->setDate($athleteActivity['date']);
                         $ride->setClubRide($athleteActivity['isClubride']);
-                        
+
                         //If the ride is real then add to db
                         if ($athleteActivity['isRealride']) {
                             $entityManager = $this->doctrine->getManager();

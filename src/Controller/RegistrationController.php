@@ -16,16 +16,13 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class RegistrationController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine)
-    {
-    }
-
     #[Route('/register', name: 'register')]
     public function register(
         Request $request,
         UserPasswordHasherInterface $passwordHasher,
         UserAuthenticatorInterface $userAuthenticator,
         FormLoginAuthenticator $formLoginAuthenticator,
+        ManagerRegistry $doctrine,
     ): Response {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -40,7 +37,7 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            $entityManager = $this->doctrine->getManager();
+            $entityManager = $doctrine->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email

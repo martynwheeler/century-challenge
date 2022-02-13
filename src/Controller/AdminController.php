@@ -16,15 +16,11 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class AdminController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine)
-    {
-    }
-
     //Produce a list of users
     #[Route('/admin/listusers', name: 'listusers')]
-    public function listUsers(Request $request, RideData $rd): Response
+    public function listUsers(Request $request, RideData $rd, ManagerRegistry $doctrine): Response
     {
-        $users = $this->doctrine->getRepository(User::class)->findBy([], ['surname' => 'ASC']);
+        $users = $doctrine->getRepository(User::class)->findBy([], ['surname' => 'ASC']);
         return $this->renderForm('admin/listusers.html.twig', [
             'users' => $users,
         ]);
@@ -72,37 +68,4 @@ class AdminController extends AbstractController
             'email_form' => $form,
         ]);
     }
-
-    /*
-        #[Route('/admin/updateusers', name: 'updateusers')]
-        public function updateUsers(Request $request, RideData $rd)
-        {
-            $entityManager = $this->doctrine->getManager();
-            $users = $this->doctrine->getRepository(User::class)->findBy([], ['name' => 'ASC']);
-
-            foreach ($users as $user) {
-                $name = $user->getName();
-                $names = explode(' ', $name);
-                //remove null elements
-                $names = array_values(array_filter($names, fn($value) => !is_null($value) && $value !== ''));
-                //remove whitespace
-                for ($i = 0; $i < count($names); $i++) {
-                    $names[$i] = preg_replace('/\s+/', '', $names[$i]);
-                }
-                //combine first names
-                if (sizeof($names) > 2){
-                    $first = array_shift($names);
-                    $names[0] = $first . ' ' . $names[0];
-                }
-                $firstname = ucwords(array_shift($names));
-                $surname = ucwords(end($names));
-                $user->setForename($firstname);
-                $user->setSurname($surname);
-                $entityManager->flush();
-            }
-            return $this->renderForm('admin/listusers.html.twig', [
-                'users' => $users,
-            ]);
-        }
-    */
 }

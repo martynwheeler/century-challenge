@@ -30,7 +30,7 @@ class UnsubscribeStravaWebhookCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        if ($this->stravawebhookservice->unsubscribe()){
+        if ($this->stravawebhookservice->unsubscribe()) {
             $io->success("Successfully unsubscribed");
         } else {
             $io->warning("Error or no subscription found");

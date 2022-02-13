@@ -8,17 +8,14 @@ use App\Service\KomootAPI;
 use App\Service\StravaAPI;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 
 class EditProfileController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine, private StravaAPI $strava_api, private KomootAPI $komoot_api)
-    {
-    }
-
     #[Route('/profile/{username}/editprofile', name: 'editprofile')]
-    public function editProfile(Request $request)
+    public function editProfile(Request $request, ManagerRegistry $doctrine, KomootAPI $komoot_api, StravaAPI $strava_api): Response
     {
         //Get the current user
         $user = $this->getUser();
@@ -33,10 +30,10 @@ class EditProfileController extends AbstractController
         if ($user->getKomootID() && $user->getKomootRefreshToken()) {
             //Get or refresh token as necessary
             if (!$request->getSession()->get('komoot.token') || $user->getKomootTokenExpiry() - time() < 300) {
-                $accessToken = $this->komoot_api->getToken($user);
+                $accessToken = $komoot_api->getToken($user);
                 $request->getSession()->set('komoot.token', $accessToken);
             }
-            $komootAthlete = $this->komoot_api->getAthlete($request->getSession()->get('komoot.token'), $user->getKomootID());
+            $komootAthlete = $komoot_api->getAthlete($request->getSession()->get('komoot.token'), $user->getKomootID());
         }
 
         $stravaAthlete = null;
@@ -44,13 +41,13 @@ class EditProfileController extends AbstractController
         if ($user->getStravaID() && $user->getStravaRefreshToken()) {
             //Get or refresh token as necessary
             if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 300) {
-                $accessToken = $this->strava_api->getToken($user);
+                $accessToken = $strava_api->getToken($user);
                 if ($accessToken) {
                     $request->getSession()->set('strava.token', $accessToken);
                 }
             }
             //grab the athlete details from strava
-            $stravaAthlete = $this->strava_api->getAthlete($request->getSession()->get('strava.token'));
+            $stravaAthlete = $strava_api->getAthlete($request->getSession()->get('strava.token'));
             //check for errors in response
             if (array_key_exists('errors', $stravaAthlete)) {
                 $stravaAthlete = null;
@@ -66,7 +63,7 @@ class EditProfileController extends AbstractController
 
         //Process form data
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->doctrine->getManager()->flush();
+            $doctrine->getManager()->flush();
 
             // do anything else you need here, like send an email
             $this->addFlash('success', $user->getName().', you have sucessfully updated your profile');

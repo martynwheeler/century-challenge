@@ -35,8 +35,8 @@ class StravaAPI
         //Return the body of the response object as an array
         return $response->toArray(false);
     }
-	
-	/**
+
+    /**
      * Gets a new token using the current refresh token
      */
     public function getToken(Object $user): ?string
@@ -103,7 +103,7 @@ class StravaAPI
     {
         //Set up request
         $url = 'athlete';
-		//request athelete data from API - check after the function call for errors
+        //request athelete data from API - check after the function call for errors
         return $athlete = $this->request($token, $url, $query = []);
     }
 
@@ -127,10 +127,10 @@ class StravaAPI
         $results = [];
         if (is_array($athleteactivities) || $athleteactivities instanceof Countable) {
             foreach ($athleteactivities as $athleteactivity) {
-				$result = $this->setResult($athleteactivity);
-				if ($result) {
-					$results[] = $result;
-				}
+                $result = $this->setResult($athleteactivity);
+                if ($result) {
+                    $results[] = $result;
+                }
             }
         }
 
@@ -151,9 +151,9 @@ class StravaAPI
         $athleteactivity = $this->request($token, $url, $query = []);
 
         //Check for error and return null if any errors found
-		if (array_key_exists('errors', $athleteactivity)) {
-			return null;
-		}
+        if (array_key_exists('errors', $athleteactivity)) {
+            return null;
+        }
 
         //Process the results and return
         $result = $this->setResult($athleteactivity);
@@ -161,10 +161,10 @@ class StravaAPI
         $result['isClubride'] = $checkRideStream['isClubride'];
         $result['isRealride'] = $checkRideStream['isRealride'];
 
-		//need to check if clubride, etc here
+        //need to check if clubride, etc here
         return $result;
     }
-    
+
     /**
      * Check if submitted ride is a real ride
      */
@@ -198,7 +198,7 @@ class StravaAPI
             $startTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 08:40:00", $tz);
             $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:30:00", $tz);
         }
-        
+
 
         //Loop over stream to see if club ride and to check distance moved and return
         $times = $stream_details[1]['data'];
@@ -226,7 +226,7 @@ class StravaAPI
                 $maxdist = $distTotal;
             }
         }
-        
+
         //Check if the rider has actually moved
         $realride = false;
         if ($maxdist > 1.0) {
@@ -242,27 +242,27 @@ class StravaAPI
     /**
      * process the result of an athelete activity returned from strava into an array
      */
-	protected function setResult(array $athleteactivity): ?array
-	{
-		$result = null;
-		if ($athleteactivity['distance'] >= 100000) {
-			//convert to km and round to nearest 10m
-			$athleteactivity['distance'] = round(($athleteactivity['distance'] / 1000), 2);
-			//Correct tz to accomodate DST
-			$date = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $athleteactivity['start_date'], new \DateTimeZone('Europe/London'));
-			//generate key for display in drop down box
-			$key = "Ride {$athleteactivity['id']} on ({$date->format('d-m-Y')}) of {$athleteactivity['distance']} km";
-			//checking for club ride/real ride not done here as it would result in too many additional API calls
-			$result = [
-				'key' => $key,
-				'id' => $athleteactivity['id'],
-				'date' => $date,
-				'distance' => $athleteactivity['distance'],
-				'average' => $athleteactivity['average_speed'] * 3.6,
-			];
-		}
-		return $result;
-	}
+    protected function setResult(array $athleteactivity): ?array
+    {
+        $result = null;
+        if ($athleteactivity['distance'] >= 100000) {
+            //convert to km and round to nearest 10m
+            $athleteactivity['distance'] = round(($athleteactivity['distance'] / 1000), 2);
+            //Correct tz to accomodate DST
+            $date = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $athleteactivity['start_date'], new \DateTimeZone('Europe/London'));
+            //generate key for display in drop down box
+            $key = "Ride {$athleteactivity['id']} on ({$date->format('d-m-Y')}) of {$athleteactivity['distance']} km";
+            //checking for club ride/real ride not done here as it would result in too many additional API calls
+            $result = [
+                'key' => $key,
+                'id' => $athleteactivity['id'],
+                'date' => $date,
+                'distance' => $athleteactivity['distance'],
+                'average' => $athleteactivity['average_speed'] * 3.6,
+            ];
+        }
+        return $result;
+    }
 
     /**
      * Get a distance between two GPS coordinates

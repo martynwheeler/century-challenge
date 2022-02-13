@@ -39,7 +39,7 @@ class AddrideController extends AbstractController
                         $accessToken = $komoot_api->getToken($user);
                         $request->getSession()->set('komoot.token', $accessToken);
                     }
-                    //Use token to retrieve array of rides for the month 
+                    //Use token to retrieve array of rides for the month
                     $token = $request->getSession()->get('komoot.token');
                     $athlete = $komoot_api->getAthlete($token, $user->getKomootID());
                     $athleteName = $athlete['display_name'];

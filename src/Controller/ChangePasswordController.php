@@ -14,12 +14,8 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ChangePasswordController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine)
-    {
-    }
-
     #[Route('/profile/{username}/changepassword', name: 'changepassword')]
-    public function changePassword(Request $request, UserPasswordHasherInterface $passwordHasher): Response
+    public function changePassword(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine): Response
     {
         //if ($this->isCsrfTokenValid('delete-item', $submittedToken)) {
         $changePasswordModel = new ChangePassword();
@@ -34,7 +30,7 @@ class ChangePasswordController extends AbstractController
                     $form->get('newPassword')->getData()
                 )
             );
-            $this->doctrine->getManager()->flush();
+            $doctrine->getManager()->flush();
 
             // do anything else you need here, like send an email
             $this->addFlash('success', $user->getName().', you have sucessfully changed your password.');

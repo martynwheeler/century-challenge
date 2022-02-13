@@ -13,10 +13,6 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ConnectKomootController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine)
-    {
-    }
-
     #[Route('/connect/komoot', name: 'connect_komoot')]
     public function connectAction(ClientRegistry $clientRegistry): RedirectResponse
     {
@@ -33,7 +29,7 @@ class ConnectKomootController extends AbstractController
      * in config/packages/knpu_oauth2_client.yaml
      */
     #[Route('/connect/komoot/check', name: 'connect_komoot_check')]
-    public function connectCheckAction(Request $request, ClientRegistry $clientRegistry): RedirectResponse
+    public function connectCheckAction(Request $request, ClientRegistry $clientRegistry, ManagerRegistry $doctrine): RedirectResponse
     {
         /** @var \MartynWheeler\OAuth2\Client\Provider\Komoot $client */
         $client = $clientRegistry->getClient('komoot_oauth');
@@ -56,7 +52,7 @@ class ConnectKomootController extends AbstractController
             $user->setPreferredProvider('komoot');
 
             //Persist user object
-            $this->doctrine->getManager()->flush();
+            $doctrine->getManager()->flush();
 
             //Success - return to the home page
             return $this->redirectToRoute('homepage');

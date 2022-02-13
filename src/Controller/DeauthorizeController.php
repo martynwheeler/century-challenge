@@ -12,12 +12,8 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class DeauthorizeController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine, private StravaAPI $strava_api)
-    {
-    }
-
     #[Route('/deauthorize/strava', name: 'deauthorize_strava')]
-    public function deauthorize(Request $request): Response
+    public function deauthorize(Request $request, ManagerRegistry $doctrine, StravaAPI $strava_api): Response
     {
         //Get the current user
         $user = $this->getUser();
@@ -32,13 +28,13 @@ class DeauthorizeController extends AbstractController
         if ($user->getStravaID() && $user->getStravaRefreshToken()) {
             //Get or refresh token as necessary
             if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 300) {
-                $accessToken = $this->strava_api->getToken($user);
+                $accessToken = $strava_api->getToken($user);
                 if ($accessToken) {
                     $request->getSession()->set('strava.token', $accessToken);
                 }
             }
             //deauthorize from strava
-            $success = $this->strava_api->deauthorize($request->getSession()->get('strava.token'));
+            $success = $strava_api->deauthorize($request->getSession()->get('strava.token'));
             //check for errors in response
             if (array_key_exists('errors', $success)) {
                 $success = null;
@@ -58,7 +54,7 @@ class DeauthorizeController extends AbstractController
             }
 
             //Persist user object
-            $this->doctrine->getManager()->flush();
+            $doctrine->getManager()->flush();
             $this->addFlash('success', $user->getName().', you have sucessfully unlinked from Strava');
         }
 

@@ -62,7 +62,7 @@ class KomootAPI
 
             //Get the last refresh token from the user entity
             $refreshToken = $user->getKomootRefreshToken();
-            
+
             //Get response
             $response = $httpClient->request('POST', 'oauth/token', [
                 'headers' => ['Accept' => 'application/json'],
