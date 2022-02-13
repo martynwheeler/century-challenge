@@ -15,6 +15,7 @@ class ConnectController extends AbstractController
     {
         try {
             $request->getSession()->remove('reconnect.strava');
+            $request->getSession()->remove('reconnect.komoot');
             $stravaurl = $this->generateUrl('connect_strava');
             $komooturl = $this->generateUrl('connect_komoot');
         } catch (Exception $e) {

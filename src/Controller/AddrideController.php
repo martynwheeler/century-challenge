@@ -35,13 +35,25 @@ class AddrideController extends AbstractController
                 //Check if the user registered with komoot
                 if ($user->getKomootID() && $user->getKomootRefreshToken()) {
                     //Get or refresh token as necessary
-                    if (!$request->getSession()->get('komoot.token') || $user->getKomootTokenExpiry() - time() < 300) {
+                    if (!$request->getSession()->get('komoot.token') || $user->getKomootTokenExpiry() - time() < 30) {
                         $accessToken = $komoot_api->getToken($user);
-                        $request->getSession()->set('komoot.token', $accessToken);
+                        if ($accessToken) {
+                            $request->getSession()->set('komoot.token', $accessToken);
+                        }
                     }
-                    //Use token to retrieve array of rides for the month
+                    //Add token to session
                     $token = $request->getSession()->get('komoot.token');
+
+                    //Get athlete
                     $athlete = $komoot_api->getAthlete($token, $user->getKomootID());
+
+                    // check for errors and redirect
+                    if (array_key_exists('error', $athlete)) {
+                        $request->getSession()->set('reconnect.komoot', true);
+                        return $this->redirectToRoute('connect_komoot');
+                    }
+
+                    //token valid, grab the rides
                     $athleteName = $athlete['display_name'];
                     $athleteActivities = $komoot_api->getAthleteActivitiesThisMonth($token, $user->getKomootID());
                 }
@@ -51,11 +63,16 @@ class AddrideController extends AbstractController
                 //Check if the user registered with strava
                 if ($user->getStravaID() && $user->getStravaRefreshToken()) {
                     //Get or refresh token as necessary
-                    if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 3) {
+                    if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 30) {
                         $accessToken = $strava_api->getToken($user);
-                        $request->getSession()->set('strava.token', $accessToken);
+                        if ($accessToken) {
+                            $request->getSession()->set('strava.token', $accessToken);
+                        }
                     }
+                    //Add token to session
                     $token = $request->getSession()->get('strava.token');
+
+                    //Get athlete
                     $athlete = $strava_api->getAthlete($token);
 
                     // check for errors and redirect
@@ -103,8 +120,10 @@ class AddrideController extends AbstractController
                     $ride->setDate($athleteActivity['date']);
                     switch ($user->getPreferredProvider()) {
                         case 'komoot':
-                            $ride->setClubRide($komoot_api->isClubRide($token, $rideID, $athleteActivity['date']));
-                            $realRide = $komoot_api->isRealRide($token, $rideID);
+                            //request and analyse ride stream
+                            $checkRideStream = $komoot_api->processRideStream($token, $rideID, $athleteActivity['date']);
+                            $ride->setClubRide($checkRideStream['isClubride']);
+                            $realRide = $checkRideStream['isRealride'];
                             break;
                         case 'strava':
                             //request and analyse ride stream

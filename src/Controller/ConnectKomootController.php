@@ -54,7 +54,10 @@ class ConnectKomootController extends AbstractController
             //Persist user object
             $doctrine->getManager()->flush();
 
-            //Success - return to the home page
+            //Success - redirect accordingly
+            if ($request->getSession()->remove('reconnect.komoot')) {
+                return $this->redirectToRoute('addride');
+            }
             return $this->redirectToRoute('homepage');
         } catch (IdentityProviderException $e) {
             // something went wrong!

@@ -82,7 +82,7 @@ class StravaAPI
 
         //Set up request headers
         $headers = [
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => "Bearer $token",
             'Content-type' => 'application/json'
         ];
 
@@ -142,10 +142,10 @@ class StravaAPI
     /**
      * Get data for a valid ride by id
      */
-    public function getAthleteActivity(string $token, string $id): array
+    public function getAthleteActivity(string $token, string $id): ?array
     {
         //Set up request
-        $url = 'activities/'. $id;
+        $url = "activities/$id";
 
         //Make request and get response from API
         $athleteactivity = $this->request($token, $url, $query = []);
@@ -166,12 +166,12 @@ class StravaAPI
     }
 
     /**
-     * Check if submitted ride is a real ride
+     * Check if submitted ride is a real/club ride
      */
     public function processRideStream(string $token, string $id, \DateTime $date): array
     {
         //Set up request
-        $url = 'activities/'. $id . '/streams/latlng';
+        $url = "activities/$id/streams/latlng";
         $query = ['resolution' => null, 'series_type' => 'time'];
 
         //Make request and get response from API
@@ -198,7 +198,6 @@ class StravaAPI
             $startTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 08:40:00", $tz);
             $endTime = \DateTime::createFromFormat('Y-m-d H:i:s', "{$date->format('Y-m-d')} 09:30:00", $tz);
         }
-
 
         //Loop over stream to see if club ride and to check distance moved and return
         $times = $stream_details[1]['data'];

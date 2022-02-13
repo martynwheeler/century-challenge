@@ -29,9 +29,11 @@ class EditProfileController extends AbstractController
         //Check if the user registered with komoot
         if ($user->getKomootID() && $user->getKomootRefreshToken()) {
             //Get or refresh token as necessary
-            if (!$request->getSession()->get('komoot.token') || $user->getKomootTokenExpiry() - time() < 300) {
+            if (!$request->getSession()->get('komoot.token') || $user->getKomootTokenExpiry() - time() < 30) {
                 $accessToken = $komoot_api->getToken($user);
-                $request->getSession()->set('komoot.token', $accessToken);
+                if ($accessToken) {
+                    $request->getSession()->set('komoot.token', $accessToken);
+                }
             }
             $komootAthlete = $komoot_api->getAthlete($request->getSession()->get('komoot.token'), $user->getKomootID());
         }
@@ -40,7 +42,7 @@ class EditProfileController extends AbstractController
         //Check if the user registered with strava
         if ($user->getStravaID() && $user->getStravaRefreshToken()) {
             //Get or refresh token as necessary
-            if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 300) {
+            if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 30) {
                 $accessToken = $strava_api->getToken($user);
                 if ($accessToken) {
                     $request->getSession()->set('strava.token', $accessToken);

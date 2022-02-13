@@ -27,7 +27,7 @@ class DeauthorizeController extends AbstractController
         //Check if the user registered with strava
         if ($user->getStravaID() && $user->getStravaRefreshToken()) {
             //Get or refresh token as necessary
-            if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 300) {
+            if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 30) {
                 $accessToken = $strava_api->getToken($user);
                 if ($accessToken) {
                     $request->getSession()->set('strava.token', $accessToken);
@@ -61,3 +61,7 @@ class DeauthorizeController extends AbstractController
         return $this->redirectToRoute('homepage');
     }
 }
+
+
+//                    dd($komoot_api->deauthorize($user->getKomootRefreshToken()));
+//                    dd($komoot_api->getToken($user));
