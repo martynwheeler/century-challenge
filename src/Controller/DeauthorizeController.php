@@ -85,7 +85,7 @@ class DeauthorizeController extends AbstractController
             }
             //deauthorize from strava
             $success = $komoot_api->deauthorize($user->getKomootRefreshToken());
-            if ($success != Response::HTTP_OK){
+            if ($success != Response::HTTP_OK) {
                 $success = null;
                 $this->addFlash('danger', $user->getName().', something went wrong, please check your Komoot account!');
             }
