@@ -81,7 +81,10 @@
                   <li><a class="dropdown-item" aria-current="page" href="{{ path('changepassword', {'username': app.user.useridentifier}) }}">Change password</a></li>
                   <li><a class="dropdown-item" aria-current="page" href="{{ path('connect') }}">Connect Services</a></li>
                   {% if app.user.stravaid and app.user.stravarefreshtoken %}
-                    <li><a class="dropdown-item" aria-current="page" href="{{ path('deauthorize_strava') }}">Disconnect Services</a></li>
+                    <li><a class="dropdown-item" aria-current="page" href="{{ path('deauthorize_strava') }}">Disconnect Strava</a></li>
+                  {% endif %}
+                  {% if app.user.komootid and app.user.komootrefreshtoken %}
+                    <li><a class="dropdown-item" aria-current="page" href="{{ path('deauthorize_komoot') }}">Disconnect Komoot</a></li>
                   {% endif %}
                   <li><a class="dropdown-item" aria-current="page" href="{{ path('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 </ul>
