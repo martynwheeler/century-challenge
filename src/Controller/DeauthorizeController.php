@@ -23,25 +23,12 @@ class DeauthorizeController extends AbstractController
         //Get the current user
         $user = $this->getUser();
 
-        //Check if the user registered with strava
-        $success = null;
-        if ($user->getStravaID() && $user->getStravaRefreshToken()) {
-            //Get or refresh token as necessary
-            if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 30) {
-                $accessToken = $this->strava_api->getToken($user);
-                if ($accessToken) {
-                    $request->getSession()->set('strava.token', $accessToken);
-                }
-            }
-
-            //deauthorize from strava
-            $success = $this->strava_api->deauthorize($request->getSession()->get('strava.token'));
-
-            //check for errors in response
-            if (array_key_exists('errors', $success)) {
-                $success = null;
-                $this->addFlash('danger', $user->getName().', something went wrong, please check your Strava account!');
-            }
+        //deauthorize from strava
+        $success = $this->strava_api->deauthorize($user);
+        //check for errors in response
+        if (array_key_exists('errors', $success)) {
+            $success = null;
+            $this->addFlash('danger', $user->getName().', something went wrong, please check your Strava account!');
         }
 
         if ($success) {
@@ -69,15 +56,11 @@ class DeauthorizeController extends AbstractController
         //Get the current user
         $user = $this->getUser();
 
-        //Check if the user registered with komoot
-        $success = null;
-        if ($user->getKomootID() && $user->getKomootRefreshToken()) {
-            //deauthorize from komoot
-            $success = $this->komoot_api->deauthorize($user->getKomootRefreshToken());
-            if ($success != Response::HTTP_OK) {
-                $success = null;
-                $this->addFlash('danger', $user->getName().', something went wrong, please check your Komoot account!');
-            }
+        //deauthorize from komoot
+        $success = $this->komoot_api->deauthorize($user);
+        if ($success != Response::HTTP_OK) {
+            $success = null;
+            $this->addFlash('danger', $user->getName().', something went wrong, please check your Komoot account!');
         }
 
         if ($success) {

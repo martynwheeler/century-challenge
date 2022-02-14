@@ -9,7 +9,6 @@ use App\Service\RideData;
 use App\Service\StravaAPI;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Doctrine\Persistence\ManagerRegistry;
-
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
@@ -22,7 +21,8 @@ class NewRideMessageHandler
         private StravaAPI $strava_api,
         private ManagerRegistry $doctrine,
         private RideData $rd,
-    ) {
+        )
+    {
     }
 
     public function __invoke(NewRideMessage $message)
@@ -43,41 +43,34 @@ class NewRideMessageHandler
                 if ($user){
                     //if not dq'ed then process
                     if (!$this->rd->getRideData(year: null, username: $user->getUsername())['users'][0]['isDisqualified']) {
-                        //set access token
-                        $token = $this->strava_api->getToken($user);
+                        //get the activity from strava
+                        $athleteActivity = $this->strava_api->getAthleteActivity($user, $object_id);
 
-                        //if token granted then add ride
-                        if ($token) {
+                        //if a valid activity is returned
+                        if ($athleteActivity) {
                             //create ride object
                             $ride = new Ride();
                             $ride->setUser($user);
                             $ride->setSource($user->getPreferredProvider());
+                            $ride->setRideId($object_id);
+                            $ride->setKm($athleteActivity['distance']);
+                            $ride->setAverageSpeed($athleteActivity['average']);
+                            $ride->setDate($athleteActivity['date']);
+                            $ride->setClubRide($athleteActivity['isClubride']);
 
-                            //get the activity from strava
-                            $athleteActivity = $this->strava_api->getAthleteActivity($token, $object_id);
+                            //If the ride is real then add to db
+                            if ($athleteActivity['isRealride']) {
+                                $entityManager = $this->doctrine->getManager();
+                                $entityManager->persist($ride);
+                                $entityManager->flush();
 
-                            //if a valid activity is returned
-                            if ($athleteActivity) {
-                                $ride->setRideId($object_id);
-                                $ride->setKm($athleteActivity['distance']);
-                                $ride->setAverageSpeed($athleteActivity['average']);
-                                $ride->setDate($athleteActivity['date']);
-                                $ride->setClubRide($athleteActivity['isClubride']);
-
-                                //If the ride is real then add to db
-                                if ($athleteActivity['isRealride']) {
-                                    $entityManager = $this->doctrine->getManager();
-                                    $entityManager->persist($ride);
-                                    $entityManager->flush();
-
-                                    //emailmessage a message
-                                    $emailmessage = (new Email())
+                                //emailmessage a message
+                                $emailmessage = (new Email())
                                     ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
                                     ->to($user->getEmail())
                                     ->subject('Message from Century Challenge')
                                     ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r"."Your ride with id=$object_id has successfully been added.");
-                                    $sentEmail = $this->mailer->send($emailmessage);
-                                }
+                                $sentEmail = $this->mailer->send($emailmessage);
                             }
                         }
                     }

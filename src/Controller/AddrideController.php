@@ -27,64 +27,32 @@ class AddrideController extends AbstractController
         $ride = new Ride();
         $ride->setUser($user);
         $ride->setSource($user->getPreferredProvider());
-        $athleteActivities = null;
 
         //Switch depending on provider
+        $athleteActivities = null;
         switch ($user->getPreferredProvider()) {
             case 'komoot':
-                //Check if the user registered with komoot
-                if ($user->getKomootID() && $user->getKomootRefreshToken()) {
-                    //Get or refresh token as necessary
-                    if (!$request->getSession()->get('komoot.token') || $user->getKomootTokenExpiry() - time() < 30) {
-                        $accessToken = $this->komoot_api->getToken($user);
-                        if ($accessToken) {
-                            $request->getSession()->set('komoot.token', $accessToken);
-                        }
-                    }
-                    //Add token to session
-                    $token = $request->getSession()->get('komoot.token');
-
-                    //Get athlete
-                    $athlete = $this->komoot_api->getAthlete($token, $user->getKomootID());
-
-                    // check for errors and redirect
-                    if (array_key_exists('error', $athlete)) {
-                        $request->getSession()->set('reconnect.komoot', true);
-                        return $this->redirectToRoute('connect_komoot');
-                    }
-
-                    //token valid, grab the rides
-                    $athleteName = $athlete['display_name'];
-                    $athleteActivities = $this->komoot_api->getAthleteActivitiesThisMonth($token, $user->getKomootID());
+                $athlete = $this->komoot_api->getAthlete($user);
+                // check for errors and redirect
+                if (!$athlete) {
+                    $request->getSession()->set('reconnect.komoot', true);
+                    return $this->redirectToRoute('connect_komoot');
                 }
+                //token valid, get rides
+                $athleteName = $athlete['display_name'];
+                $athleteActivities = $this->komoot_api->getAthleteActivitiesThisMonth($user);
                 break;
 
             case 'strava':
-                //Check if the user registered with strava
-                if ($user->getStravaID() && $user->getStravaRefreshToken()) {
-                    //Get or refresh token as necessary
-                    if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 30) {
-                        $accessToken = $this->strava_api->getToken($user);
-                        if ($accessToken) {
-                            $request->getSession()->set('strava.token', $accessToken);
-                        }
-                    }
-                    //Add token to session
-                    $token = $request->getSession()->get('strava.token');
-
-                    //Get athlete
-                    $athlete = $this->strava_api->getAthlete($token);
-
-                    // check for errors and redirect
-                    if (array_key_exists('errors', $athlete)) {
-                        $request->getSession()->set('reconnect.strava', true);
-                        return $this->redirectToRoute('connect_strava');
-                    }
-
-                    //token valid, grab the rides
-                    $athleteName = $athlete['firstname'].' '.$athlete['lastname'];
-                    $athleteActivities = $this->strava_api->getAthleteActivitiesThisMonth($token);
+                $athlete = $this->strava_api->getAthlete($user);
+                // check for errors and redirect
+                if (array_key_exists('errors', $athlete)) {
+                    $request->getSession()->set('reconnect.strava', true);
+                    return $this->redirectToRoute('connect_strava');
                 }
+                //token valid, grab the rides
+                $athleteName = $athlete['firstname'].' '.$athlete['lastname'];
+                $athleteActivities = $this->strava_api->getAthleteActivitiesThisMonth($user);
                 break;
 
             default:
@@ -121,13 +89,13 @@ class AddrideController extends AbstractController
                     switch ($user->getPreferredProvider()) {
                         case 'komoot':
                             //request and analyse ride stream
-                            $checkRideStream = $this->komoot_api->processRideStream($token, $rideID, $athleteActivity['date']);
+                            $checkRideStream = $this->komoot_api->processRideStream($user, $rideID, $athleteActivity['date']);
                             $ride->setClubRide($checkRideStream['isClubride']);
                             $realRide = $checkRideStream['isRealride'];
                             break;
                         case 'strava':
                             //request and analyse ride stream
-                            $checkRideStream = $this->strava_api->processRideStream($token, $rideID, $athleteActivity['date']);
+                            $checkRideStream = $this->strava_api->processRideStream($user, $rideID, $athleteActivity['date']);
                             $ride->setClubRide($checkRideStream['isClubride']);
                             $realRide = $checkRideStream['isRealride'];
                             break;
@@ -141,7 +109,7 @@ class AddrideController extends AbstractController
                 $entityManager->persist($ride);
                 $entityManager->flush();
 
-                // do anything else you need here, like send an email
+                //Add flash message
                 $this->addFlash('success', $this->getUser()->getName().', you have sucessfully added your ride');
             } else {
                 $this->addFlash('warning', $this->getUser()->getName().', you cannot upload virtual rides');
