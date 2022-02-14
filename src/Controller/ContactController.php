@@ -13,8 +13,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ContactController extends AbstractController
 {
+    public function __construct(private MailerInterface $mailer)
+    {
+    }
+
     #[Route('/contact', name: 'contact')]
-    public function contact(Request $request, MailerInterface $mailer): Response
+    public function contact(Request $request): Response
     {
         $form = $this->createForm(ContactType::class);
         $form->handleRequest($request);
@@ -29,7 +33,7 @@ class ContactController extends AbstractController
                     'Message from: '.$contactFormData['fromEmail']."\n\r".$contactFormData['message']."\n\r".$contactFormData['fullName']
                 )
             ;
-            $mailer->send($message);
+            $this->mailer->send($message);
             $this->addFlash('success', 'Thank you for contacting the Century Challenge Admin, I will get back to you as soon as possible.');
             return $this->redirectToRoute('homepage');
         }

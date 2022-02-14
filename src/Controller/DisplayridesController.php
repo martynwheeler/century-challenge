@@ -9,10 +9,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DisplayridesController extends AbstractController
 {
-    #[Route('/profile/{username}', name: 'displayrides')]
-    public function display($username, RideData $rd): Response
+    public function __construct(private RideData $rd)
     {
-        $data = $rd->getRideData(year: null, username: $username);
+    }
+
+    #[Route('/profile/{username}', name: 'displayrides')]
+    public function display($username): Response
+    {
+        $data = $this->rd->getRideData(year: null, username: $username);
         return $this->render('displayrides/display.html.twig', [
             'user' => $data['users'][0],
         ]);

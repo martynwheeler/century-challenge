@@ -15,12 +15,12 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class AddrideController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine)
+    public function __construct(private ManagerRegistry $doctrine, private StravaAPI $strava_api, private KomootAPI $komoot_api)
     {
     }
 
     #[Route('/addride', name: 'addride')]
-    public function addRide(Request $request, StravaAPI $strava_api, KomootAPI $komoot_api): Response
+    public function addRide(Request $request): Response
     {
         //Get the user and set up ride object
         $user = $this->getUser();
@@ -36,7 +36,7 @@ class AddrideController extends AbstractController
                 if ($user->getKomootID() && $user->getKomootRefreshToken()) {
                     //Get or refresh token as necessary
                     if (!$request->getSession()->get('komoot.token') || $user->getKomootTokenExpiry() - time() < 30) {
-                        $accessToken = $komoot_api->getToken($user);
+                        $accessToken = $this->komoot_api->getToken($user);
                         if ($accessToken) {
                             $request->getSession()->set('komoot.token', $accessToken);
                         }
@@ -45,7 +45,7 @@ class AddrideController extends AbstractController
                     $token = $request->getSession()->get('komoot.token');
 
                     //Get athlete
-                    $athlete = $komoot_api->getAthlete($token, $user->getKomootID());
+                    $athlete = $this->komoot_api->getAthlete($token, $user->getKomootID());
 
                     // check for errors and redirect
                     if (array_key_exists('error', $athlete)) {
@@ -55,7 +55,7 @@ class AddrideController extends AbstractController
 
                     //token valid, grab the rides
                     $athleteName = $athlete['display_name'];
-                    $athleteActivities = $komoot_api->getAthleteActivitiesThisMonth($token, $user->getKomootID());
+                    $athleteActivities = $this->komoot_api->getAthleteActivitiesThisMonth($token, $user->getKomootID());
                 }
                 break;
 
@@ -64,7 +64,7 @@ class AddrideController extends AbstractController
                 if ($user->getStravaID() && $user->getStravaRefreshToken()) {
                     //Get or refresh token as necessary
                     if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 30) {
-                        $accessToken = $strava_api->getToken($user);
+                        $accessToken = $this->strava_api->getToken($user);
                         if ($accessToken) {
                             $request->getSession()->set('strava.token', $accessToken);
                         }
@@ -73,7 +73,7 @@ class AddrideController extends AbstractController
                     $token = $request->getSession()->get('strava.token');
 
                     //Get athlete
-                    $athlete = $strava_api->getAthlete($token);
+                    $athlete = $this->strava_api->getAthlete($token);
 
                     // check for errors and redirect
                     if (array_key_exists('errors', $athlete)) {
@@ -83,7 +83,7 @@ class AddrideController extends AbstractController
 
                     //token valid, grab the rides
                     $athleteName = $athlete['firstname'].' '.$athlete['lastname'];
-                    $athleteActivities = $strava_api->getAthleteActivitiesThisMonth($token);
+                    $athleteActivities = $this->strava_api->getAthleteActivitiesThisMonth($token);
                 }
                 break;
 
@@ -121,13 +121,13 @@ class AddrideController extends AbstractController
                     switch ($user->getPreferredProvider()) {
                         case 'komoot':
                             //request and analyse ride stream
-                            $checkRideStream = $komoot_api->processRideStream($token, $rideID, $athleteActivity['date']);
+                            $checkRideStream = $this->komoot_api->processRideStream($token, $rideID, $athleteActivity['date']);
                             $ride->setClubRide($checkRideStream['isClubride']);
                             $realRide = $checkRideStream['isRealride'];
                             break;
                         case 'strava':
                             //request and analyse ride stream
-                            $checkRideStream = $strava_api->processRideStream($token, $rideID, $athleteActivity['date']);
+                            $checkRideStream = $this->strava_api->processRideStream($token, $rideID, $athleteActivity['date']);
                             $ride->setClubRide($checkRideStream['isClubride']);
                             $realRide = $checkRideStream['isRealride'];
                             break;

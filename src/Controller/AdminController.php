@@ -16,11 +16,15 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class AdminController extends AbstractController
 {
+    public function __construct(private ManagerRegistry $doctrine, private RideData $rd, private MailerInterface $mailer)
+    {
+    }
+
     //Produce a list of users
     #[Route('/admin/listusers', name: 'listusers')]
-    public function listUsers(Request $request, RideData $rd, ManagerRegistry $doctrine): Response
+    public function listUsers(Request $request): Response
     {
-        $users = $doctrine->getRepository(User::class)->findBy([], ['surname' => 'ASC']);
+        $users = $this->doctrine->getRepository(User::class)->findBy([], ['surname' => 'ASC']);
         return $this->renderForm('admin/listusers.html.twig', [
             'users' => $users,
         ]);
@@ -28,7 +32,7 @@ class AdminController extends AbstractController
 
     //Send an email to users
     #[Route('/admin/email', name: 'email')]
-    public function sendEmail(Request $request, RideData $rd, MailerInterface $mailer): Response
+    public function sendEmail(Request $request): Response
     {
         //Create a form for text entry
         $form = $this->createFormBuilder()
@@ -54,14 +58,14 @@ class AdminController extends AbstractController
                 'Message from: '.$_ENV['MAILER_FROM']."\n\r".$emailFormData['message']
             );
             //Add BCC to non-disqualified users
-            $users = $rd->getRideData(year: null, username: null)['users'];
+            $users = $this->rd->getRideData(year: null, username: null)['users'];
             foreach ($users as $user) {
                 if (!$user['isDisqualified']) {
                     $message->addBcc($user['email']);
                 }
             }
             /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
-            $sentEmail = $mailer->send($message);
+            $sentEmail = $this->mailer->send($message);
             return $this->redirectToRoute('homepage');
         }
         return $this->renderForm('admin/sendemail.html.twig', [

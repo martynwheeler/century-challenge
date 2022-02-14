@@ -13,11 +13,15 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ConnectStravaController extends AbstractController
 {
+    public function __construct(private ClientRegistry $clientRegistry, private ManagerRegistry $doctrine)
+    {
+    }
+
     #[Route('/connect/strava', name: 'connect_strava')]
-    public function connectAction(ClientRegistry $clientRegistry): RedirectResponse
+    public function connectAction(): RedirectResponse
     {
         // will redirect to Strava!
-        return $clientRegistry
+        return $this->clientRegistry
             ->getClient('strava_oauth') // key used in config/packages/knpu_oauth2_client.yaml
             ->redirect(['read', 'activity:read_all']) // the scopes you want to access
         ;
@@ -29,10 +33,10 @@ class ConnectStravaController extends AbstractController
      * in config/packages/knpu_oauth2_client.yaml
      */
     #[Route('/connect/strava/check', name: 'connect_strava_check')]
-    public function connectCheckAction(Request $request, ClientRegistry $clientRegistry, ManagerRegistry $doctrine): RedirectResponse
+    public function connectCheckAction(Request $request): RedirectResponse
     {
         /** @var \MartynWheeler\OAuth2\Client\Provider\Strava $client */
-        $client = $clientRegistry->getClient('strava_oauth');
+        $client = $this->clientRegistry->getClient('strava_oauth');
 
         try {
             // the exact class depends on which provider you're using
@@ -51,7 +55,7 @@ class ConnectStravaController extends AbstractController
             $user->setPreferredProvider('strava');
 
             //update user object
-            $doctrine->getManager()->flush();
+            $this->doctrine->getManager()->flush();
 
             //Success - redirect accordingly
             if ($request->getSession()->remove('reconnect.strava')) {

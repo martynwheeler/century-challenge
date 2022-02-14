@@ -9,6 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class LeaderboardController extends AbstractController
 {
+    public function __construct()
+    {
+    }
+    
     #[Route('/leaderboard/{year?}', name: 'leaderboard')]
     public function leaderboard(RideData $rd, ?int $year): Response
     {

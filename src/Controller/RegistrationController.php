@@ -16,14 +16,17 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class RegistrationController extends AbstractController
 {
+    public function __construct(
+        private UserPasswordHasherInterface $passwordHasher,
+        private UserAuthenticatorInterface $userAuthenticator,
+        private FormLoginAuthenticator $formLoginAuthenticator,
+        private ManagerRegistry $doctrine,
+        )
+    {
+    }
+
     #[Route('/register', name: 'register')]
-    public function register(
-        Request $request,
-        UserPasswordHasherInterface $passwordHasher,
-        UserAuthenticatorInterface $userAuthenticator,
-        FormLoginAuthenticator $formLoginAuthenticator,
-        ManagerRegistry $doctrine,
-    ): Response
+    public function register(Request $request): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -32,22 +35,22 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user->setPassword(
-                $passwordHasher->hashPassword(
+                $this->passwordHasher->hashPassword(
                     $user,
                     $form->get('plainPassword')->getData()
                 )
             );
 
-            $entityManager = $doctrine->getManager();
+            $entityManager = $this->doctrine->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
             // set redirect route upon authentication
             $request->getSession()->set('redirectTo', 'connect');
 
-            return $userAuthenticator->authenticateUser(
+            return $this->userAuthenticator->authenticateUser(
                 $user,
-                $formLoginAuthenticator,
+                $this->formLoginAuthenticator,
                 $request
             );
         }

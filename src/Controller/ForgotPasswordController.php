@@ -20,12 +20,18 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ForgotPasswordController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine)
+    public function __construct(
+        private ManagerRegistry $doctrine,
+        private MailerInterface $mailer,
+        private UserPasswordHasherInterface $passwordHasher,
+        private UserAuthenticatorInterface $userAuthenticator,
+        private FormLoginAuthenticator $formLoginAuthenticator,
+        )
     {
     }
 
     #[Route('/resetpassword', name: 'resetpassword')]
-    public function resetPassword(Request $request, MailerInterface $mailer): Response
+    public function resetPassword(Request $request): Response
     {
         $form = $this->createForm(ForgotPasswordFormType::class);
         $form->handleRequest($request);
@@ -78,7 +84,7 @@ class ForgotPasswordController extends AbstractController
                         )
                 ;
             }
-            $mailer->send($message);
+            $this->mailer->send($message);
             $this->addFlash('success', 'You have been sent an email to '.$email.' with instructions on how to reset your password, please check your inbox and your spam folder.');
             return $this->redirectToRoute('homepage');
         }
@@ -88,13 +94,8 @@ class ForgotPasswordController extends AbstractController
     }
 
     #[Route('/resetpassword/confirm/{token}', name: 'resetpassword_confirm')]
-    public function resetPasswordCheck(
-        Request $request,
-        $token,
-        UserPasswordHasherInterface $passwordHasher,
-        UserAuthenticatorInterface $userAuthenticator,
-        FormLoginAuthenticator $formLoginAuthenticator
-    ): Response {
+    public function resetPasswordCheck(Request $request, $token): Response
+    {
         //test whether the link is valid
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['passwordRequestToken' => hash('md5', $token)]);
         if (!$user instanceof User || !$token) {
@@ -114,15 +115,15 @@ class ForgotPasswordController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $form->get('newPassword')->getData();
-            $password = $passwordHasher->hashPassword($user, $plainPassword);
+            $password = $this->passwordHasher->hashPassword($user, $plainPassword);
             $user->setPassword($password);
             $user->setPasswordRequestToken(null);
             $this->doctrine->getManager()->flush();
 
             //Everyhting has gone smoothly so authenticate the user
-            return $userAuthenticator->authenticateUser(
+            return $this->userAuthenticator->authenticateUser(
                 $user,
-                $formLoginAuthenticator,
+                $this->formLoginAuthenticator,
                 $request
             );
         }

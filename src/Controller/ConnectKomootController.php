@@ -13,11 +13,15 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ConnectKomootController extends AbstractController
 {
+    public function __construct(private ClientRegistry $clientRegistry, private ManagerRegistry $doctrine)
+    {
+    }
+
     #[Route('/connect/komoot', name: 'connect_komoot')]
-    public function connectAction(ClientRegistry $clientRegistry): RedirectResponse
+    public function connectAction(): RedirectResponse
     {
         // will redirect to Komoot!
-        return $clientRegistry
+        return $this->clientRegistry
             ->getClient('komoot_oauth') // key used in config/packages/knpu_oauth2_client.yaml
             ->redirect(['profile']) // the scopes you want to access
         ;
@@ -29,10 +33,10 @@ class ConnectKomootController extends AbstractController
      * in config/packages/knpu_oauth2_client.yaml
      */
     #[Route('/connect/komoot/check', name: 'connect_komoot_check')]
-    public function connectCheckAction(Request $request, ClientRegistry $clientRegistry, ManagerRegistry $doctrine): RedirectResponse
+    public function connectCheckAction(Request $request): RedirectResponse
     {
         /** @var \MartynWheeler\OAuth2\Client\Provider\Komoot $client */
-        $client = $clientRegistry->getClient('komoot_oauth');
+        $client = $this->clientRegistry->getClient('komoot_oauth');
 
         try {
             // the exact class depends on which provider you're using
@@ -51,7 +55,7 @@ class ConnectKomootController extends AbstractController
             $user->setPreferredProvider('komoot');
 
             //update user object
-            $doctrine->getManager()->flush();
+            $this->doctrine->getManager()->flush();
 
             //Success - redirect accordingly
             if ($request->getSession()->remove('reconnect.komoot')) {

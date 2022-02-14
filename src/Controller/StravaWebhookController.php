@@ -12,8 +12,12 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 class StravaWebhookController extends AbstractController
 {
+    public function __construct(private StravaWebhookService $stravawebhookservice, private MessageBusInterface $bus)
+    {
+    }
+
     #[Route('/strava/webhook', name:'webhook_create', methods: ['GET'])]
-    public function create(Request $request, StravaWebhookService $stravawebhookservice): Response
+    public function create(Request $request): Response
     {
         //Process query string
         $mode = $request->query->get('hub_mode'); // hub.mode
@@ -21,13 +25,13 @@ class StravaWebhookController extends AbstractController
         $challenge = $request->query->get('hub_challenge'); // hub.challenge
 
         //Validate with strava
-        return $stravawebhookservice->validate($mode, $token, $challenge);
+        return $this->stravawebhookservice->validate($mode, $token, $challenge);
     }
 
     #[Route('/strava/webhook', name:'webhook', methods: ['POST'])]
-    public function data(Request $request, MessageBusInterface $bus): Response
+    public function data(Request $request): Response
     {
-        $bus->dispatch(new NewRideMessage($request->getContent()));
+        $this->bus->dispatch(new NewRideMessage($request->getContent()));
         return new Response('EVENT_RECEIVED', Response::HTTP_OK, []);
     }
 }

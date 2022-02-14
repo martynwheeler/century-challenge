@@ -9,7 +9,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ConnectController extends AbstractController
-{
+{   
+    public function __construct()
+    {
+    }
+
     #[Route('/connect', name: 'connect')]
     public function connect(Request $request): Response
     {

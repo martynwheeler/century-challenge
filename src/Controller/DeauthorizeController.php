@@ -13,8 +13,12 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class DeauthorizeController extends AbstractController
 {
+    public function __construct(private ManagerRegistry $doctrine, private StravaAPI $strava_api, private KomootAPI $komoot_api)
+    {
+    }
+
     #[Route('/deauthorize/strava', name: 'deauthorize_strava')]
-    public function deauthorizeStrava(Request $request, ManagerRegistry $doctrine, StravaAPI $strava_api): Response
+    public function deauthorizeStrava(Request $request): Response
     {
         //Get the current user
         $user = $this->getUser();
@@ -24,14 +28,14 @@ class DeauthorizeController extends AbstractController
         if ($user->getStravaID() && $user->getStravaRefreshToken()) {
             //Get or refresh token as necessary
             if (!$request->getSession()->get('strava.token') || $user->getStravaTokenExpiry() - time() < 30) {
-                $accessToken = $strava_api->getToken($user);
+                $accessToken = $this->strava_api->getToken($user);
                 if ($accessToken) {
                     $request->getSession()->set('strava.token', $accessToken);
                 }
             }
 
             //deauthorize from strava
-            $success = $strava_api->deauthorize($request->getSession()->get('strava.token'));
+            $success = $this->strava_api->deauthorize($request->getSession()->get('strava.token'));
 
             //check for errors in response
             if (array_key_exists('errors', $success)) {
@@ -52,7 +56,7 @@ class DeauthorizeController extends AbstractController
             }
 
             //Persist user object
-            $doctrine->getManager()->flush();
+            $this->doctrine->getManager()->flush();
             $this->addFlash('success', $user->getName().', you have sucessfully unlinked from Strava');
         }
 
@@ -60,7 +64,7 @@ class DeauthorizeController extends AbstractController
     }
 
     #[Route('/deauthorize/komoot', name: 'deauthorize_komoot')]
-    public function deauthorizeKomoot(Request $request, ManagerRegistry $doctrine, KomootAPI $komoot_api): Response
+    public function deauthorizeKomoot(Request $request): Response
     {
         //Get the current user
         $user = $this->getUser();
@@ -69,7 +73,7 @@ class DeauthorizeController extends AbstractController
         $success = null;
         if ($user->getKomootID() && $user->getKomootRefreshToken()) {
             //deauthorize from komoot
-            $success = $komoot_api->deauthorize($user->getKomootRefreshToken());
+            $success = $this->komoot_api->deauthorize($user->getKomootRefreshToken());
             if ($success != Response::HTTP_OK) {
                 $success = null;
                 $this->addFlash('danger', $user->getName().', something went wrong, please check your Komoot account!');
@@ -88,7 +92,7 @@ class DeauthorizeController extends AbstractController
             }
 
             //Persist user object
-            $doctrine->getManager()->flush();
+            $this->doctrine->getManager()->flush();
             $this->addFlash('success', $user->getName().', you have sucessfully unlinked from Komoot');
         }
 

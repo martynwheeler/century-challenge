@@ -10,11 +10,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CenturyController extends AbstractController
 {
+    public function __construct(private RideData $rd)
+    {
+    }
+
     #[Route('/', name: 'homepage')]
-    public function index(Request $request, RideData $rd): Response
+    public function index(Request $request): Response
     {
         //Read latest ride data
-        $data = $rd->getRideData(year: null, username: null);
+        $data = $this->rd->getRideData(year: null, username: null);
 
         //Read in any warning messages
         @$motd = file_get_contents('resources/motd.json');
