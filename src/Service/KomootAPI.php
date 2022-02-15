@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Ride;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -154,19 +155,19 @@ class KomootAPI
             $athleteactivities = $this->request($token, $url, $query)["_embedded"]['tours'];
 
             //Process the results
-            $results = [];
+            $rides = [];
             if (is_array($athleteactivities) || $athleteactivities instanceof Countable) {
                 foreach ($athleteactivities as $athleteactivity) {
-                    $result = $this->setResult($athleteactivity);
-                    if ($result) {
-                        $results[] = $result;
+                    $ride = $this->setRide($athleteactivity);
+                    if ($ride) {
+                        $rides[] = $ride;
                     }
                 }
             }
 
             //Sort and return
-            usort($results, [$this, 'date_compare']);
-            return $results;
+            usort($rides, [$this, 'ride_date_compare']);
+            return $rides;
         }
 
         return null;
@@ -175,7 +176,7 @@ class KomootAPI
     /**
      * Get data for a valid ride by id
      */
-    public function getAthleteActivity(Object $user, string $id): ?array
+    public function getAthleteActivity(Object $user, string $id): ?Ride
     {
         //get an access token and return ride analysis
         $token = $this->getToken($user);
@@ -192,12 +193,14 @@ class KomootAPI
             }
 
             //Process the results and return
-            $result = $this->setResult($athleteactivity);
-            $checkRideStream = $this->processRideStream($user, $id, $result['date']);
-            $result['isClubride'] = $checkRideStream['isClubride'];
-            $result['isRealride'] = $checkRideStream['isRealride'];
-
-            return $result;
+            $ride = $this->setRide($athleteactivity);
+            $ride->setUser($user);
+            $checkRideStream = $this->processRideStream($user, $id, $ride->getDate());
+            $ride->setClubRide($checkRideStream['isClubride']);
+            if (!$checkRideStream['isRealride']){
+                $ride = null;
+            }
+            return $ride;
         }
 
         return null;
@@ -283,26 +286,27 @@ class KomootAPI
     /**
      * process the result of an athelete activity returned from strava into an array
      */
-    protected function setResult(array $athleteactivity): ?array
+    protected function setRide(array $athleteactivity): ?Ride
     {
-        $result = null;
+        $ride = null;
         if ($athleteactivity['distance'] >= 100000) {
             //convert to km and round to nearest 10m
             $athleteactivity['distance'] = round(($athleteactivity['distance'] / 1000), 2);
+
             //Correct tz to accomodate DST
             $date = \DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $athleteactivity['date'], new \DateTimeZone('Europe/London'));
-            //generate key for display in drop down box
-            $key = "Ride {$athleteactivity['id']} on ({$date->format('d-m-Y')}) of {$athleteactivity['distance']} km";
-            //checking for club ride/real ride not done here as it would result in too many additional API calls
-            $result = [
-                'key' => $key,
-                'id' => $athleteactivity['id'],
-                'date' => $date,
-                'distance' => $athleteactivity['distance'],
-                'average' => $athleteactivity['distance']/$athleteactivity['time_in_motion'] * 3600,
-            ];
+
+            //Return a Ride object
+            $ride = (new Ride())
+                ->setRideId($athleteactivity['id'])
+                ->setKm($athleteactivity['distance'])
+                ->setAverageSpeed($athleteactivity['distance']/$athleteactivity['time_in_motion'] * 3600)
+                ->setDate($date)
+                ->setSource('komoot');
+
         }
-        return $result;
+
+        return $ride;
     }
 
     /**
@@ -322,10 +326,10 @@ class KomootAPI
     /**
      * Compare two date stamps
      */
-    protected function date_compare(array $a, array $b): int
+    protected function ride_date_compare(Ride $a, Ride $b): int
     {
-        $t1 = $a['date']->getTimestamp();
-        $t2 = $b['date']->getTimestamp();
+        $t1 = $a->getDate()->getTimestamp();
+        $t2 = $b->getDate()->getTimestamp();
         return $t2 - $t1;
     }
 }

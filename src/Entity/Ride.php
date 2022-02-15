@@ -126,7 +126,7 @@ class Ride implements \Stringable
     }
     public function __toString(): string
     {
-        return (string)$this->getId();
+        return (string)$this->getRideId();
     }
     public function getSource(): ?string
     {

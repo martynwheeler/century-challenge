@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Ride;
-use App\Form\AddrideFormType;
+use App\Form\AddrideManFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,15 +20,19 @@ class EditrideController extends AbstractController
     #[Route('/ride/{ride_id}/delete', name: 'deleteride')]
     public function delete(Request $request, $ride_id): Response
     {
+        //Get the ride from db
         $ride = $this->doctrine->getRepository(Ride::class)->find($ride_id);
         if (!$ride) {
             throw $this->createNotFoundException(
                 'No ride found for id '.$ride_id
             );
         }
-        $form = $this->createFormBuilder()->getForm();
-        $form->handleRequest($request);
 
+        //build form
+        $form = $this->createFormBuilder()->getForm();
+
+        //process form
+        $form->handleRequest($request);
         if ($form->isSubmitted()) {
             $entityManager = $this->doctrine->getManager();
             $entityManager->remove($ride);
@@ -46,15 +50,19 @@ class EditrideController extends AbstractController
     #[Route('/ride/{ride_id}/editride', name: 'editride')]
     public function edit(Request $request, $ride_id): Response
     {
+        //Get the ride from db
         $ride = $this->doctrine->getRepository(Ride::class)->find($ride_id);
         if (!$ride) {
             throw $this->createNotFoundException(
                 'No ride found for id '.$ride_id
             );
         }
-        $form = $this->createForm(AddrideFormType::class, $ride);
-        $form->handleRequest($request);
 
+        //build form
+        $form = $this->createForm(AddrideManFormType::class, $ride);
+
+        //process form
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             //this could be improved by validation, but hey
             $firstdayofmonth = new \DateTime();

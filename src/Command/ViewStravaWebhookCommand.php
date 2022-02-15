@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Service\StravaWebhookService;
+use App\Service\StravaWebhook;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -17,7 +17,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class ViewStravaWebhookCommand extends Command
 {
-    public function __construct(private StravaWebhookService $stravawebhookservice)
+    public function __construct(private StravaWebhook $stravawebhook)
     {
         parent::__construct(null);
     }
@@ -30,7 +30,7 @@ class ViewStravaWebhookCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $id = $this->stravawebhookservice->view();
+        $id = $this->stravawebhook->view();
 
         if ($id != null) {
             $io->success("There is currently a subcription with id = $id");

@@ -29,9 +29,9 @@ class EditProfileController extends AbstractController
             'komootAthlete' => $this->komoot_api->getAthlete($user),
             'stravaAthlete' => $this->strava_api->getAthlete($user),
         ]);
-        $form->handleRequest($request);
 
         //Process form data
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->doctrine->getManager()->flush();
 

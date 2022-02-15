@@ -44,7 +44,7 @@ class RegistrationController extends AbstractController
             $entityManager = $this->doctrine->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
-            // do anything else you need here, like send an email
+
             // set redirect route upon authentication
             $request->getSession()->set('redirectTo', 'connect');
 

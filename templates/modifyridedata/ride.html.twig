@@ -8,7 +8,7 @@
     and log out of {{ service|capitalize }}. Then log back in with the correct account.</p>
     <p class="text-left">If you would like to enter the ride manually then follow <a href="{{ path('addridemanual') }}">this link</a><p>
 {{ form_start(addrideForm) }}
-    {{ form_row(addrideForm.ride_id) }}
+    {{ form_row(addrideForm.ride) }}
     <button type="submit" class="btn btn-primary" name="submit">Submit Ride</button>
 {{ form_end(addrideForm) }}
 {% endblock %}

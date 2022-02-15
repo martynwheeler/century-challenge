@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Ride;
+use App\Form\AddrideManFormType;
 use App\Form\AddrideFormType;
 use App\Service\StravaAPI;
 use App\Service\KomootAPI;
@@ -22,14 +23,13 @@ class AddrideController extends AbstractController
     #[Route('/addride', name: 'addride')]
     public function addRide(Request $request): Response
     {
-        //Get the user and set up ride object
+        //Get the user and switch depending on provider
         $user = $this->getUser();
-        $ride = new Ride();
-        $ride->setUser($user);
-        $ride->setSource($user->getPreferredProvider());
 
-        //Switch depending on provider
-        $athleteActivities = null;
+        if (!$user->getPreferredProvider()){
+            return $this->redirectToRoute('addridemanual');
+        }
+
         switch ($user->getPreferredProvider()) {
             case 'komoot':
                 $athlete = $this->komoot_api->getAthlete($user);
@@ -38,73 +38,37 @@ class AddrideController extends AbstractController
                     $request->getSession()->set('reconnect.komoot', true);
                     return $this->redirectToRoute('connect_komoot');
                 }
-                //token valid, get rides
+                //token valid, get name
                 $athleteName = $athlete['display_name'];
-                $athleteActivities = $this->komoot_api->getAthleteActivitiesThisMonth($user);
                 break;
 
             case 'strava':
                 $athlete = $this->strava_api->getAthlete($user);
                 // check for errors and redirect
-                if (array_key_exists('errors', $athlete)) {
+                if (!$athlete) {
                     $request->getSession()->set('reconnect.strava', true);
                     return $this->redirectToRoute('connect_strava');
                 }
-                //token valid, grab the rides
+                //token valid, get name
                 $athleteName = $athlete['firstname'].' '.$athlete['lastname'];
-                $athleteActivities = $this->strava_api->getAthleteActivitiesThisMonth($user);
                 break;
-
-            default:
-                return $this->redirectToRoute('addridemanual');
         }
 
-        //if there are valid rides create a form with drop down list
-        if ($athleteActivities) {
-            $form = $this->createFormBuilder($ride)
-                ->add('ride_id', ChoiceType::class, [
-                    'choices' => array_column($athleteActivities, 'id', 'key'),
-                    'label' => 'Select a recent century ride from the dropdown menu:',
-                    'expanded' => false,
-                    'multiple' => false,
-                ])
-                ->getForm()
-            ;
-        } else {
+        //Build form
+        $form = $this->createForm(AddrideFormType::class);
+
+        //if no rides were found redirect to manual entry
+        if (!$form->has('ride')){
             return $this->redirectToRoute('addridemanual');
         }
 
         //Submitted form
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $rideID = $form->getData()->getRideId();
-            $realRide = null;
+            //get the selected ride
+            $ride = $form->getData()['ride']; 
 
-            //loop over array of activities to process selected ride
-            foreach ($athleteActivities as $athleteActivity) {
-                if ($athleteActivity['id'] == $rideID) {
-                    $ride->setKm($athleteActivity['distance']);
-                    $ride->setAverageSpeed($athleteActivity['average']);
-                    $ride->setDate($athleteActivity['date']);
-                    switch ($user->getPreferredProvider()) {
-                        case 'komoot':
-                            //request and analyse ride stream
-                            $checkRideStream = $this->komoot_api->processRideStream($user, $rideID, $athleteActivity['date']);
-                            $ride->setClubRide($checkRideStream['isClubride']);
-                            $realRide = $checkRideStream['isRealride'];
-                            break;
-                        case 'strava':
-                            //request and analyse ride stream
-                            $checkRideStream = $this->strava_api->processRideStream($user, $rideID, $athleteActivity['date']);
-                            $ride->setClubRide($checkRideStream['isClubride']);
-                            $realRide = $checkRideStream['isRealride'];
-                            break;
-                    }
-                }
-            }
-
-            if ($realRide) {
-                //Maybe do some error checking here?
+            if ($ride) {
                 $entityManager = $this->doctrine->getManager();
                 $entityManager->persist($ride);
                 $entityManager->flush();
@@ -137,7 +101,7 @@ class AddrideController extends AbstractController
         $ride->setClubRide(false);
 
         //Build form
-        $form = $this->createForm(AddrideFormType::class, $ride);
+        $form = $this->createForm(AddrideManFormType::class, $ride);
         $form->handleRequest($request);
 
         //Submitted form

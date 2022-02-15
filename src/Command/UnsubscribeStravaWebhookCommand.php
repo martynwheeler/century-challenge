@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Service\StravaWebhookService;
+use App\Service\StravaWebhook;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -17,7 +17,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class UnsubscribeStravaWebhookCommand extends Command
 {
-    public function __construct(private StravaWebhookService $stravawebhookservice)
+    public function __construct(private StravaWebhook $stravawebhook)
     {
         parent::__construct(null);
     }
@@ -30,7 +30,7 @@ class UnsubscribeStravaWebhookCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        if ($this->stravawebhookservice->unsubscribe()) {
+        if ($this->stravawebhook->unsubscribe()) {
             $io->success("Successfully unsubscribed");
         } else {
             $io->warning("Error or no subscription found");

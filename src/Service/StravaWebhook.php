@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  * @author Martyn Wheeler
  */
 
-class StravaWebhookService
+class StravaWebhook
 {
     public const API_URL = 'https://www.strava.com/api/v3/';
 

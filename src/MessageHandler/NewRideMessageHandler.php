@@ -42,36 +42,23 @@ class NewRideMessageHandler
 
                 if ($user){
                     //if not dq'ed then process
-                    if (!$this->rd->getRideData(year: null, username: $user->getUsername())['users'][0]['isDisqualified']) {
+                    if (!$this->rd->getRideData(year: null, username: $user->getUsername())['users'][0]['isDisqualified']){
                         //get the activity from strava
-                        $athleteActivity = $this->strava_api->getAthleteActivity($user, $object_id);
+                        $ride = $this->strava_api->getAthleteActivity($user, $object_id);
+                        
+                        //If the ride is real then add to db
+                        if ($ride){
+                            $entityManager = $this->doctrine->getManager();
+                            $entityManager->persist($ride);
+                            $entityManager->flush();
 
-                        //if a valid activity is returned
-                        if ($athleteActivity) {
-                            //create ride object
-                            $ride = new Ride();
-                            $ride->setUser($user);
-                            $ride->setSource($user->getPreferredProvider());
-                            $ride->setRideId($object_id);
-                            $ride->setKm($athleteActivity['distance']);
-                            $ride->setAverageSpeed($athleteActivity['average']);
-                            $ride->setDate($athleteActivity['date']);
-                            $ride->setClubRide($athleteActivity['isClubride']);
-
-                            //If the ride is real then add to db
-                            if ($athleteActivity['isRealride']) {
-                                $entityManager = $this->doctrine->getManager();
-                                $entityManager->persist($ride);
-                                $entityManager->flush();
-
-                                //emailmessage a message
-                                $emailmessage = (new Email())
-                                    ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
-                                    ->to($user->getEmail())
-                                    ->subject('Message from Century Challenge')
-                                    ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r"."Your ride with id=$object_id has successfully been added.");
-                                $sentEmail = $this->mailer->send($emailmessage);
-                            }
+                            //emailmessage a message
+                            $emailmessage = (new Email())
+                                ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
+                                ->to($user->getEmail())
+                                ->subject('Message from Century Challenge')
+                                ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r"."Your ride with id=$object_id has successfully been added.");
+                            $sentEmail = $this->mailer->send($emailmessage);
                         }
                     }
                 }                

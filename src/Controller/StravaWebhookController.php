@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Service\StravaWebhookService;
+use App\Service\StravaWebhook;
 use App\Message\NewRideMessage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,7 +12,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 class StravaWebhookController extends AbstractController
 {
-    public function __construct(private StravaWebhookService $stravawebhookservice, private MessageBusInterface $bus)
+    public function __construct(private StravaWebhook $stravawebhook, private MessageBusInterface $bus)
     {
     }
 
@@ -25,7 +25,7 @@ class StravaWebhookController extends AbstractController
         $challenge = $request->query->get('hub_challenge'); // hub.challenge
 
         //Validate with strava
-        return $this->stravawebhookservice->validate($mode, $token, $challenge);
+        return $this->stravawebhook->validate($mode, $token, $challenge);
     }
 
     #[Route('/strava/webhook', name:'webhook', methods: ['POST'])]
