@@ -25,7 +25,7 @@ jobs:
         uses: fmunirdev/envvar-to-dotenv-action@v0.2.0
         with:
           target: .env.local
-          variableNames: APP_ENV,APP_SECRET,APP_DEBUG,DATABASE_URL,STRAVA_SECRET,STRAVA_ID,KOMOOT_SECRET,KOMOOT_ID,MAILER_DSN,MAILER_FROM
+          variableNames: APP_ENV,APP_SECRET,APP_DEBUG,DATABASE_URL,STRAVA_SECRET,STRAVA_ID,STRAVA_WEBHOOK_CALLBACK_URL,STRAVA_WEBHOOK_VERIFY_TOKEN,KOMOOT_SECRET,KOMOOT_ID,MAILER_DSN,MAILER_FROM
         env:
           APP_DEBUG: 0
           APP_ENV: prod
@@ -36,6 +36,8 @@ jobs:
           MAILER_FROM: ${{ secrets.MAILER_FROM }}
           STRAVA_ID: ${{ secrets.STRAVA_ID }}
           STRAVA_SECRET: ${{ secrets.STRAVA_SECRET }}
+          STRAVA_WEBHOOK_CALLBACK_URL: ${{ secrets.STRAVA_WEBHOOK_CALLBACK_URL }}
+          STRAVA_WEBHOOK_VERIFY_TOKEN: ${{ secrets.STRAVA_WEBHOOK_VERIFY_TOKEN }}
       - name: Setup composer
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
         uses: php-actions/composer@v6
