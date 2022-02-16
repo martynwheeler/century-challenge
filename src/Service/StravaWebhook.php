@@ -32,8 +32,8 @@ class StravaWebhook
             'body' => [
                 'client_id' => $_ENV['STRAVA_ID'],
                 'client_secret' => $_ENV['STRAVA_SECRET'],
-                'callback_url' => 'https://cc.leicesterforest.com/strava/webhook', //this needs fixing
-                'verify_token' => 'STRAVA',
+                'callback_url' => $_ENV['STRAVA_WEBHOOK_CALLBACK_URL'],
+                'verify_token' => $_ENV['STRAVA_WEBHOOK_VERIFY_TOKEN'],
             ]
         ]);
 
@@ -99,7 +99,7 @@ class StravaWebhook
         // Checks if a token and mode is in the query string of the request
         if ($mode && $token) {
             // Verifies that the mode and token sent are valid
-            if ($mode === 'subscribe' && $token === 'STRAVA') {
+            if ($mode === 'subscribe' && $token === $_ENV['STRAVA_WEBHOOK_VERIFY_TOKEN']) {
                 // Responds with the challenge token from the request
                 return new JsonResponse(['hub.challenge' => $challenge], Response::HTTP_OK, []);
             } else {
