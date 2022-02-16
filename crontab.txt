@@ -1,1 +1,0 @@
-* * * * * php8.0-cli /homepages/3/d4296217316/htdocs/century/bin/console scheduler:execute
