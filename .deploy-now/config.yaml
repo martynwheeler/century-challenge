@@ -6,6 +6,7 @@ deploy:
     # folders that are not copied to IONOS webspace
     excludes:
       - tests
+      #- node_modules
       # the following three files are generated during composer action and are not neccessary
       - DOCKER_ENV
       - docker_tag
@@ -21,14 +22,14 @@ deploy:
       ## You need to specify the php version with appendix cli, like php8.0-cli or php7.4-cli
       ## php without version or executing ./bin/console directly is leading to use PHP 4.4
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:clear
+      #- php8.0-cli bin/console assets:install
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:warmup
-      # delete unwanted files
-      #- rm -rf assets bin tools 
 
   # configuration part, which is taken at ALL FURTHER deployments of this branch
   recurring:
     excludes:
       - tests
+      #- node_modules
       - DOCKER_ENV
       - docker_tag
       - output.log
@@ -44,6 +45,5 @@ deploy:
       - chmod -R o+w var
       # clear caches, migrate database, install assets, warmup caches
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:clear
+      #- php8.0-cli bin/console assets:install
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:warmup
-      # delete unwanted files
-      #- rm -rf assets bin tools 
