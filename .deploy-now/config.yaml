@@ -22,8 +22,6 @@ deploy:
       ## php without version or executing ./bin/console directly is leading to use PHP 4.4
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:clear
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:warmup
-      # start worker command
-#      - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console messenger:consume &
       # delete unwanted files
       #- rm -rf assets bin tools 
 
@@ -47,10 +45,5 @@ deploy:
       # clear caches, migrate database, install assets, warmup caches
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:clear
       - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console cache:warmup
-      # start worker command
-#      - APP_ENV=prod APP_DEBUG=0 php8.0-cli bin/console messenger:consume &
       # delete unwanted files
       #- rm -rf assets bin tools 
-      #- php8.0-cli bin/console app:send-monthly-email
-      #- /usr/sbin/cron -f
-      #- (crontab -l ; echo "* * * * * php8.0-cli /homepages/3/d4296217316/htdocs/century/bin/console scheduler:execute") 2>&1 | grep -v "no crontab" | sort | uniq | crontab -

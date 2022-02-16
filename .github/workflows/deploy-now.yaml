@@ -64,5 +64,3 @@ jobs:
           remote-host: ${{ steps.project.outputs.remote-host }}
           service-host: api-eu.ionos.space
           storage-quota: ${{ steps.project.outputs.storage-quota }}
-#      - name: Setup Cron
-#        run: /usr/bin/crontab ./crontab.txt
