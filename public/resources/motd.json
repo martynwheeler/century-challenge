@@ -1,8 +1,8 @@
 {
-    "date": "01/01/22",
+    "date": "16/02/22",
     "message": [
-        "Migration to new site: <br>", 
-        "The Century Challenge has now moved into part of the main Leicester Forest domain.<br>",
+        "New Feature: <br>", 
+        "The Century Challenge website should now automatically detect your Strava rides and upload them if they took place outdoors and are over 100km.<br>",
         "If there are any issues please contact the Century Challenge Organiser via the <a href=\"contact\">contact form</a>."
     ]
 }
