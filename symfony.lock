@@ -1,4 +1,7 @@
 {
+    "composer/package-versions-deprecated": {
+        "version": "1.11.99.4"
+    },
     "doctrine/annotations": {
         "version": "1.13",
         "recipe": {
@@ -108,6 +111,9 @@
     "egulias/email-validator": {
         "version": "2.1.15"
     },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.5"
+    },
     "guzzlehttp/guzzle": {
         "version": "6.5.2"
     },
@@ -128,6 +134,12 @@
         "files": [
             "config/packages/knpu_oauth2_client.yaml"
         ]
+    },
+    "laminas/laminas-code": {
+        "version": "4.5.1"
+    },
+    "league/html-to-markdown": {
+        "version": "5.0.2"
     },
     "league/oauth2-client": {
         "version": "2.4.1"
@@ -150,17 +162,11 @@
     "nikic/php-parser": {
         "version": "v4.3.0"
     },
-    "ocramius/proxy-manager": {
-        "version": "2.2.3"
-    },
     "phar-io/manifest": {
         "version": "2.0.3"
     },
     "phar-io/version": {
         "version": "3.1.0"
-    },
-    "php": {
-        "version": "7.3"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.0.0"
@@ -736,8 +742,5 @@
     },
     "webmozart/assert": {
         "version": "1.6.0"
-    },
-    "zendframework/zend-code": {
-        "version": "3.4.1"
     }
 }
