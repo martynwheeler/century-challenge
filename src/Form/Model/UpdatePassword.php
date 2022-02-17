@@ -1,12 +1,12 @@
 <?php
 
-// src/Form/Model/ChangePassword.php
+// src/Form/Model/UpdatePassword.php
 
 namespace App\Form\Model;
 
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 
-class ChangePassword
+class UpdatePassword
 {
     #[SecurityAssert\UserPassword(
         message: 'Wrong value for your current password',

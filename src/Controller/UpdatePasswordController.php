@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\ChangePasswordFormType;
-use App\Form\Model\ChangePassword;
+use App\Form\UpdatePasswordFormType;
+use App\Form\Model\UpdatePassword;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,18 +12,18 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
-class ChangePasswordController extends AbstractController
+class UpdatePasswordController extends AbstractController
 {
     public function __construct(private UserPasswordHasherInterface $passwordHasher, private ManagerRegistry $doctrine)
     {
     }
 
-    #[Route('/profile/{username}/changepassword', name: 'changepassword')]
-    public function changePassword(Request $request): Response
+    #[Route('/profile/{username}/updatepassword', name: 'updatepassword')]
+    public function updatePassword(Request $request): Response
     {
         //if ($this->isCsrfTokenValid('delete-item', $submittedToken)) {
-        $changePasswordModel = new ChangePassword();
-        $form = $this->createForm(ChangePasswordFormType::class, $changePasswordModel);
+        $updatePasswordModel = new UpdatePassword();
+        $form = $this->createForm(UpdatePasswordFormType::class, $updatePasswordModel);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -37,11 +37,11 @@ class ChangePasswordController extends AbstractController
             $this->doctrine->getManager()->flush();
 
             // do anything else you need here, like send an email
-            $this->addFlash('success', $user->getName().', you have sucessfully changed your password.');
+            $this->addFlash('success', $user->getName().', you have sucessfully updated your password.');
             return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUserIdentifier()]);
         }
-        return $this->renderForm('security/changepassword.html.twig', [
-            'changepasswordForm' => $form,
+        return $this->renderForm('security/updatepassword.html.twig', [
+            'updatepasswordForm' => $form,
         ]);
     }
 }
