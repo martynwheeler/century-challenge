@@ -41,12 +41,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     #[ORM\Column(type: 'string', length: 40)]
     private $forename;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $passwordRequestToken = null;
-
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\DateTime $requestTokenExpiry = null;
-
     #[ORM\OneToMany(targetEntity: \App\Entity\Ride::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Object $rides;
 
@@ -209,33 +203,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     public function getPrivateName()
     {
         return ucwords($this->getForeName().' '.substr($this->getSurname(), 0, 1).'.');
-    }
-
-    /**
-     * fields for password reset
-     */
-    public function getPasswordRequestToken(): ?string
-    {
-        return $this->passwordRequestToken;
-    }
-
-    public function setPasswordRequestToken(?string $passwordRequestToken): self
-    {
-        $this->passwordRequestToken = $passwordRequestToken;
-
-        return $this;
-    }
-
-    public function getRequestTokenExpiry(): ?\DateTimeInterface
-    {
-        return $this->requestTokenExpiry;
-    }
-
-    public function setRequestTokenExpiry(?\DateTimeInterface $requestTokenExpiry): self
-    {
-        $this->requestTokenExpiry = $requestTokenExpiry;
-
-        return $this;
     }
 
     /**

@@ -1,0 +1,6 @@
+<h3>Password Reset</h3>
+<p>Hi {{ user.name }}</p> 
+<p>Your username is <b>{{ user.username }}</b>.
+<p>To reset your password click on the following link <a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ url('app_reset_password', {token: resetToken.token}) }}</a>.</p>
+<p>This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+<p>Thank you, Admin</p>
