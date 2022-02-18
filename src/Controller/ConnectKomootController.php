@@ -60,7 +60,7 @@ class ConnectKomootController extends AbstractController
             //Success - redirect accordingly
             if ($request->getSession()->remove('reconnect.komoot')) {
                 //you were redirected here because of an invalid token
-                return $this->redirectToRoute('addride');
+                return $this->redirectToRoute('app_add_ride');
             }
 
             return $this->redirectToRoute('homepage');

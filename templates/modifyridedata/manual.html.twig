@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block title %}
-{% if app.request.attributes.get("_route") == 'addridemanual' %}
+{% if app.request.attributes.get("_route") == 'app_add_ride_manual' %}
 Add Ride
 {% else %}
 Edit Ride
@@ -8,13 +8,13 @@ Edit Ride
 {% endblock %}
 
 {% block body %}
-{% if app.request.attributes.get("_route") == 'addridemanual' %}
+{% if app.request.attributes.get("_route") == 'app_add_ride_manual' %}
 <h3 class="text-center">Add Ride</h3>
 {% else %}
 <h3 class="text-center">Edit Ride</h3>
 {% endif %}
 <div class="form">
-	{% if app.request.attributes.get("_route") == 'addridemanual' %}
+	{% if app.request.attributes.get("_route") == 'app_add_ride_manual' %}
 	<p class="text-left">Please note that uploading via Strava/Komoot 
 		is the preferred method of registering your rides if you wish to be considered for the Century Challenge trophy. You can connect to Strava/Komoot
 		by following <a href="{{ path('connect') }}">this link</a>.</p>
