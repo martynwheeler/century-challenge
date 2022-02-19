@@ -3,24 +3,28 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Service\StravaAPI;
 use App\Service\KomootAPI;
+use App\Service\StravaAPI;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Persistence\ManagerRegistry;
 
+#[Route('/deauthorize')]
 class DeauthorizeController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine, private StravaAPI $strava_api, private KomootAPI $komoot_api)
-    {
+    public function __construct(
+        private ManagerRegistry $doctrine,
+        private StravaAPI $strava_api,
+        private KomootAPI $komoot_api,
+    ) {
     }
 
-    #[Route('/deauthorize/strava', name: 'deauthorize_strava')]
-    public function deauthorizeStrava(Request $request): Response
+    #[Route('/strava', name: 'app_deauthorize_strava')]
+    public function deauthorizeStravaAction(): Response
     {
         //Get the current user
+        /** @var User $user */
         $user = $this->getUser();
 
         //deauthorize from strava
@@ -28,7 +32,7 @@ class DeauthorizeController extends AbstractController
         //check for errors in response
         if (array_key_exists('errors', $success)) {
             $success = null;
-            $this->addFlash('danger', $user->getName().', something went wrong, please check your Strava account!');
+            $this->addFlash('danger', "{$user->getName()}, something went wrong, please check your Strava account!");
         }
 
         if ($success) {
@@ -44,23 +48,24 @@ class DeauthorizeController extends AbstractController
 
             //Persist user object
             $this->doctrine->getManager()->flush();
-            $this->addFlash('success', $user->getName().', you have sucessfully unlinked from Strava');
+            $this->addFlash('success', "{$user->getName()}, you have successfully unlinked from Strava");
         }
 
-        return $this->redirectToRoute('homepage');
+        return $this->redirectToRoute('app_homepage');
     }
 
-    #[Route('/deauthorize/komoot', name: 'deauthorize_komoot')]
-    public function deauthorizeKomoot(Request $request): Response
+    #[Route('/komoot', name: 'app_deauthorize_komoot')]
+    public function deauthorizeKomootAction(): Response
     {
         //Get the current user
+        /** @var User $user */
         $user = $this->getUser();
 
         //deauthorize from komoot
         $success = $this->komoot_api->deauthorize($user);
         if ($success != Response::HTTP_OK) {
             $success = null;
-            $this->addFlash('danger', $user->getName().', something went wrong, please check your Komoot account!');
+            $this->addFlash('danger', "{$user->getName()}, something went wrong, please check your Komoot account!");
         }
 
         if ($success) {
@@ -76,9 +81,9 @@ class DeauthorizeController extends AbstractController
 
             //Persist user object
             $this->doctrine->getManager()->flush();
-            $this->addFlash('success', $user->getName().', you have sucessfully unlinked from Komoot');
+            $this->addFlash('success', "{$user->getName()}, you have successfully unlinked from Komoot");
         }
 
-        return $this->redirectToRoute('homepage');
+        return $this->redirectToRoute('app_homepage');
     }
 }

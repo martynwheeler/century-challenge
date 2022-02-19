@@ -20,7 +20,7 @@
           {% set counter = counter + 1 %}{{ counter }}
         </td>
         <td>
-          <a href="{{ path('displayrides', {'username': user.useridentifier}) }}">{{ user.forename }} {{ user.surname }}</a>
+          <a href="{{ path('app_display_rides', {'username': user.useridentifier}) }}">{{ user.forename }} {{ user.surname }}</a>
         </td>
         <td>
           {{ user.username }}				

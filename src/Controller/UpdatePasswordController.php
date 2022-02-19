@@ -3,14 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\UpdatePasswordFormType;
 use App\Form\Model\UpdatePassword;
+use App\Form\UpdatePasswordFormType;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Routing\Annotation\Route;
 
 class UpdatePasswordController extends AbstractController
 {
@@ -18,8 +18,8 @@ class UpdatePasswordController extends AbstractController
     {
     }
 
-    #[Route('/profile/{username}/updatepassword', name: 'updatepassword')]
-    public function updatePassword(Request $request): Response
+    #[Route('/profile/{username}/update-password', name: 'app_update_password')]
+    public function updatePasswordAction(Request $request): Response
     {
         //if ($this->isCsrfTokenValid('delete-item', $submittedToken)) {
         $updatePasswordModel = new UpdatePassword();
@@ -27,6 +27,7 @@ class UpdatePasswordController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $user */
             $user = $this->getUser();
             $user->setPassword(
                 $this->passwordHasher->hashPassword(
@@ -37,11 +38,11 @@ class UpdatePasswordController extends AbstractController
             $this->doctrine->getManager()->flush();
 
             // do anything else you need here, like send an email
-            $this->addFlash('success', $user->getName().', you have sucessfully updated your password.');
-            return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUserIdentifier()]);
+            $this->addFlash('success', "{$user->getName()}, you have successfully updated your password.");
+            return $this->redirectToRoute('app_display_rides', ['username' => $this->getUser()->getUserIdentifier()]);
         }
-        return $this->renderForm('security/updatepassword.html.twig', [
-            'updatepasswordForm' => $form,
+        return $this->renderForm('security/update_password.html.twig', [
+            'updatePasswordForm' => $form,
         ]);
     }
 }

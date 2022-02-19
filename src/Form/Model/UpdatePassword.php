@@ -11,7 +11,7 @@ class UpdatePassword
     #[SecurityAssert\UserPassword(
         message: 'Wrong value for your current password',
     )]
-    protected $oldPassword;
+    protected string $oldPassword;
 
     public function getOldPassword(): string
     {

@@ -48,7 +48,7 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToRoute('Public Homepage', 'fas fa-home', 'homepage');
+        yield MenuItem::linkToRoute('Public Homepage', 'fas fa-home', 'app_homepage');
         yield MenuItem::linkToCrud('Users', 'fas fa-user', User::class);
         yield MenuItem::linkToCrud('Ride', 'fas fa-biking', Ride::class);
         yield MenuItem::linkToCrud('Scheduler', 'fa fa-calendar', ScheduledCommand::class);
@@ -65,8 +65,8 @@ class DashboardController extends AbstractDashboardController
 
             // you can use any type of menu item, except submenus
             ->addMenuItems([
-                MenuItem::linkToRoute('My Profile', 'fa fa-id-card', 'displayrides', ['username' => $this->getUser()->getUserIdentifier()]),
-                MenuItem::linkToRoute('Settings', 'fa fa-user-cog', 'editprofile', ['username' => $this->getUser()->getUserIdentifier()]),
+                MenuItem::linkToRoute('My Profile', 'fa fa-id-card', 'app_display_rides', ['username' => $this->getUser()->getUserIdentifier()]),
+                MenuItem::linkToRoute('Settings', 'fa fa-user-cog', 'app_edit_profile', ['username' => $this->getUser()->getUserIdentifier()]),
             ]);
     }
 }

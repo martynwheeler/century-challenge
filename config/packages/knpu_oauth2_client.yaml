@@ -16,7 +16,7 @@ knpu_oauth2_client:
             # now, all the normal options!
             client_id: '%env(KOMOOT_ID)%'
             client_secret: '%env(KOMOOT_SECRET)%'
-            redirect_route: connect_komoot_check
+            redirect_route: app_connect_komoot_check
             redirect_params: {}
 
         # will create service: "knpu.oauth2.client.strava"
@@ -29,7 +29,7 @@ knpu_oauth2_client:
             client_id: '%env(STRAVA_ID)%'
             client_secret: '%env(STRAVA_SECRET)%'
             # a route name you'll create
-            redirect_route: connect_strava_check
+            redirect_route: app_connect_strava_check
             redirect_params: {}
 
             # whether to check OAuth2 "state": defaults to true

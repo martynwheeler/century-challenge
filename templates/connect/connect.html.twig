@@ -6,20 +6,20 @@
 	<p>If you would like to register your rides from Strava you will need to authorise this site to have read access to your Strava account. 
 	  Clicking the button below will redirect you to the Strava website, you will then need to sign in and grant access.</p>
 	<div class="row justify-content-center pb-3">
-	  <a href="{{ stravaurl }}" role="button">
+	  <a href="{{ stravaUrl }}" role="button">
 	    <img src="{{ asset('build/images/btn_strava_connectwith_orange/btn_strava_connectwith_orange.png') }}" alt="Connect with Strava"/>
 	  </a>
 	</div>
 	<p>Alternatively if you would like to register your rides from Komoot you will need to authorise this site to have read access to your Komoot account. 
 	  Clicking the button below will redirect you to the Komoot website, you will then need to sign in and grant access.</p>
 	<div class="row justify-content-center pb-3">
-	  <a href="{{ komooturl }}" role="button">
+	  <a href="{{ komootUrl }}" role="button">
 	    <img src="{{ asset('build/images/btn_komoot_connectwith/btn_komoot_connectwith.png') }}" alt="Connect with Komoot"/>
 	  </a>
 	</div>
 	<p>If you prefer not to connect then click the button below to continue to the home page.</p>
 	<div class="row justify-content-center pb-3">
-	  <a class="btn btn-secondary col-md-3" href="{{ path('homepage') }}" role="button">No thanks</a>
+	  <a class="btn btn-secondary col-md-3" href="{{ path('app_homepage') }}" role="button">No thanks</a>
 	</div>
 </div>
 {% endblock %}

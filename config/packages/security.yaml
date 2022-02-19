@@ -22,13 +22,13 @@ security:
 
             form_login:
                 # "login" is the name of the route created previously
-                login_path: login
-                check_path: login
+                login_path: app_login
+                check_path: app_login
                 success_handler: App\Security\AuthenticationSuccessHandler
                 enable_csrf: true
 
             logout:
-                path: logout
+                path: app_logout
 
             remember_me:
                 secret:   '%kernel.secret%'

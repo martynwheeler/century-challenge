@@ -4,6 +4,7 @@
 
 namespace App\EventSubscriber;
 
+use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\WorkerRunningEvent;
 
@@ -16,10 +17,8 @@ class CronRunningEvent implements EventSubscriberInterface
         }
     }
 
-    /**
-     * @return array<string>
-     */
-    public static function getSubscribedEvents()
+    #[ArrayShape([WorkerRunningEvent::class => "string"])]
+    public static function getSubscribedEvents(): array
     {
         return [
             WorkerRunningEvent::class => 'onWorkerRunning',

@@ -39,8 +39,14 @@ class UpdatePasswordFormType extends AbstractType
                 ],
                 'invalid_message' => 'The password fields must match.',
                 'options' => ['attr' => ['class' => 'password-field']],
-                'first_options'  => ['label' => 'New Password', 'attr' => ['placeholder' => 'New Password']],
-                'second_options' => ['label' => 'Repeat New Password', 'attr' => ['placeholder' => 'Repeat New Password']],
+                'first_options'  => [
+                    'label' => 'New Password',
+                    'attr' => ['placeholder' => 'New Password']
+                ],
+                'second_options' => [
+                    'label' => 'Repeat New Password',
+                    'attr' => ['placeholder' => 'Repeat New Password']
+                ],
             ])
         ;
     }

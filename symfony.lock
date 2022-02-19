@@ -111,6 +111,9 @@
     "egulias/email-validator": {
         "version": "2.1.15"
     },
+    "escapestudios/symfony2-coding-standard": {
+        "version": "3.x-dev"
+    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
@@ -122,6 +125,9 @@
     },
     "guzzlehttp/psr7": {
         "version": "1.6.1"
+    },
+    "jetbrains/phpstorm-attributes": {
+        "version": "1.0"
     },
     "knpuniversity/oauth2-client-bundle": {
         "version": "1.34",
@@ -306,6 +312,18 @@
         },
         "files": [
             "config/packages/sensio_framework_extra.yaml"
+        ]
+    },
+    "squizlabs/php_codesniffer": {
+        "version": "3.6",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.6",
+            "ref": "1019e5c08d4821cb9b77f4891f8e9c31ff20ac6f"
+        },
+        "files": [
+            "phpcs.xml.dist"
         ]
     },
     "symfony-bundles/json-request-bundle": {

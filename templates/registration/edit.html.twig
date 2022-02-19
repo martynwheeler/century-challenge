@@ -6,7 +6,7 @@
 	{% if service is not null %}
 	<p class="text-left">If your {{ service|capitalize }} details displayed below are incorrect please log out of the 
 		  service and log back in with the correct account.  After this you will be able to update your {{ service|capitalize }} details from 
-		  <a href="{{ path('connect') }}">here</a>.</p>
+		  <a href="{{ path('app_connect') }}">here</a>.</p>
 	{% endif %}
 	{{ form_start(registrationForm) }}
 		{{ form_row(registrationForm.username) }}

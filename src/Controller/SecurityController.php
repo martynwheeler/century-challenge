@@ -14,12 +14,12 @@ class SecurityController extends AbstractController
     {
     }
 
-    #[Route('/login', name: 'login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    #[Route('/login', name: 'app_login')]
+    public function loginAction(AuthenticationUtils $authenticationUtils): Response
     {
         //send to homepage if already logged in
-        if ($this->isGranted('IS_AUTHENTICATED_FULLY')){
-            return new RedirectResponse($this->generateUrl('homepage'));
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return new RedirectResponse($this->generateUrl('app_homepage'));
         }
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();

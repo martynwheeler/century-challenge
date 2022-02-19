@@ -214,8 +214,8 @@ class StravaAPI
             $ride = $this->setRide($athleteactivity);
             $ride->setUser($user);
             $checkRideStream = $this->processRideStream($user, $id, $ride->getDate());
-            $ride->setClubRide($checkRideStream['isClubride']);
-            if (!$checkRideStream['isRealride']){
+            $ride->setClubRide($checkRideStream['isClubRide']);
+            if (!$checkRideStream['isRealRide']){
                 $ride = null;
             }
             return $ride;
@@ -295,8 +295,8 @@ class StravaAPI
             }
 
             return [
-                "isClubride" => $clubride,
-                "isRealride" => $realride,
+                "isClubRide" => $clubride,
+                "isRealRide" => $realride,
             ];
         }
 

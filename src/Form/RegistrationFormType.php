@@ -9,19 +9,18 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Regex;
 
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('username', TextType::class, ['label' => 'Username (all lowercase, no spaces - use underscores instead.) *'])
+            ->add('username', TextType::class, [
+                'label' => 'Username (all lowercase, no spaces - use underscores instead.) *'
+            ])
             ->add('plainPassword', RepeatedType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
@@ -45,8 +44,9 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('email', EmailType::class, ['label' => 'Email address *'])
             ->add('forename', TextType::class, ['label' => 'First Name(s) *'])
-            ->add('surname', TextType::class, ['label' => 'Surname (this will only be shown to logged in users.) *'])
-        ;
+            ->add('surname', TextType::class, [
+                'label' => 'Surname (this will only be shown to logged in users.) *'
+                ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

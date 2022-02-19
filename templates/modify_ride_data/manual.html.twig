@@ -17,24 +17,24 @@ Edit Ride
 	{% if app.request.attributes.get("_route") == 'app_add_ride_manual' %}
 	<p class="text-left">Please note that uploading via Strava/Komoot 
 		is the preferred method of registering your rides if you wish to be considered for the Century Challenge trophy. You can connect to Strava/Komoot
-		by following <a href="{{ path('connect') }}">this link</a>.</p>
+		by following <a href="{{ path('app_connect') }}">this link</a>.</p>
 	{% endif %}
-	{{ form_start(addrideForm) }}
+	{{ form_start(addRideForm) }}
 	<div class="row">
 	  <div class="col">
-	    {{ form_label(addrideForm.km) }}
+	    {{ form_label(addRideForm.km) }}
 	    <div class="input-group">
-	      {{ form_widget(addrideForm.km) }}
+	      {{ form_widget(addRideForm.km) }}
 	      <div class="input-group-append">
 			<span class="input-group-text">km</span>
 	      </div>
 	    </div>
-		{{ form_errors(addrideForm.km) }}
+		{{ form_errors(addRideForm.km) }}
 	  </div>
 	  <div class="col">
-	    {{ form_label(addrideForm.average_speed) }}
+	    {{ form_label(addRideForm.average_speed) }}
 	    <div class="input-group">
-	      {{ form_widget(addrideForm.average_speed) }}
+	      {{ form_widget(addRideForm.average_speed) }}
 	      <div class="input-group-append">
 			<span class="input-group-text">km/h</span>
 	      </div>
@@ -43,18 +43,18 @@ Edit Ride
 	</div>
 	<div class="row pt-3">
 	  <div class="col-6">
-	    {{ form_label(addrideForm.date) }}
-	    {{ form_widget(addrideForm.date) }}
-		{{ form_errors(addrideForm.date) }}
+	    {{ form_label(addRideForm.date) }}
+	    {{ form_widget(addRideForm.date) }}
+		{{ form_errors(addRideForm.date) }}
 	  </div>
 	</div>
 	<div class="row pt-3">
 	  <div class="col">
-	    {{ form_row(addrideForm.details) }}
+	    {{ form_row(addRideForm.details) }}
 	  </div>
 	</div>
 	<div class="help-inline pb-2 text-danger">* denotes required field</div>
 	<button type="submit" class="btn btn-primary" name="submit">Submit Ride</button>
-	{{ form_end(addrideForm) }}
+	{{ form_end(addRideForm) }}
 </div>
 {% endblock %}

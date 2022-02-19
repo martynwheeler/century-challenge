@@ -20,27 +20,27 @@
       <nav class="navbar navbar-expand-xl navbar-dark bg-dark">
         <div class="container-fluid">
           <!-- Navbar brand link -->
-          <a class="navbar-brand" href="{{ path('homepage') }}"><img src="{{ asset('build/images/lfcc_logo.png') }}" width="35" height="35" class="d-inline-block align-center" alt=""/> Century Challenge</a>
+          <a class="navbar-brand" href="{{ path('app_homepage') }}"><img src="{{ asset('build/images/lfcc_logo.png') }}" width="35" height="35" class="d-inline-block align-center" alt=""/> Century Challenge</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
 
           <!-- Main collapsable navbar-->
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <!-- Left hand links-->
+            <!-- Left-hand links-->
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="{{ path('homepage') }}">Home</a>
+                <a class="nav-link" aria-current="page" href="{{ path('app_homepage') }}">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="{{ path('rules') }}">Rules</a>
+                <a class="nav-link" aria-current="page" href="{{ path('app_rules') }}">Rules</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="{{ path('leaderboard') }}">Leaderboard</a>
+                <a class="nav-link" aria-current="page" href="{{ path('app_leaderboard') }}">Leaderboard</a>
               </li>
               {% if is_granted('ROLE_USER') %}
               <li class="nav-item">
-                <a class="nav-link" href="{{ path('displayrides', {'username': app.user.useridentifier}) }}">
+                <a class="nav-link" href="{{ path('app_display_rides', {'username': app.user.useridentifier}) }}">
                   Your Rides
                 </a>
               </li>
@@ -50,10 +50,10 @@
               {% endif %}
             </ul>
 
-            <!-- Right hand links-->
+            <!-- Right-hand links-->
             <ul class="navbar-nav ms-auto">
 			  <li class="nav-item">
-	    		<a class="nav-link" href="{{ path('contact') }}"><i class="fas fa-envelope-square"></i> Contact</a>
+	    		<a class="nav-link" href="{{ path('app_contact') }}"><i class="fas fa-envelope-square"></i> Contact</a>
 	  		  </li>
         	  {% if is_granted('ROLE_ADMIN') %}
               <li class="nav-item dropdown">
@@ -61,10 +61,10 @@
                     <i class="fas fa-tools"></i> Admin
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-			      		  <li><a class="dropdown-item" aria-current="page" href="{{ path('email') }}">Email</a></li>
-					        <li><a class="dropdown-item" aria-current="page" href="{{ path('listusers') }}">List Users</a></li>
-      					  <li><a class="dropdown-item" aria-current="page" href="{{ path('easyadmin') }}">EasyAdmin</a></li>
-      					  <li><a class="dropdown-item" aria-current="page" href="{{ path('dukecity_command_scheduler_list') }}">Scheduler</a></li>
+                  <li><a class="dropdown-item" aria-current="page" href="{{ path('app_email_users') }}">Email</a></li>
+                  <li><a class="dropdown-item" aria-current="page" href="{{ path('app_list_users') }}">List Users</a></li>
+      			  <li><a class="dropdown-item" aria-current="page" href="{{ path('easyadmin') }}">EasyAdmin</a></li>
+      			  <li><a class="dropdown-item" aria-current="page" href="{{ path('dukecity_command_scheduler_list') }}">Scheduler</a></li>
                 </ul>
               </li>
 			  {% endif %}
@@ -72,27 +72,27 @@
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   {% if gravatar_exists(app.user.email) %}
-              		  <img src="{{ gravatar(app.user.email, 25) }}" />
+              		  <img src="{{ gravatar(app.user.email, 25) }}"  alt=""/>
 		              {% else %}
                     <i class="fas fa-user"></i>
 		              {% endif %} {{ app.user.useridentifier }}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" aria-current="page" href="{{ path('editprofile', {'username': app.user.useridentifier}) }}">Edit profile</a></li>
-                  <li><a class="dropdown-item" aria-current="page" href="{{ path('updatepassword', {'username': app.user.useridentifier}) }}">Change password</a></li>
-                  <li><a class="dropdown-item" aria-current="page" href="{{ path('connect') }}">Connect Services</a></li>
+                  <li><a class="dropdown-item" aria-current="page" href="{{ path('app_edit_profile', {'username': app.user.useridentifier}) }}">Edit profile</a></li>
+                  <li><a class="dropdown-item" aria-current="page" href="{{ path('app_update_password', {'username': app.user.useridentifier}) }}">Change password</a></li>
+                  <li><a class="dropdown-item" aria-current="page" href="{{ path('app_connect') }}">Connect Services</a></li>
                   {% if app.user.stravaid and app.user.stravarefreshtoken %}
-                    <li><a class="dropdown-item" aria-current="page" href="{{ path('deauthorize_strava') }}">Disconnect Strava</a></li>
+                    <li><a class="dropdown-item" aria-current="page" href="{{ path('app_deauthorize_strava') }}">Disconnect Strava</a></li>
                   {% endif %}
                   {% if app.user.komootid and app.user.komootrefreshtoken %}
-                    <li><a class="dropdown-item" aria-current="page" href="{{ path('deauthorize_komoot') }}">Disconnect Komoot</a></li>
+                    <li><a class="dropdown-item" aria-current="page" href="{{ path('app_deauthorize_komoot') }}">Disconnect Komoot</a></li>
                   {% endif %}
-                  <li><a class="dropdown-item" aria-current="page" href="{{ path('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                  <li><a class="dropdown-item" aria-current="page" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 </ul>
               </li>
 			  {% else %}
 			  <li class="nav-item">
-				<a class="nav-link" aria-current="page" href="{{ path('login') }}"><i class="fas fa-sign-in-alt"></i> Sign in</a>
+				<a class="nav-link" aria-current="page" href="{{ path('app_login') }}"><i class="fas fa-sign-in-alt"></i> Sign in</a>
 	  		  </li>
 			  {% endif %}
             </ul>
@@ -118,7 +118,7 @@
   <footer class="footer mt-auto py-3 bg-light">
     <div class="container">
       <span class="text-muted">
-        <img src="{{ asset('build/images/compatible_with_strava/cptblWith_strava_light/api_logo_cptblWith_strava_horiz_light.png') }}" height="48"alt=""/>
+        <img src="{{ asset('build/images/compatible_with_strava/cptblWith_strava_light/api_logo_cptblWith_strava_horiz_light.png') }}" height="48" alt=""/>
       </span>
     </div>
   </footer>

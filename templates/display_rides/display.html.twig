@@ -85,7 +85,7 @@
 	  </td>
 	  <td class="text-center">
 	    {% if ride.rideid == null and is_granted('ROLE_USER') and app.user.id == user.id %}
-	    <a title="Edit Ride" class="btn btn-sm btn-primary" href="{{ path('editride', {'ride_id': ride.id}) }}">
+	    <a title="Edit Ride" class="btn btn-sm btn-primary" href="{{ path('app_edit_ride', {'ride_id': ride.id}) }}">
 	      <i class="fas fa-edit"></i>
 	    </a>
 	    {% else %}
@@ -96,7 +96,7 @@
 	  </td>
 	  <td class="text-center">
 	    {% if is_granted('ROLE_USER') and app.user.id == user.id %}
-	    <a title="Delete Ride" class="btn btn-sm btn-danger" href="{{ path('deleteride', {'ride_id': ride.id}) }}">
+	    <a title="Delete Ride" class="btn btn-sm btn-danger" href="{{ path('app_delete_ride', {'ride_id': ride.id}) }}">
 	      <i class="fas fa-trash-alt"></i>
 	    </a>
 	    {% else %}

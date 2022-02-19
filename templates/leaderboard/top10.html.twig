@@ -21,7 +21,7 @@
         </td>
         <td>
     {% if is_granted('ROLE_USER') %}
-    <a href="{{ path('displayrides', {'username': user.username}) }}">{{ user.name }}</a>
+    <a href="{{ path('app_display_rides', {'username': user.username}) }}">{{ user.name }}</a>
     {% else %}
     {{ user.privatename }}
     {% endif %}
@@ -38,7 +38,7 @@
       {% endif %}
       {% endfor %}
       <tr>
-        <td class="text-center" colspan="{{ months | length + 3}}"><strong><a href="{{ path('leaderboard') }}">View more</a></strong></td>
+        <td class="text-center" colspan="{{ months | length + 3}}"><strong><a href="{{ path('app_leaderboard') }}">View more</a></strong></td>
       </tr>
     </tbody>
   </table>

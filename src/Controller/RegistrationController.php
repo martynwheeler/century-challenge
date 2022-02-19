@@ -4,15 +4,14 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use League\OAuth2\Client\Token\AccessToken;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
-use Doctrine\Persistence\ManagerRegistry;
 
 class RegistrationController extends AbstractController
 {
@@ -21,12 +20,11 @@ class RegistrationController extends AbstractController
         private UserAuthenticatorInterface $userAuthenticator,
         private FormLoginAuthenticator $formLoginAuthenticator,
         private ManagerRegistry $doctrine,
-        )
-    {
+    ) {
     }
 
-    #[Route('/register', name: 'register')]
-    public function register(Request $request): Response
+    #[Route('/register', name: 'app_register')]
+    public function registerAction(Request $request): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -46,7 +44,7 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             // set redirect route upon authentication
-            $request->getSession()->set('redirectTo', 'connect');
+            $request->getSession()->set('redirectTo', 'app_connect');
 
             return $this->userAuthenticator->authenticateUser(
                 $user,

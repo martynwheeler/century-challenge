@@ -2,22 +2,24 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use Doctrine\Persistence\ManagerRegistry;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use KnpU\OAuth2ClientBundle\Client\Provider\StravaClient;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Persistence\ManagerRegistry;
 
+#[Route('/connect')]
 class ConnectStravaController extends AbstractController
 {
     public function __construct(private ClientRegistry $clientRegistry, private ManagerRegistry $doctrine)
     {
     }
 
-    #[Route('/connect/strava', name: 'connect_strava')]
+    #[Route('/strava', name: 'app_connect_strava')]
     public function connectAction(): RedirectResponse
     {
         // will redirect to Strava!
@@ -32,22 +34,21 @@ class ConnectStravaController extends AbstractController
      * because this is the "redirect_route" you configured
      * in config/packages/knpu_oauth2_client.yaml
      */
-    #[Route('/connect/strava/check', name: 'connect_strava_check')]
+    #[Route('/strava/check', name: 'app_connect_strava_check')]
     public function connectCheckAction(Request $request): RedirectResponse
     {
-        /** @var \MartynWheeler\OAuth2\Client\Provider\Strava $client */
+        /** @var StravaClient $client */
         $client = $this->clientRegistry->getClient('strava_oauth');
 
         try {
-            // the exact class depends on which provider you're using
-            /** @var \MartynWheeler\OAuth2\Client\Provider\KomootResourceOwner $user */
-            //Get hold of the accesstoken object and get importantstauff
+            //Get hold of the accessToken object and get important stuff
             $accessToken = $client->getAccessToken();
 
-            //save the short-lived token in the session 
+            //save the short-lived token in the session
             $request->getSession()->set('strava.token', $accessToken->getToken());
 
             //Now store the refresh token and the expiry time of the access token in the user object
+            /** @var User $user */
             $user = $this->getUser();
             $user->setStravaRefreshToken($accessToken->getRefreshToken());
             $user->setStravaTokenExpiry($accessToken->getExpires());
@@ -63,7 +64,7 @@ class ConnectStravaController extends AbstractController
                 return $this->redirectToRoute('app_add_ride');
             }
 
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('app_homepage');
         } catch (IdentityProviderException $e) {
             // something went wrong!
             // probably you should return the reason to the user

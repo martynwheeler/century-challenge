@@ -2,9 +2,9 @@
 {% block title %}Welcome{% endblock %}
 {% block body %}
 <h1>Century Challenge</h1>
-{% if motd != null and is_granted('ROLE_USER')%}
+{% if message != null and is_granted('ROLE_USER')%}
   <div class="alert alert-info text-left col-sm-8 col-md-8 mx-auto">
-    <strong>Notice to Century Challenge users: </strong><p>{{ motd.date }} - {{ motd.message|raw }}</p>    
+    <strong>Notice to Century Challenge users: </strong><p>{{ message.date }} - {{ message.message|raw }}</p>
   </div>
 {% endif %}
 <p>{% if is_granted('ROLE_USER') %}Welcome back to the LFCC Century Challenge {{ app.user.name }}. {% endif %}The current top 10 riders are:</p>

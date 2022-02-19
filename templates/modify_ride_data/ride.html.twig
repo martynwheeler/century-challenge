@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% block title %}Add Ride{% endblock %}
+{% block body %}
+<h3 class="text-center">Add Ride</h3>
+<div class="form">
+    <p class="text-left">You are currently logged into {{ service|capitalize }} as <b>{{ name }}</b>. If this is incorrect please
+        click <a href="{{ path('app_logout') }}?redirect={% if service == 'komoot' %}https://www.komoot.com{% elseif service == 'strava' %}https://www.strava.com{% endif %}">here</a>
+        and log out of {{ service|capitalize }}. Then log back in with the correct account.</p>
+        <p class="text-left">If you would like to enter the ride manually then follow <a href="{{ path('app_add_ride_manual') }}">this link</a><p>
+    {{ form_start(addRideForm) }}
+        {{ form_row(addRideForm.ride) }}
+        <button type="submit" class="btn btn-primary" name="submit">Submit Ride</button>
+    {{ form_end(addRideForm) }}
+</div>
+{% endblock %}
+
+		

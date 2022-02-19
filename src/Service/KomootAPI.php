@@ -176,11 +176,11 @@ class KomootAPI
     /**
      * Get data for a valid ride by id
      */
-    public function getAthleteActivity(Object $user, string $id): ?Ride
+    public function getAthleteActivity(object $user, string $id): ?Ride
     {
         //get an access token and return ride analysis
         $token = $this->getToken($user);
-        if ($token){
+        if ($token) {
             //Set up request
             $url = "tours/$id";
 
@@ -196,8 +196,8 @@ class KomootAPI
             $ride = $this->setRide($athleteactivity);
             $ride->setUser($user);
             $checkRideStream = $this->processRideStream($user, $id, $ride->getDate());
-            $ride->setClubRide($checkRideStream['isClubride']);
-            if (!$checkRideStream['isRealride']){
+            $ride->setClubRide($checkRideStream['isClubRide']);
+            if (!$checkRideStream['isRealRide']){
                 $ride = null;
             }
             return $ride;
@@ -209,7 +209,7 @@ class KomootAPI
     /**
      * Check if submitted ride is a real/club ride
      */
-    public function processRideStream(Object $user, string $id, \DateTime $date): ?array
+    public function processRideStream(object $user, string $id, \DateTime $date): ?array
     {
         //get an access token and return ride analysis
         $token = $this->getToken($user);
@@ -275,8 +275,8 @@ class KomootAPI
             }
 
             return [
-                "isClubride" => $clubride,
-                "isRealride" => $realride,
+                "isClubRide" => $clubride,
+                "isRealRide" => $realride,
             ];
         }
 

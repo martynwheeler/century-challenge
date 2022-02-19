@@ -5,7 +5,7 @@
 <p>Previous years: 
   {% set thisyear = "now"|date("Y") %}
   {% for year in (thisyear - 5)..(thisyear - 1) %}
-  <a href="{{ path('leaderboard', {'year': year}) }}">{{ year }}</a>
+  <a href="{{ path('app_leaderboard', {'year': year}) }}">{{ year }}</a>
   {% endfor %}
 </p>
 <div class="table-responsive">
@@ -31,7 +31,7 @@
         </td>
         <td>
           {% if is_granted('ROLE_USER') %}
-          <a href="{{ path('displayrides', {'username': user.username}) }}">{{ user.name }}</a>
+          <a href="{{ path('app_display_rides', {'username': user.username}) }}">{{ user.name }}</a>
           {% else %}
           {{ user.privatename }}
           {% endif %}
@@ -57,7 +57,7 @@
         <td></td>
         <td>
           {% if is_granted('ROLE_USER') %}
-          <a href="{{ path('displayrides', {'username': user.username}) }}">{{ user.name }}</a>
+          <a href="{{ path('app_display_rides', {'username': user.username}) }}">{{ user.name }}</a>
           {% else %}
           {{ user.privatename }}
           {% endif %}			

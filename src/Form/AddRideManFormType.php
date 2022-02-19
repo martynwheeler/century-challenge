@@ -7,12 +7,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AddrideManFormType extends AbstractType
+class AddRideManFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -24,7 +23,7 @@ class AddrideManFormType extends AbstractType
             ->add('average_speed', NumberType::class, [
                 'label' => 'Average Speed',
                 'required' => false,
-                'scale' =>2,
+                'scale' => 2,
             ])
             ->add('date', DateType::class, [
                 'label' => 'Date of ride *',

@@ -2,10 +2,14 @@
 
 namespace App\Service;
 
+use JsonException;
 use Symfony\Component\HttpClient\HttpClient;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
  * Simple PHP Library for the Strava Webhook
@@ -17,6 +21,13 @@ class StravaWebhook
 {
     public const API_URL = 'https://www.strava.com/api/v3/';
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws JsonException
+     */
     public function subscribe(): ?int
     {
         //Check for existing subscription
@@ -44,6 +55,10 @@ class StravaWebhook
         return null;
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws JsonException
+     */
     public function unsubscribe(): bool
     {
         $id = $this->view();
@@ -69,6 +84,13 @@ class StravaWebhook
         return false;
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws JsonException
+     */
     public function view(): ?int
     {
         //Create a new client

@@ -3,41 +3,47 @@
 namespace App\Controller;
 
 use App\Entity\Ride;
-use App\Form\AddrideManFormType;
-use App\Form\AddrideFormType;
-use App\Service\StravaAPI;
+use App\Entity\User;
+use App\Form\AddRideFormType;
+use App\Form\AddRideManFormType;
 use App\Service\KomootAPI;
+use App\Service\StravaAPI;
+use DateTime;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Persistence\ManagerRegistry;
 
 #[Route('/add-ride')]
 class AddRideController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine, private StravaAPI $strava_api, private KomootAPI $komoot_api)
-    {
+    public function __construct(
+        private ManagerRegistry $doctrine,
+        private StravaAPI $strava_api,
+        private KomootAPI $komoot_api
+    ) {
     }
 
     #[Route('', name: 'app_add_ride')]
     public function addRideAction(Request $request): Response
     {
         //Get the user and switch depending on provider
+        /** @var User $user */
         $user = $this->getUser();
 
-        if (!$user->getPreferredProvider()){
+        if (!$user->getPreferredProvider()) {
             return $this->redirectToRoute('app_add_ride_manual');
         }
 
+        $athleteName = null;
         switch ($user->getPreferredProvider()) {
             case 'komoot':
                 $athlete = $this->komoot_api->getAthlete($user);
                 // check for errors and redirect
                 if (!$athlete) {
                     $request->getSession()->set('reconnect.komoot', true);
-                    return $this->redirectToRoute('connect_komoot');
+                    return $this->redirectToRoute('app_connect_komoot');
                 }
                 //token valid, get name
                 $athleteName = $athlete['display_name'];
@@ -48,18 +54,18 @@ class AddRideController extends AbstractController
                 // check for errors and redirect
                 if (!$athlete) {
                     $request->getSession()->set('reconnect.strava', true);
-                    return $this->redirectToRoute('connect_strava');
+                    return $this->redirectToRoute('app_connect_strava');
                 }
                 //token valid, get name
-                $athleteName = $athlete['firstname'].' '.$athlete['lastname'];
+                $athleteName = $athlete['firstname'] . ' ' . $athlete['lastname'];
                 break;
         }
 
         //Build form
-        $form = $this->createForm(AddrideFormType::class);
+        $form = $this->createForm(AddRideFormType::class);
 
         //if no rides were found redirect to manual entry
-        if (!$form->has('ride')){
+        if (!$form->has('ride')) {
             return $this->redirectToRoute('app_add_ride_manual');
         }
 
@@ -67,7 +73,7 @@ class AddRideController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             //get the selected ride
-            $ride = $form->getData()['ride']; 
+            $ride = $form->getData()['ride'];
 
             if ($ride) {
                 $entityManager = $this->doctrine->getManager();
@@ -75,18 +81,18 @@ class AddRideController extends AbstractController
                 $entityManager->flush();
 
                 //Add flash message
-                $this->addFlash('success', $this->getUser()->getName().', you have sucessfully added your ride');
+                $this->addFlash('success', "{$user->getName()}, you have successfully added your ride");
             } else {
-                $this->addFlash('warning', $this->getUser()->getName().', you cannot upload virtual rides');
+                $this->addFlash('warning', "{$user->getName()}, you cannot upload virtual rides)");
             }
 
             //Success
-            return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUserIdentifier()]);
+            return $this->redirectToRoute('app_display_rides', ['username' => $user->getUserIdentifier()]);
         }
 
         //Return the form as a response
-        return $this->renderForm('modifyridedata/ride.html.twig', [
-            'addrideForm' => $form,
+        return $this->renderForm('modify_ride_data/ride.html.twig', [
+            'addRideForm' => $form,
             'name' => $athleteName,
             'service' => $user->getPreferredProvider(),
         ]);
@@ -96,22 +102,23 @@ class AddRideController extends AbstractController
     public function addRideManualAction(Request $request): Response
     {
         //Get the user and set up ride object
+        /** @var User $user */
         $user = $this->getUser();
         $ride = new Ride();
         $ride->setUser($user);
         $ride->setClubRide(false);
 
         //Build form
-        $form = $this->createForm(AddrideManFormType::class, $ride);
+        $form = $this->createForm(AddRideManFormType::class, $ride);
         $form->handleRequest($request);
 
         //Submitted form
         if ($form->isSubmitted() && $form->isValid()) {
             //this could be improved by validation, but hey
-            $firstdayofmonth = new \DateTime();
-            $firstdayofmonth->modify('midnight')->modify('first day of this month');
+            $firstDayOfMonth = new DateTime();
+            $firstDayOfMonth->modify('midnight')->modify('first day of this month');
 
-            if ($form->getData()->getDate() < $firstdayofmonth) {
+            if ($form->getData()->getDate() < $firstDayOfMonth) {
                 $this->addFlash('danger', 'You cannot enter a ride for last month!');
             } else {
                 $entityManager = $this->doctrine->getManager();
@@ -119,12 +126,15 @@ class AddRideController extends AbstractController
                 $entityManager->flush();
 
                 // do anything else you need here, like send an email
-                $this->addFlash('success', $this->getUser()->getName().', you have sucessfully added your ride');
-                return $this->redirectToRoute('displayrides', ['username' => $this->getUser()->getUserIdentifier()]);
+                $this->addFlash('success', $user->getName() . ', you have successfully added your ride');
+                return $this->redirectToRoute(
+                    'app_display_rides',
+                    ['username' => $this->getUser()->getUserIdentifier()]
+                );
             }
         }
-        return $this->renderForm('modifyridedata/manual.html.twig', [
-            'addrideForm' => $form,
+        return $this->renderForm('modify_ride_data/manual.html.twig', [
+            'addRideForm' => $form,
         ]);
     }
 }
