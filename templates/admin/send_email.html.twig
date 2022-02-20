@@ -24,25 +24,23 @@
 {{ parent() }}
 <script>
   function monthReminder() {
-    var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    var now = new Date();
-    var message =
+    let months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    let now = new Date();
+      document.getElementById("form_message").value =
       'Dear Century Challenge User,' + String.fromCharCode(13) + 
       'Just a gentle reminder to add your rides for ' + months[now.getMonth()] + '.  ' +
       'The deadline for adding any rides is midnight on last day of the month.  ' +
       'If you have not submitted any rides by this time you will get the boot!' + String.fromCharCode(13) + 
       'Thank you, Admin.';
-    document.getElementById("form_message").value = message;
   }
 
   function annualMessage() {
-    var message =
+      document.getElementById("form_message").value =
       'Dear Century Challenge User,' + String.fromCharCode(13) + 
       'You are currently signed up for the LFCC century challenge.  ' +
       'If you no longer wish to be signed up please reply to this message and I will remove you from the database.  ' +
       'Do not forget to add your 100km rides before the end of January to avoid being disqualified!' + String.fromCharCode(13) + 
       'Thank you, Admin.';
-    document.getElementById("form_message").value = message;
   }
 </script>
 {% endblock %}
