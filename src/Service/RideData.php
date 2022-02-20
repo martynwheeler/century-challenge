@@ -4,7 +4,11 @@ namespace App\Service;
 
 use App\Entity\Ride;
 use App\Entity\User;
+use DateInterval;
+use Dateperiod;
+use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
+use JetBrains\PhpStorm\ArrayShape;
 
 class RideData
 {
@@ -15,24 +19,25 @@ class RideData
     /**
      * Gets the data for rides by user or all users
      */
+    #[ArrayShape(['users' => "array", 'months' => "array"])]
     public function getRideData(?string $year, ?string $username): array
     {
         //Date range to loop over
         //Can change when rides need to be entered here
         //Modified for MySQL 8 - 13/3/20
-        $thisyear = false;
+        $thisYear = false;
         if (!$year) {
-            $start = new \DateTime('first day of January');
-            $end = new \DateTime();
-            $thisyear = true;
+            $start = new DateTime('first day of January');
+            $end = new DateTime();
+            $thisYear = true;
         } else {
-            $start = new \DateTime($year.'-01-01');
-            $end = new \DateTime($year.'-12-01');
+            $start = new DateTime("$year-01-01");
+            $end = new DateTime("$year-12-01");
         }
         $year = $start;
         $end->modify('midnight')->modify('last day of this month');
-        $interval = new \DateInterval('P1M');
-        $period = new \Dateperiod($start, $interval, $end);
+        $interval = new DateInterval('P1M');
+        $period = new Dateperiod($start, $interval, $end);
 
         //Get data from repos
         $rides = $this->doctrine->getRepository(Ride::class)->findRidesByYear($year);
@@ -51,14 +56,14 @@ class RideData
             $results[$i]['id'] = $users[$i]->getId();
             $results[$i]['name'] = $users[$i]->getName();
             $results[$i]['username'] = $users[$i]->getUserIdentifier();
-            $results[$i]['privatename'] = $users[$i]->getPrivateName();
-            $results[$i]['stravauserid'] = $users[$i]->getStravaId();
-            $results[$i]['komootuserid'] = $users[$i]->getKomootId();
+            $results[$i]['privateName'] = $users[$i]->getPrivateName();
+            $results[$i]['stravaUserId'] = $users[$i]->getStravaId();
+            $results[$i]['komootUserId'] = $users[$i]->getKomootId();
             $results[$i]['email'] = $users[$i]->getEmail();
             $results[$i]['isDisqualified'] = false;
-            $results[$i]['totalpoints'] = 0;
-            $results[$i]['totaldistance'] = 0;
-            $results[$i]['totalclubrides'] = 0;
+            $results[$i]['totalPoints'] = 0;
+            $results[$i]['totalDistance'] = 0;
+            $results[$i]['totalClubRides'] = 0;
             $results[$i]['months'] = [];
         }
 
@@ -69,7 +74,10 @@ class RideData
             for ($i = 0; $i < count($results); $i++) {
                 $results[$i]['months'] += [$month->format('M') => ['points' => 0, 'distance' => 0]];
                 foreach ($rides as $ride) {
-                    if ($ride->getUser()->getID() == $results[$i]['id'] && $ride->getDate()->format('Y M') == $month->format('Y M')) {
+                    if (
+                        $ride->getUser()->getID() == $results[$i]['id']
+                        && $ride->getDate()->format('Y M') == $month->format('Y M')
+                    ) {
                         $distance = $ride->getKm();
                         $speed = $ride->getAverageSpeed();
                         $clubRide = $ride->getClubRide();
@@ -84,19 +92,22 @@ class RideData
                             'id' => $ride->getId(),
                             'km' => $distance,
                             'speed' => $speed,
-                            'clubride' => $clubRide,
+                            'clubRide' => $clubRide,
                             'points' => $points,
-                            'rideid' => $ride->getRideId(),
+                            'rideId' => $ride->getRideId(),
                             'source' => $ride->getSource(),
                             'date' => $ride->getDate()->format("d-m-Y"),
                         ];
-                        $results[$i]['totalpoints'] += $points;
-                        $results[$i]['totaldistance'] += $distance;
-                        $results[$i]['totalclubrides'] += $clubRides;
+                        $results[$i]['totalPoints'] += $points;
+                        $results[$i]['totalDistance'] += $distance;
+                        $results[$i]['totalClubRides'] += $clubRides;
                     }
                 }
-                if ($thisyear) {
-                    if ($results[$i]['months'][$month->format('M')]['points'] == 0 && $month->format('M') != $end->format('M')) {
+                if ($thisYear) {
+                    if (
+                        $results[$i]['months'][$month->format('M')]['points'] == 0
+                        && $month->format('M') != $end->format('M')
+                    ) {
                         $results[$i]['isDisqualified'] = true;
                     }
                 } else {
@@ -113,7 +124,7 @@ class RideData
         }
         exit();
         */
-        //sort the resulst by total points and return
+        //sort the results by total points and return
         usort($results, [$this, 'sortByTotal']);
         return ['users' => $results, 'months' => $months];
     }
@@ -123,31 +134,26 @@ class RideData
      */
     protected function setPoints(float $km): int
     {
-        //For 100km, you get 10 points
-        if ($km >= 100 && $km < 150) {
+        if ($km >= 100 && $km < 150) { //For 100km, you get 10 points
             return 10;
-        }
-        //for every 50km over 100km you get a further 5 points
-        elseif ($km >= 150) {
+        } elseif ($km >= 150) { //for every 50km over 100km you get a further 5 points
             //take first 100km off to work out additional points
             $km = $km - 100;
 
             //Could instead / 10?
-           return 10 + floor($km/50) * 5; //add
-        }
-        //under 100km you get 0 points.
-        else {
+            return 10 + floor($km / 50) * 5; //add
+        } else { //under 100km you get 0 points.
             return 0;
         }
     }
 
     /**
-     * Comparison function to determine the order of the riders by totalpoints
+     * Comparison function to determine the order of the riders by totalPoints
      */
     protected function sortByTotal(array $a, array $b): int
     {
-        $a = $a['totalpoints'];
-        $b = $b['totalpoints'];
+        $a = $a['totalPoints'];
+        $b = $b['totalPoints'];
         return $b <=> $a;
     }
 }

@@ -23,11 +23,11 @@
     {% if is_granted('ROLE_USER') %}
     <a href="{{ path('app_display_rides', {'username': user.username}) }}">{{ user.name }}</a>
     {% else %}
-    {{ user.privatename }}
+    {{ user.privateName }}
     {% endif %}
         </td>
         <td>
-    {{ user.totalpoints }}				
+    {{ user.totalPoints }}
         </td>
         {% for month in user.months %}
         <td>

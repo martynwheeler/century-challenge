@@ -3,7 +3,7 @@
 {% if is_granted('ROLE_USER') %}
 {{ user.name }}
 {% else %}
-{{ user.privatename }}
+{{ user.privateName }}
 {% endif %}
 {% endblock %}
 {% block body %}
@@ -12,26 +12,26 @@
     <h1>
       {% if is_granted('ROLE_USER') %}
 	  	{% if gravatar_exists(user.email) %}
-		  <img src="{{ gravatar(user.email, 40) }}" />
+		  <img src="{{ gravatar(user.email, 40) }}"  alt=""/>
 		{% endif %}
       {{ user.name }}
       {% else %}
-      {{ user.privatename }}
+      {{ user.privateName }}
       {% endif %}
       {% if user.isDisqualified %}
       <em>Disqualified</em>
       {% endif %}
     </h1>
-    <p class="pl-2=0">has earned a total of {{ user.totalpoints }} points from riding a total distance of {{ user.totaldistance }} km in {{ "now"|date("Y") }}.</p>
+    <p class="pl-2=0">has earned a total of {{ user.totalPoints }} points from riding a total distance of {{ user.totalDistance }} km in {{ "now"|date("Y") }}.</p>
   </div>
   <div class="col-4">
-		{% if is_granted('ROLE_USER') and (user.stravauserid or user.komootuserid) %}
+		{% if is_granted('ROLE_USER') and (user.stravaUserId or user.komootUserId) %}
 		<p class="float-right">Find {{ user.name }} on
-    {% if is_granted('ROLE_USER') and user.stravauserid %}
-      <a href="https://app.strava.com/athletes/{{ user.stravauserid }}"><img src="{{ asset('build/images/strava.jpg') }}" width="80px"/></a>
+    {% if is_granted('ROLE_USER') and user.stravaUserId %}
+      <a href="https://app.strava.com/athletes/{{ user.stravaUserId }}"><img src="{{ asset('build/images/strava.jpg') }}" width="80px" alt=""/></a>
     {% endif %}
-		{% if is_granted('ROLE_USER') and user.komootuserid %}
-      <a href="https://www.komoot.com/user/{{ user.komootuserid }}"><img src="{{ asset('build/images/komoot.jpg') }}" width="80px"/></a>
+		{% if is_granted('ROLE_USER') and user.komootUserId %}
+      <a href="https://www.komoot.com/user/{{ user.komootUserId }}"><img src="{{ asset('build/images/komoot.jpg') }}" width="80px" alt=""/></a>
     {% endif %}
     </p>
 		{% endif %}
@@ -70,21 +70,21 @@
 	  <td>{{ ride.date|date("d/m/Y") }}</td>
 	  <td>{{ ride.km }}</td>
 	  <td>{{ ride.speed }}</td>
-	  <td>{{ ride.clubride  ? 'Yes':'No' }}</td>
+	  <td>{{ ride.clubRide  ? 'Yes':'No' }}</td>
 	  <td>{{ ride.points }}</td>
 	  <td class="text-center">
-	    {% if ride.rideid and ride.source == 'strava' %}
-	    <a title="Ride Link" href="https://www.strava.com/activities/{{ ride.rideid }}">
+	    {% if ride.rideId and ride.source == 'strava' %}
+	    <a title="Ride Link" href="https://www.strava.com/activities/{{ ride.rideId }}">
 	      <img class="border" width="60px" src="{{ asset('build/images/strava.jpg') }}" alt="strava logo" />
 	    </a>
-		{% elseif ride.rideid and ride.source == 'komoot' %}
-	    <a title="Ride Link" href="https://www.komoot.com/tour/{{ ride.rideid }}">
+		{% elseif ride.rideId and ride.source == 'komoot' %}
+	    <a title="Ride Link" href="https://www.komoot.com/tour/{{ ride.rideId }}">
 	      <img class="border" width="60px" src="{{ asset('build/images/komoot.jpg') }}" alt="komoot logo" />
 	    </a>
 	    {% endif %}
 	  </td>
 	  <td class="text-center">
-	    {% if ride.rideid == null and is_granted('ROLE_USER') and app.user.id == user.id %}
+	    {% if ride.rideId == null and is_granted('ROLE_USER') and app.user.id == user.id %}
 	    <a title="Edit Ride" class="btn btn-sm btn-primary" href="{{ path('app_edit_ride', {'ride_id': ride.id}) }}">
 	      <i class="fas fa-edit"></i>
 	    </a>

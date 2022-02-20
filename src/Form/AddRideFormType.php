@@ -47,7 +47,7 @@ class AddRideFormType extends AbstractType
                         return
                             "Ride {$ride->getRideId()} on ({$ride->getDate()->format('d-m-Y')}) of {$ride->getKm()} km";
                     },
-                    'label' => 'Select a recent century ride from the dropdown menu:',
+                    'label' => /** @lang Text */ 'Select a recent century ride from the dropdown menu:',
                     'expanded' => false,
                     'multiple' => false,
                 ]);
