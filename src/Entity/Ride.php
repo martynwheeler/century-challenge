@@ -1,40 +1,56 @@
 <?php
 
+/** @noinspection PhpPropertyOnlyWrittenInspection */
+
 namespace App\Entity;
 
+use App\Repository\RideRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
+use Stringable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: \App\Repository\RideRepository::class)]
+#[ORM\Entity(repositoryClass: RideRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['ride_id', 'source'], message: 'There is already a ride with this ID', ignoreNull: true)]
-class Ride implements \Stringable
+class Ride implements Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
-    #[ORM\ManyToOne(targetEntity: \App\Entity\User::class, inversedBy: 'rides')]
+    private int $id;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'rides')]
     #[ORM\JoinColumn(nullable: false)]
-    private $user;
+    private User $user;
+
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private $km;
+    private float $km;
+
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    private $average_speed;
+    private ?float $average_speed = null;
+
     #[ORM\Column(type: 'datetime')]
-    private $date;
+    private DateTime $date;
+
     #[ORM\Column(type: 'datetime')]
-    private $date_added;
+    private DateTime $date_added;
+
     #[ORM\Column(type: 'string', length: 2000, nullable: true)]
-    private $details;
+    private ?string $details = null;
+
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
-    #[Assert\Regex(pattern: '/^\d+$/', match: true, message: 'Invalid Ride ID')]
-    private $ride_id;
+    #[Assert\Regex(pattern: '/^\d+$/', message: 'Invalid Ride ID', match: true)]
+    private ?string $ride_id = null;
+
     #[ORM\Column(type: 'boolean')]
-    private $club_ride;
+    private bool $club_ride;
+
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
-    private $source;
+    private ?string $source = null;
+
     public function getId(): int
     {
         return $this->id;
@@ -69,26 +85,26 @@ class Ride implements \Stringable
 
         return $this;
     }
-    public function getDate(): \DateTimeInterface
+    public function getDate(): DateTime
     {
         return $this->date;
     }
-    public function setDate(\DateTimeInterface $date): self
+    public function setDate(DateTime $date): self
     {
         $this->date = $date;
 
         return $this;
     }
-    public function getDateAdded(): \DateTimeInterface
+    public function getDateAdded(): DateTime
     {
         return $this->date_added;
     }
     #[ORM\PrePersist]
     public function setDateAddedValue()
     {
-        $this->date_added = new \DateTime();
+        $this->date_added = new DateTime();
     }
-    public function setDateAdded(\DateTimeInterface $date_added): self
+    public function setDateAdded(DateTime $date_added): self
     {
         $this->date_added = $date_added;
 
@@ -124,9 +140,10 @@ class Ride implements \Stringable
 
         return $this;
     }
+    #[Pure]
     public function __toString(): string
     {
-        return (string)$this->getRideId();
+        return $this->getRideId();
     }
     public function getSource(): ?string
     {

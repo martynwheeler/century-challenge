@@ -7,6 +7,8 @@ use App\Entity\User;
 use App\Message\NewRideMessage;
 use App\Service\RideData;
 use App\Service\StravaAPI;
+use JsonException;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Mailer\MailerInterface;
@@ -21,10 +23,13 @@ class NewRideMessageHandler
         private StravaAPI $strava_api,
         private ManagerRegistry $doctrine,
         private RideData $rd,
-        )
-    {
+    ) {
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws JsonException
+     */
     public function __invoke(NewRideMessage $message)
     {
         //Decode json string
@@ -34,34 +39,34 @@ class NewRideMessageHandler
         $object_type = $data['object_type']; // "activity" | "athlete"
         $owner_id = $data['owner_id']; // athlete ID
 
-        if ($aspect_type == 'create' && $object_type == 'activity') {//should be create
+        if ($aspect_type == 'create' && $object_type == 'activity') {
             //Does ride already exist in the database
             if ($this->doctrine->getRepository(Ride::class)->findOneBy(['ride_id' => $object_id]) == null) {
                 //Get the user
                 $user = $this->doctrine->getRepository(User::class)->findOneBy(['stravaID' => $owner_id]);
 
-                if ($user){
-                    //if not dq'ed then process
-                    if (!$this->rd->getRideData(year: null, username: $user->getUsername())['users'][0]['isDisqualified']){
+                if ($user) {
+                    //if not disqualified then process
+                    if (!$this->rd->getRideData(year: null, username: $user->getUsername())['users'][0]['isDisqualified']) {
                         //get the activity from strava
                         $ride = $this->strava_api->getAthleteActivity($user, $object_id);
-                        
+
                         //If the ride is real then add to db
-                        if ($ride){
+                        if ($ride) {
                             $entityManager = $this->doctrine->getManager();
                             $entityManager->persist($ride);
                             $entityManager->flush();
 
-                            //emailmessage a message
-                            $emailmessage = (new Email())
+                            //email a message
+                            $emailMessage = (new Email())
                                 ->from(new Address($_ENV['MAILER_FROM'], 'Century Challenge Contact'))
                                 ->to($user->getEmail())
                                 ->subject('Message from Century Challenge')
-                                ->text('Message from: '.$_ENV['MAILER_FROM']."\n\r"."Your ride with id=$object_id has successfully been added.");
-                            $sentEmail = $this->mailer->send($emailmessage);
+                                ->text("Message from: {$_ENV['MAILER_FROM']} \n\r Your ride with id=$object_id has successfully been added.");
+                            $this->mailer->send($emailMessage);
                         }
                     }
-                }                
+                }
             }
         }
     }

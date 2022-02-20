@@ -1,20 +1,24 @@
 <?php
 
+/** @noinspection PhpPropertyOnlyWrittenInspection */
+
 namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
+use Stringable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: \App\Repository\UserRepository::class)]
+#[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, \Stringable
+class User implements UserInterface, PasswordAuthenticatedUserInterface, Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -36,13 +40,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     private string $email;
 
     #[ORM\Column(type: 'string', length: 40)]
-    private $surname;
+    private string $surname;
 
     #[ORM\Column(type: 'string', length: 40)]
-    private $forename;
+    private string $forename;
 
-    #[ORM\OneToMany(targetEntity: \App\Entity\Ride::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private Object $rides;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Ride::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $rides;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $komootID = null;
@@ -54,7 +58,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     private ?string $komootTokenExpiry = null;
 
     #[ORM\Column(type: 'string', length: 25, nullable: true)]
-    #[Assert\Regex(pattern: '/^\d+$/', match: true, message: 'Invalid Strava ID')]
+    #[Assert\Regex(pattern: '/^\d+$/', message: 'Invalid Strava ID', match: true)]
     private ?string $stravaID = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -66,12 +70,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
     private ?string $preferredProvider = null;
 
+    #[Pure]
     public function __construct()
     {
         $this->rides = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -83,15 +88,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->username;
+        return $this->username;
     }
 
     /**
-     * @deprecated since Symfony 5.3
+     *
      */
     public function getUsername(): string
     {
-        return (string) $this->username;
+        return $this->username;
     }
 
     public function setUsername(string $username): self
@@ -125,7 +130,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
      */
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return $this->password;
     }
 
     public function setPassword(string $password): self
@@ -156,7 +161,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     /**
      * getters for user fields
      */
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -168,7 +173,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
         return $this;
     }
 
-    public function getSurname(): ?string
+    public function getSurname(): string
     {
         return $this->surname;
     }
@@ -180,7 +185,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
         return $this;
     }
 
-    public function getForename(): ?string
+    public function getForename(): string
     {
         return $this->forename;
     }
@@ -192,17 +197,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
         return $this;
     }
 
-    public function getName(): ?string
+    #[Pure]
+    public function getName(): string
     {
-        return $this->getForeName() . ' ' . $this->getSurname();
+        return "{$this->getForeName()} {$this->getSurname()}";
     }
 
     /**
      * Added functionality to set private name
      */
-    public function getPrivateName()
+    #[Pure]
+    public function getPrivateName(): string
     {
-        return ucwords($this->getForeName().' '.substr($this->getSurname(), 0, 1).'.');
+        return ucwords($this->getForeName() . ' ' . substr($this->getSurname(), 0, 1) . '.');
     }
 
     /**
@@ -234,7 +241,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
         }
         return $this;
     }
-
 
     /**
      * Get and set komoot credentials
@@ -326,8 +332,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
         return $this;
     }
 
+    #[Pure]
     public function __toString(): string
     {
-        return (string)$this->getName();
+        return $this->getName();
     }
 }
